@@ -17,7 +17,7 @@ O objetivo do sistema é **gerenciar candidatos, vagas, entrevistas, funcionári
 ## 📂 Estrutura do Projeto
 O projeto utiliza **Maven** e segue uma **arquitetura MVC** com camadas organizadas:
 
-projetoRH/<br>
+projeto-tp1/<br>
 ├── src/main/java/<br>
 │   ├── view/             # Interfaces gráficas (JavaFX)<br>
 │   ├── controller/       # Lógica de controle e integração<br>
