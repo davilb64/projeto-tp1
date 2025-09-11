@@ -89,11 +89,11 @@ mvn javafx:run
 ## 🧑‍💻 Contribuidores
 | Aluno | Módulo | GitHub |
 |--------|-------------------------------|-------------------------|
-| **Aluno 1** | Administração e autenticação | [@aluno1](https://github.com/aluno1) |
-| **Aluno 2** | Candidatos e candidaturas    | [@aluno2](https://github.com/aluno2) |
-| **Aluno 3** | Vagas, entrevistas, contratações | [@aluno3](https://github.com/aluno3) |
-| **Aluno 4** | Financeiro e folha de pagamento | [@aluno4](https://github.com/aluno4) |
-| **Aluno 5** | Prestadores e contratos     | [@aluno5](https://github.com/aluno5) |
+| **Aluno 1** | Administração e autenticação | [Davi Lopes](https://github.com/davilb64) |
+| **Aluno 2** | Candidatos e candidaturas    | [Valquíria Machado](https://github.com/valquiria11) |
+| **Aluno 3** | Vagas, entrevistas, contratações | [Ricado Rian](https://github.com/RianRSM) |
+| **Aluno 4** | Financeiro e folha de pagamento | [Samara Gomes](https://github.com/samaragomess) |
+
 
 ---
 
