@@ -76,13 +76,13 @@ mvn javafx:run
 ---
 
 ## 🗂️ Roadmap do Desenvolvimento
-| **Etapa** | **Descrição**                                | **Prazo**    | **Responsáveis**         |
-|-----------|--------------------------------------------|------------|--------------------------|
-| **Etapa 1** | Estrutura inicial, protótipos e diagramas UML | 16/09/2025 | Todos                   |
-| **Etapa 2** | Modelagem completa e assinaturas de métodos  | 30/09/2025 | Todos                   |
-| **Etapa 3** | CRUDs, validações, persistência e testes    | 28/10/2025 | Cada aluno por módulo   |
-| **Etapa 4** | Integração final e relatórios               | 11/11/2025 | Todos                   |
-| **Etapa 5** | Entrega final, manual e apresentação        | 28/11/2025 | Todos                   |
+| **Etapa**   | **Descrição**                | **Prazo**  | **Responsáveis**       |
+|-------------|------------------------------|------------|------------------------|
+| **Etapa 1** | Estrutura inicial            | 23/09/2025 | Todos                  |
+| **Etapa 2** | Design e Modelagem           | 30/09/2025 | Todos                  |
+| **Etapa 3** | Implementaçao da Logica      | 28/10/2025 | Cada membro por módulo |
+| **Etapa 4** | Integração e Navegabilidade  | 11/11/2025 | Todos                  |
+| **Etapa 5** | Entrega final e apresentação | 25/11/2025 | Todos                  |
 
 ---
 
@@ -106,7 +106,6 @@ Sinta-se livre para modificar e utilizar, desde que mantenha os créditos.
 ## 🌟 Observações
 - Utilize **Git Flow** para criar features, releases e hotfixes.
 - Sempre crie **pull requests** para integração de novas funcionalidades.
-- Use o [Trello do projeto]([https://trello.com/](https://trello.com/b/EUpSU1r6/projeto-tp1)) para acompanhar tarefas.
 
 ---
 Feito com ❤️ pelo **Grupo 07** — UnB, 2025.
