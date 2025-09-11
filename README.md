@@ -79,7 +79,7 @@ mvn javafx:run
 | **Etapa**   | **Descrição**                | **Prazo**  | **Responsáveis**       |
 |-------------|------------------------------|------------|------------------------|
 | **Etapa 1** | Estrutura inicial            | 23/09/2025 | Todos                  |
-| **Etapa 2** | Design e Modelagem           | 30/09/2025 | Todos                  |
+| **Etapa 2** | Design e Modelagem           | 07/10/2025 | Todos                  |
 | **Etapa 3** | Implementaçao da Logica      | 28/10/2025 | Cada membro por módulo |
 | **Etapa 4** | Integração e Navegabilidade  | 11/11/2025 | Todos                  |
 | **Etapa 5** | Entrega final e apresentação | 25/11/2025 | Todos                  |
