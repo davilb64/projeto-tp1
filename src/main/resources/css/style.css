@@ -1,0 +1,36 @@
+.root {
+    -fx-background-color: #bec6dc;
+    -fx-font-family: "Ubuntu", sans-serif;
+}
+
+.button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: #94badc;
+    -fx-border-color: #000000;
+    -fx-border-width: 0;
+    -fx-font: bold 16px "Ubuntu", sans-serif;
+
+}
+.password-field, .text-field {
+    -fx-background-color: #ffff;
+}
+
+#barraLateral{
+    -fx-background-color: #3A7CA5;
+}
+
+
+#buttonAtivo{
+    -fx-background-color: #6f8ca3;
+}
+
+#botaoRegistro:hover{
+    -fx-background-color: #6f8ca3;
+
+}
+
+#cabecalho{
+    -fx-background-color: #a6bdcf;
+}
