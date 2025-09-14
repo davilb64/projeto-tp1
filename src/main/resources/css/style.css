@@ -1,13 +1,13 @@
 .root {
-    -fx-background-color: #bec6dc;
+    -fx-background-color: #d8d8d8;
     -fx-font-family: "Ubuntu", sans-serif;
 }
 
 .button {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
+    -fx-background-radius: 15;
+    -fx-border-radius: 10;
     -fx-background-insets: 0;
-    -fx-background-color: #94badc;
+    -fx-background-color: #fafafa;
     -fx-border-color: #000000;
     -fx-border-width: 0;
     -fx-font: bold 16px "Ubuntu", sans-serif;
@@ -17,20 +17,11 @@
     -fx-background-color: #ffff;
 }
 
-#barraLateral{
-    -fx-background-color: #3A7CA5;
-}
-
-
-#buttonAtivo{
-    -fx-background-color: #6f8ca3;
-}
-
-#botaoRegistro:hover{
-    -fx-background-color: #6f8ca3;
-
+#title{
+    font-family: 'corbel', sans-serif;
+    -fx-font-weight: bold;
 }
 
 #cabecalho{
-    -fx-background-color: #a6bdcf;
+    -fx-background-color: #505050;
 }
