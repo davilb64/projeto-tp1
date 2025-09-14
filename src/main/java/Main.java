@@ -1,10 +1,12 @@
-public class Main {
-    public static void main(String[] args) {
+import util.ScreenController;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-        System.out.print("Hello world!");
-
-        for (int i = 1; i <= 5; i++) {
-            System.out.println("i = " + i);
-        }
+public class Main extends Application {
+    @Override
+    public void start(Stage stage) {
+        ScreenController.setStage(stage);
+        ScreenController.changeScene("/view/LoginView.fxml"); // Tela inicial
     }
+
 }
