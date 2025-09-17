@@ -1,11 +1,12 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.layout.BorderPane;
-import util.ScreenController;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import util.ScreenController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,8 +14,29 @@ import java.net.URL;
 public class PrincipalAdministradorController {
 
     public BorderPane root;
+
     @FXML
     private StackPane contentArea;
+
+    @FXML
+    private Button btnDashboard;
+
+    @FXML
+    private Button btnUsuarios;
+
+    @FXML
+    private Button btnRelatorios;
+
+    @FXML
+    private Button btnConfig;
+
+    private Button activeButton;
+
+    @FXML
+    public void initialize() {
+        // Carrega Dashboard por padrão
+        showDashboard();
+    }
 
     private void loadUI(String fxml) {
         try {
@@ -25,7 +47,7 @@ public class PrincipalAdministradorController {
                 throw new IllegalStateException("FXML não encontrado: " + fxml);
             }
 
-            Pane pane = FXMLLoader.load(resource); // <- agora funciona
+            Pane pane = FXMLLoader.load(resource);
             contentArea.getChildren().clear();
             contentArea.getChildren().add(pane);
 
@@ -34,30 +56,40 @@ public class PrincipalAdministradorController {
         }
     }
 
+    private void setActiveButton(Button button) {
+        if (activeButton != null) {
+            activeButton.setId("buttonLateral"); // volta ao normal
+        }
+        button.setId("buttonLateralActive"); // destaca o atual
+        activeButton = button;
+    }
+
     @FXML
     private void showDashboard() {
-        loadUI("Dashboard");
+        loadUI("DashboardAdm");
+        setActiveButton(btnDashboard);
     }
 
     @FXML
     private void showUsuarios() {
-        loadUI("Usuarios");
+        loadUI("UsuariosAdm");
+        setActiveButton(btnUsuarios);
     }
 
     @FXML
     private void showRelatorios() {
-        loadUI("Relatorios");
+        loadUI("RelatoriosAdm");
+        setActiveButton(btnRelatorios);
     }
 
     @FXML
     private void showConfiguracoes() {
-        loadUI("Configuracoes");
+        loadUI("ConfiguracoesAdm");
+        setActiveButton(btnConfig);
     }
 
     @FXML
     private void sair() {
         ScreenController.changeScene("/view/LoginView.fxml");
     }
-
-
 }

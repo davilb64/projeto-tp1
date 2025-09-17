@@ -6,14 +6,9 @@ import javafx.scene.control.Label;
 
 public class UsuariosController {
 
+    public Button cadastrarButton;
     @FXML
     private Label tituloLabel;
-
-    @FXML
-    private Button cadastrarButton;
-
-    @FXML
-    private Button listarButton;
 
     // Método de inicialização (chamado automaticamente ao carregar o FXML)
     @FXML
@@ -26,8 +21,4 @@ public class UsuariosController {
         System.out.println("👉 Botão de cadastro clicado! Aqui você pode abrir um formulário de cadastro.");
     }
 
-    @FXML
-    private void listarUsuarios() {
-        System.out.println("👉 Botão de listar clicado! Aqui você pode carregar uma tabela de usuários.");
-    }
 }
