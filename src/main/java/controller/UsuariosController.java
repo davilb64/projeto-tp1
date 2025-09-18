@@ -1,8 +1,16 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class UsuariosController {
 
@@ -17,8 +25,16 @@ public class UsuariosController {
     }
 
     @FXML
-    private void cadastrarUsuario() {
-        System.out.println("👉 Botão de cadastro clicado! Aqui você pode abrir um formulário de cadastro.");
+    private void cadastrarUsuario() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroUsuarioAdm.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = new Stage();
+        stage.setTitle("Cadastrar Usuário");
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL); // trava a tela até fechar
+        stage.showAndWait(); // aguarda fechar para voltar
     }
+
 
 }

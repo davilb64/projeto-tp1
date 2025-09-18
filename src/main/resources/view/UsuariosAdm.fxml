@@ -26,7 +26,7 @@
            <padding>
                <Insets top="15.0"/>
            </padding>
-           <Button fx:id="cadastrarButton" onAction="#cadastrarUsuario" text="Cadastrar Novo Usuário">
+           <Button fx:id="abrirCadastroUsuario" onAction="#cadastrarUsuario" text="Cadastrar Novo Usuário">
               <cursor>
                   <Cursor fx:constant="HAND"/>
               </cursor>
