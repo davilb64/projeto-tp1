@@ -1,40 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
-   <children>
-      <Label layoutX="14.0" layoutY="14.0" prefHeight="59.0" prefWidth="244.0" text="Menu de Recrutamento">
-         <font>
-            <Font name="System Bold" size="20.0" />
-         </font>
-      </Label>
-      <BorderPane layoutX="14.0" layoutY="91.0" prefHeight="200.0" prefWidth="200.0">
-         <top>
-            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button mnemonicParsing="false" text="Gerenciar candidatos" />
-                  <Button mnemonicParsing="false" text="Processos seletivos" />
-                  <Button mnemonicParsing="false" text="Relatórios" />
-                  <Button mnemonicParsing="false" text="Entrevistas marcadas" />
-                <Button mnemonicParsing="false" text="Consultar contratações" />
-                <Button mnemonicParsing="false" text="Vizualizar vagas" />
-                  <Button mnemonicParsing="false" text="Cadastrar vagas" />
-                  <StackPane prefHeight="150.0" prefWidth="200.0" />
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalAdministradorController">
+
+    <left>
+        <VBox alignment="CENTER" prefWidth="217.0" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
+            <ImageView fitHeight="120.0" fitWidth="106.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../humanize-logo.png" />
+            </ImageView>
+
+            <Button id="buttonLateral" fx:id="btnDashboard" prefWidth="150.0" text="Cadastro de candidatos">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+
+            <Button id="buttonLateral" fx:id="btnUsuarios" onAction="#showUsuarios" prefWidth="150.0" text="Realizar candidatura">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+
+            <Button id="buttonLateral" fx:id="btnRelatorios" onAction="#showRelatorios" prefWidth="150.0" text="Entrevistas">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button id="buttonLateral" fx:id="btnFinanceiro" onAction="#showFinanceiro" prefWidth="150.0" text="Contratações">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+
+            <Button id="buttonLateral" fx:id="btnConfig" onAction="#showConfiguracoes" prefWidth="150.0" text="Configurações">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+
+            <VBox alignment="BOTTOM_LEFT" prefHeight="462.0" prefWidth="150.0">
+                <Button onAction="#sair" prefHeight="29.0" prefWidth="59.0" text="Sair">
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </Button>
             </VBox>
-         </top>
-      </BorderPane>
-      <Text layoutX="6.0" layoutY="604.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." />
-      <Button layoutX="26.0" layoutY="536.0" mnemonicParsing="false" text="Sair" />
-   </children>
-</AnchorPane>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1; -fx-padding: 20;">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu">
+                <font><Font size="21.0" /></font>
+            </Text>
+        </StackPane>
+    </center>
+
+    <bottom>
+        <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." BorderPane.alignment="BOTTOM_LEFT" />
+    </bottom>
+</BorderPane>
