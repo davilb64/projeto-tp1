@@ -92,7 +92,7 @@ public class PrincipalAdministradorController {
 
     @FXML
     private void showFinanceiro() {
-        loadUI("MenuFinanceiro");
+        loadUI("MenuFinanceiroAdm");
         setActiveButton(btnFinanceiro);
     }
 

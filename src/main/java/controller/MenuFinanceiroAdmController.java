@@ -5,15 +5,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import util.ScreenController;
 
 import java.io.IOException;
 import java.net.URL;
 
 
 
-public class MenuFinanceiroController {
+public class MenuFinanceiroAdmController {
     public BorderPane root;
 
     @FXML
@@ -36,6 +34,7 @@ public class MenuFinanceiroController {
 
     private Button activeButton;
 
+    @FXML
     public void initialize() {
 
     }
@@ -68,7 +67,32 @@ public class MenuFinanceiroController {
 
     @FXML
     private void showRegrasSalariais() {
-        loadUI("RegrasSalariais");
+        loadUI("RegrasSalariais"); 
         setActiveButton(btnRegrasSalariais);
     }
+
+    @FXML
+    private void showCadastroFuncionario() {
+        loadUI("CadastroDeFuncionario");
+        setActiveButton(btnCadastroFuncionario);
+    }
+
+    @FXML
+    private void showFolhaPagamento() {
+        loadUI("FolhaDePagamento");
+        setActiveButton(btnFolhaPagamento);
+    }
+
+    @FXML
+    private void showRelatorioFinanceiro() {
+        loadUI("RelatorioFinanceiro");
+        setActiveButton(btnRelatorioFinanceiro);
+    }
+
+    @FXML
+    private void showContraCheques() {
+        loadUI("Contracheque");
+        setActiveButton(btnContracheques);
+    }
+
 }

@@ -9,15 +9,14 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="650.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+<AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroDeFuncionarioController">
    <children>
-      <VBox layoutX="131.0" layoutY="14.0" prefHeight="502.0" prefWidth="577.0" spacing="10.0">
+      <VBox layoutX="3.0" prefHeight="502.0" prefWidth="577.0" spacing="10.0">
          <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </padding>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="Cadastro de funcionarios">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="557.0" text="Cadastro de funcionarios" underline="true">
                <font>
                   <Font size="36.0" />
                </font>
@@ -78,9 +77,6 @@
                            <opaqueInsets>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </opaqueInsets>
-                           <font>
-                              <Font size="64.0" />
-                           </font>
                         </Button>
                      </children>
                   </HBox>
