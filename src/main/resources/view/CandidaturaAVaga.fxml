@@ -13,7 +13,7 @@
    <content>
       <AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css">
          <children>
-            <Label alignment="CENTER" layoutX="115.0" layoutY="6.0" prefHeight="37.0" prefWidth="371.0" style="-fx-font-size: 20px;" text="Cadastro de Candidato" underline="true">
+            <Label alignment="CENTER" layoutX="115.0" layoutY="6.0" prefHeight="37.0" prefWidth="371.0" style="-fx-font-size: 20px;" text="Candidatura À Vaga" underline="true">
                <font>
                   <Font size="36.0" />
                </font>
