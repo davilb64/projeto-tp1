@@ -11,33 +11,33 @@ import util.ScreenController;
 import java.io.IOException;
 import java.net.URL;
 
-public class PrincipalAdministradorController {
 
+
+public class MenuFinanceiroController {
     public BorderPane root;
 
     @FXML
-    private StackPane contentArea;
+    private Pane contentArea;
 
     @FXML
-    private Button btnDashboard;
+    private Button btnRegrasSalariais;
 
     @FXML
-    private Button btnUsuarios;
+    private Button btnCadastroFuncionario;
 
     @FXML
-    private Button btnRelatorios;
+    private Button btnFolhaPagamento;
 
     @FXML
-    private Button btnConfig;
+    private Button btnRelatorioFinanceiro;
 
     @FXML
-    private Button btnFinanceiro;
+    private Button btnContracheques;
 
     private Button activeButton;
 
-    @FXML
     public void initialize() {
-        showDashboard();
+
     }
 
     private void loadUI(String fxml) {
@@ -67,37 +67,8 @@ public class PrincipalAdministradorController {
     }
 
     @FXML
-    private void showDashboard() {
-        loadUI("DashboardAdm");
-        setActiveButton(btnDashboard);
-    }
-
-    @FXML
-    private void showUsuarios() {
-        loadUI("UsuariosAdm");
-        setActiveButton(btnUsuarios);
-    }
-
-    @FXML
-    private void showRelatorios() {
-        loadUI("RelatoriosAdm");
-        setActiveButton(btnRelatorios);
-    }
-
-    @FXML
-    private void showConfiguracoes() {
-        loadUI("ConfiguracoesAdm");
-        setActiveButton(btnConfig);
-    }
-
-    @FXML
-    private void showFinanceiro() {
-        loadUI("MenuFinanceiro");
-        setActiveButton(btnFinanceiro);
-    }
-
-    @FXML
-    private void sair() {
-        ScreenController.changeScene("/view/LoginView.fxml");
+    private void showRegrasSalariais() {
+        loadUI("RegrasSalariais");
+        setActiveButton(btnRegrasSalariais);
     }
 }
