@@ -45,7 +45,7 @@
             <TableColumn minWidth="0.0" prefWidth="118.0" text="Status" />
         </columns>
       </TableView>
-      <Button layoutX="313.0" layoutY="501.0" mnemonicParsing="false" text="Atualizar lista" />
-      <Button layoutX="445.0" layoutY="501.0" mnemonicParsing="false" text="Voltar" />
+      <Button layoutX="418.0" layoutY="501.0" mnemonicParsing="false" text="Atualizar lista" />
+      <Button layoutX="525.0" layoutY="501.0" mnemonicParsing="false" text="Voltar" />
    </children>
 </AnchorPane>
