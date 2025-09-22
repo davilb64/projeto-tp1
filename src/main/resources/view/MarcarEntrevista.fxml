@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CONTROLLER_NAME">
+   <children>
+      <MenuButton layoutX="45.0" layoutY="226.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Candidatos">
+         <items>
+          <MenuItem mnemonicParsing="false" text="Candidato 1" />
+          <MenuItem mnemonicParsing="false" text="Candidato 2" />
+            <MenuItem mnemonicParsing="false" text="Candidato 3" />
+        <MenuItem mnemonicParsing="false" text="Candidato 4" />
+         </items>
+      </MenuButton>
+      <Label layoutX="45.0" layoutY="14.0" prefHeight="55.0" prefWidth="237.0" text="Entrevistas">
+         <font>
+            <Font size="42.0" />
+         </font>
+      </Label>
+      <MenuButton layoutX="215.0" layoutY="226.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Entrevistadores">
+        <items>
+        <MenuItem mnemonicParsing="false" text="Entrevistador 1" />
+            <MenuItem mnemonicParsing="false" text="Entrevistador 2" />
+          <MenuItem mnemonicParsing="false" text="Entrevistador 3" />
+        </items>
+      </MenuButton>
+      <ScrollBar layoutX="572.0" layoutY="225.0" orientation="VERTICAL" prefHeight="141.0" prefWidth="14.0" />
+      <MenuButton layoutX="45.0" layoutY="260.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Candidatos">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Candidato 1" />
+            <MenuItem mnemonicParsing="false" text="Candidato 2" />
+            <MenuItem mnemonicParsing="false" text="Candidato 3" />
+            <MenuItem mnemonicParsing="false" text="Candidato 4" />
+         </items>
+      </MenuButton>
+      <MenuButton layoutX="45.0" layoutY="295.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Candidatos">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Candidato 1" />
+            <MenuItem mnemonicParsing="false" text="Candidato 2" />
+            <MenuItem mnemonicParsing="false" text="Candidato 3" />
+            <MenuItem mnemonicParsing="false" text="Candidato 4" />
+         </items>
+      </MenuButton>
+      <MenuButton layoutX="45.0" layoutY="332.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Candidatos">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Candidato 1" />
+            <MenuItem mnemonicParsing="false" text="Candidato 2" />
+            <MenuItem mnemonicParsing="false" text="Candidato 3" />
+            <MenuItem mnemonicParsing="false" text="Candidato 4" />
+         </items>
+      </MenuButton>
+      <MenuButton layoutX="215.0" layoutY="260.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Entrevistadores">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Entrevistador 1" />
+            <MenuItem mnemonicParsing="false" text="Entrevistador 2" />
+            <MenuItem mnemonicParsing="false" text="Entrevistador 3" />
+         </items>
+      </MenuButton>
+      <MenuButton layoutX="215.0" layoutY="295.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Entrevistadores">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Entrevistador 1" />
+            <MenuItem mnemonicParsing="false" text="Entrevistador 2" />
+            <MenuItem mnemonicParsing="false" text="Entrevistador 3" />
+         </items>
+      </MenuButton>
+      <MenuButton layoutX="217.0" layoutY="332.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="166.0" text="Entrevistadores">
+         <items>
+            <MenuItem mnemonicParsing="false" text="Entrevistador 1" />
+            <MenuItem mnemonicParsing="false" text="Entrevistador 2" />
+            <MenuItem mnemonicParsing="false" text="Entrevistador 3" />
+         </items>
+      </MenuButton>
+      <DatePicker layoutX="387.0" layoutY="295.0" />
+      <DatePicker layoutX="387.0" layoutY="226.0" />
+      <DatePicker layoutX="387.0" layoutY="260.0" />
+      <DatePicker layoutX="387.0" layoutY="332.0" />
+   </children>
+</AnchorPane>
