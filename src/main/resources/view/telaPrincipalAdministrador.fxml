@@ -10,34 +10,37 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css"
-            xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.PrincipalAdministradorController">
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalAdministradorController">
 
     <left>
         <VBox alignment="CENTER" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
             <ImageView fitHeight="120.0" fitWidth="106.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@../humanize-logo.png"/>
+                <Image url="@../humanize-logo.png" />
             </ImageView>
 
-            <Button fx:id="btnDashboard" id="buttonLateral" onAction="#showDashboard" prefWidth="150.0" text="Dashboard">
+            <Button id="buttonLateral" fx:id="btnDashboard" onAction="#showDashboard" prefWidth="150.0" text="Dashboard">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
 
-            <Button fx:id="btnUsuarios" id="buttonLateral" onAction="#showUsuarios" prefWidth="150.0" text="Usuários">
+            <Button id="buttonLateral" fx:id="btnUsuarios" onAction="#showUsuarios" prefWidth="150.0" text="Usuários">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
 
-            <Button fx:id="btnRelatorios" id="buttonLateral" onAction="#showRelatorios" prefWidth="150.0" text="Relatórios">
+            <Button id="buttonLateral" fx:id="btnRelatorios" onAction="#showRelatorios" prefWidth="150.0" text="Relatórios">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
+         <Button id="buttonLateral" fx:id="btnFinanceiro" onAction="#showFinanceiro" prefWidth="150.0" text="Financeiro">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </Button>
 
-            <Button fx:id="btnConfig" id="buttonLateral" onAction="#showConfiguracoes" prefWidth="150.0" text="Configurações">
+            <Button id="buttonLateral" fx:id="btnConfig" onAction="#showConfiguracoes" prefWidth="150.0" text="Configurações">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
 
             <VBox alignment="BOTTOM_LEFT" prefHeight="462.0" prefWidth="150.0">
-                <Button text="Sair" onAction="#sair" prefHeight="29.0" prefWidth="59.0">
+                <Button onAction="#sair" prefHeight="29.0" prefWidth="59.0" text="Sair">
                     <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
             </VBox>
@@ -53,7 +56,6 @@
     </center>
 
     <bottom>
-        <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0"
-              text=" © 2025 Humanize. Todos os direitos reservados." BorderPane.alignment="BOTTOM_LEFT" />
+        <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." BorderPane.alignment="BOTTOM_LEFT" />
     </bottom>
 </BorderPane>

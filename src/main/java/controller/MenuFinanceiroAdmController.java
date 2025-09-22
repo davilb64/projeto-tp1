@@ -5,39 +5,38 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import util.ScreenController;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class PrincipalAdministradorController {
 
+
+public class MenuFinanceiroAdmController {
     public BorderPane root;
 
     @FXML
-    private StackPane contentArea;
+    private Pane contentArea;
 
     @FXML
-    private Button btnDashboard;
+    private Button btnRegrasSalariais;
 
     @FXML
-    private Button btnUsuarios;
+    private Button btnCadastroFuncionario;
 
     @FXML
-    private Button btnRelatorios;
+    private Button btnFolhaPagamento;
 
     @FXML
-    private Button btnConfig;
+    private Button btnRelatorioFinanceiro;
 
     @FXML
-    private Button btnFinanceiro;
+    private Button btnContracheques;
 
     private Button activeButton;
 
     @FXML
     public void initialize() {
-        showDashboard();
+
     }
 
     private void loadUI(String fxml) {
@@ -67,37 +66,33 @@ public class PrincipalAdministradorController {
     }
 
     @FXML
-    private void showDashboard() {
-        loadUI("DashboardAdm");
-        setActiveButton(btnDashboard);
+    private void showRegrasSalariais() {
+        loadUI("RegrasSalariais"); 
+        setActiveButton(btnRegrasSalariais);
     }
 
     @FXML
-    private void showUsuarios() {
-        loadUI("UsuariosAdm");
-        setActiveButton(btnUsuarios);
+    private void showCadastroFuncionario() {
+        loadUI("CadastroDeFuncionario");
+        setActiveButton(btnCadastroFuncionario);
     }
 
     @FXML
-    private void showRelatorios() {
-        loadUI("RelatoriosAdm");
-        setActiveButton(btnRelatorios);
+    private void showFolhaPagamento() {
+        loadUI("FolhaDePagamento");
+        setActiveButton(btnFolhaPagamento);
     }
 
     @FXML
-    private void showConfiguracoes() {
-        loadUI("ConfiguracoesAdm");
-        setActiveButton(btnConfig);
+    private void showRelatorioFinanceiro() {
+        loadUI("RelatorioFinanceiro");
+        setActiveButton(btnRelatorioFinanceiro);
     }
 
     @FXML
-    private void showFinanceiro() {
-        loadUI("MenuFinanceiroAdm");
-        setActiveButton(btnFinanceiro);
+    private void showContraCheques() {
+        loadUI("Contracheque");
+        setActiveButton(btnContracheques);
     }
 
-    @FXML
-    private void sair() {
-        ScreenController.changeScene("/view/LoginView.fxml");
-    }
 }

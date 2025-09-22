@@ -61,12 +61,31 @@
                     </font>
                 </PasswordField>
             </HBox>
-            <Button id="buttonAtivo" contentDisplay="TEXT_ONLY" mnemonicParsing="false" onAction="#entrar" prefHeight="40.0" prefWidth="210.0" text="Entrar (administrador)" textFill="#505050">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-            </Button>
-            <Pane prefHeight="91.0" prefWidth="295.0" />
+         <VBox alignment="CENTER" prefHeight="186.0" prefWidth="343.0" spacing="15.0">
+            <children>
+                  <Button id="buttonAtivo" contentDisplay="TEXT_ONLY" mnemonicParsing="false" onAction="#entrarAdm" prefHeight="40.0" prefWidth="210.0" text="Entrar (administrador)" textFill="#505050">
+                      <cursor>
+                          <Cursor fx:constant="HAND" />
+                      </cursor>
+                  </Button>
+               <Button mnemonicParsing="false" onAction="#entrarGestor" prefHeight="40.0" prefWidth="210.0" text="Entrar (gestor)">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </Button>
+               <Button mnemonicParsing="false" onAction="#entrarRecrutador" prefHeight="40.0" prefWidth="210.0" text="Entrar (recrutador)">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </Button>
+               <Button mnemonicParsing="false" onAction="#entrarFuncionario" prefHeight="40.0" prefWidth="210.0" text="Entrar (funcionario)">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </Button>
+            </children>
+         </VBox>
+            <Pane prefHeight="40.0" prefWidth="343.0" />
         </VBox>
         <Pane prefHeight="200.0" prefWidth="200.0" />
     </HBox>
