@@ -4,24 +4,41 @@
 }
 
 .button {
-    -fx-background-radius: 15;
-    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-radius: 15;
     -fx-background-insets: 0;
     -fx-background-color: #fafafa;
     -fx-border-color: #000000;
     -fx-border-width: 0;
     -fx-font: bold 16px "Ubuntu", sans-serif;
-
 }
+
 .password-field, .text-field {
     -fx-background-color: #ffff;
 }
 
-#title{
+#title {
     font-family: 'corbel', sans-serif;
     -fx-font-weight: bold;
 }
 
-#cabecalho{
+#cabecalho {
     -fx-background-color: #505050;
+}
+
+#buttonLateral {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.button:hover {
+    -fx-background-color: #a5a5a5;
+}
+
+#buttonLateralActive {
+    -fx-background-color: #505050;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
 }
