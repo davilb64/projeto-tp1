@@ -10,29 +10,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalAdministradorController">
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PrincipalFuncionarioController">
 
     <left>
-        <VBox alignment="CENTER" prefWidth="217.0" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
+        <VBox alignment="CENTER" prefWidth="150.0" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
             <ImageView fitHeight="120.0" fitWidth="106.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@../humanize-logo.png" />
             </ImageView>
 
-            <Button id="buttonLateral" fx:id="btnDashboard" prefWidth="150.0" text="Cadastro de candidatos">
+            <Button id="buttonLateral" fx:id="btnFinanceiro" onAction="#showFinanceiro" prefWidth="150.0" text="Financeiro">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
-            </Button>
-
-            <Button id="buttonLateral" fx:id="btnUsuarios" onAction="#showUsuarios" prefWidth="150.0" text="Realizar candidatura">
-                <cursor><Cursor fx:constant="HAND" /></cursor>
-            </Button>
-
-            <Button id="buttonLateral" fx:id="btnRelatorios" onAction="#showRelatorios" prefWidth="150.0" text="Entrevistas">
-                <cursor><Cursor fx:constant="HAND" /></cursor>
-            </Button>
-            <Button id="buttonLateral" fx:id="btnFinanceiro" onAction="#showFinanceiro" prefWidth="150.0" text="Contratações">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
             </Button>
 
             <Button id="buttonLateral" fx:id="btnConfig" onAction="#showConfiguracoes" prefWidth="150.0" text="Configurações">

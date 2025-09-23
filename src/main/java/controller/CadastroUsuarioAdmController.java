@@ -6,14 +6,12 @@ import javafx.stage.Stage;
 
 public class CadastroUsuarioAdmController {
 
+    public PasswordField senhaField;
     @FXML
     private TextField nomeField;
 
     @FXML
     private TextField emailField;
-
-    @FXML
-    private PasswordField senhaField;
 
     @FXML
     private ComboBox<String> perfilCombo;
@@ -27,7 +25,6 @@ public class CadastroUsuarioAdmController {
     private void salvarUsuario() {
         String nome = nomeField.getText();
         String email = emailField.getText();
-        String senha = senhaField.getText();
         String perfil = perfilCombo.getValue();
 
         System.out.println("Usuário salvo: " + nome + " - " + email + " - " + perfil);

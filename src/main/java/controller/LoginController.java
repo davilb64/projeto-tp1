@@ -10,15 +10,15 @@ public class LoginController {
     }
     @FXML
     private void entrarGestor() {
-        ScreenController.changeScene("/view/telaPrincipalAdministrador.fxml");
+        ScreenController.changeScene("/view/TelaPrincipalGestor.fxml");
     }
     @FXML
     private void entrarRecrutador() {
-        ScreenController.changeScene("/view/telaPrincipalAdministrador.fxml");
+        ScreenController.changeScene("/view/TelaPrincipalRecrutador.fxml");
     }
     @FXML
     private void entrarFuncionario() {
-        ScreenController.changeScene("/view/telaPrincipalAdministrador.fxml");
+        ScreenController.changeScene("/view/TelaPrincipalFuncionario.fxml");
     }
 
 }

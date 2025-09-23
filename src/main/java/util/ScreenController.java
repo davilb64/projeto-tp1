@@ -18,7 +18,7 @@ public class ScreenController {
     public static void changeScene(String fxmlPath) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(ScreenController.class.getResource(fxmlPath)));
-            stage.setScene(new Scene(root, 800, 600));
+            stage.setScene(new Scene(root, 800, 650));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,18 +1,17 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import util.ScreenController;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class PrincipalAdministradorController {
-
+public class PrincipalGestorController {
     public BorderPane root;
 
     @FXML
@@ -22,31 +21,19 @@ public class PrincipalAdministradorController {
     private Button btnDashboard;
 
     @FXML
-    private Button btnUsuarios;
-
-    @FXML
-    private Button btnRelatorios;
-
-    @FXML
-    private Button btnConfig;
-
-    @FXML
-    private Button btnFinanceiro;
+    private Button btnContratacoes;
 
     @FXML
     private Button btnRecrutadores;
 
     @FXML
-    private Button btnCandidatos;
+    private Button btnRelatorios;
 
     @FXML
-    private Button btnEntrevistas;
+    private Button btnFinanceiro;
 
     @FXML
-    private Button btnContratacoes;
-
-
-
+    private Button btnConfig;
 
     private Button activeButton;
 
@@ -83,32 +70,21 @@ public class PrincipalAdministradorController {
 
     @FXML
     private void showDashboard() {
-        loadUI("DashboardAdm");
+        loadUI("DashboardGestor");
         setActiveButton(btnDashboard);
     }
 
     @FXML
-    private void showUsuarios() {
-        loadUI("UsuariosAdm");
-        setActiveButton(btnUsuarios);
+    private void showRecrutadores() {
+        loadUI("AtribuirRecrutadorAVaga");
+        setActiveButton(btnRecrutadores);
     }
+
 
     @FXML
     private void showRelatorios() {
         loadUI("RelatoriosAdm");
         setActiveButton(btnRelatorios);
-    }
-
-    @FXML
-    private void showConfiguracoes() {
-        loadUI("ConfiguracoesAdm");
-        setActiveButton(btnConfig);
-    }
-
-    @FXML
-    private void showFinanceiro() {
-        loadUI("MenuFinanceiroAdm");
-        setActiveButton(btnFinanceiro);
     }
 
     @FXML
@@ -118,22 +94,19 @@ public class PrincipalAdministradorController {
     }
 
     @FXML
-    private void showRecrutadores() {
-        loadUI("AtribuirRecrutadorAVaga");
-        setActiveButton(btnRecrutadores);
+    private void showFinanceiro() {
+        loadUI("MenuFinanceiroAdm");
+        setActiveButton(btnFinanceiro);
     }
 
     @FXML
-    private void showEntrevistas() {
-        loadUI("MarcarEntrevista");
-        setActiveButton(btnEntrevistas);
+    private void showConfig() {
+        loadUI("ConfiguracoesAdm");
+        setActiveButton(btnConfig);
     }
 
-    @FXML
-    private void showCandidatos() {
-        loadUI("CandidatosAdm");
-        setActiveButton(btnCandidatos);
-    }
+
+
 
     @FXML
     private void sair() {

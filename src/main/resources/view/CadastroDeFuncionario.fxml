@@ -9,85 +9,67 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroDeFuncionarioController">
-   <children>
-      <VBox layoutX="3.0" prefHeight="502.0" prefWidth="577.0" spacing="10.0">
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="557.0" text="Cadastro de funcionarios" underline="true">
-               <font>
-                  <Font size="36.0" />
-               </font>
-            </Label>
-            <Label prefHeight="27.0" prefWidth="146.0" text="Nome" textFill="#562121">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <TextField />
-            <Label prefHeight="27.0" prefWidth="64.0" text="Email">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Label>
-            <TextField />
-            <HBox prefHeight="40.0" prefWidth="538.0">
-               <children>
-                  <HBox prefHeight="42.0" prefWidth="259.0">
-                     <children>
-                        <Label text="Cargo">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="54.0" prefWidth="286.0">
-                     <children>
-                        <Label text="Departamento">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-               </children>
+<AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/24.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroDeFuncionarioController">
+    <VBox layoutX="3.0" prefHeight="502.0" prefWidth="577.0" spacing="10.0">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="557.0"
+               text="Cadastro de funcionarios" underline="true">
+            <font>
+                <Font size="36.0"/>
+            </font>
+        </Label>
+        <Label prefHeight="27.0" prefWidth="146.0" text="Nome" textFill="#562121">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+        <TextField/>
+        <Label prefHeight="27.0" prefWidth="64.0" text="Email">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Label>
+        <TextField/>
+        <HBox prefHeight="40.0" prefWidth="538.0">
+            <HBox prefHeight="42.0" prefWidth="259.0">
+                <Label text="Cargo">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Label>
             </HBox>
-            <HBox prefHeight="71.0" prefWidth="538.0">
-               <children>
-                  <HBox prefHeight="158.0" prefWidth="269.0">
-                     <children>
-                        <TextField prefHeight="26.0" prefWidth="230.0" />
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="187.0" prefWidth="270.0">
-                     <children>
-                        <TextField prefHeight="26.0" prefWidth="230.0" />
-                     </children>
-                  </HBox>
-               </children>
+            <HBox prefHeight="54.0" prefWidth="286.0">
+                <Label text="Departamento">
+                    <font>
+                        <Font size="18.0"/>
+                    </font>
+                </Label>
             </HBox>
-            <HBox prefHeight="118.0" prefWidth="538.0">
-               <children>
-                  <HBox prefHeight="118.0" prefWidth="295.0">
-                     <children>
-                        <Button contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="262.0" style="-fx-background-color: #ffc0cb;" text="SAIR" textAlignment="RIGHT">
-                           <opaqueInsets>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </opaqueInsets>
-                        </Button>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="118.0" prefWidth="279.0">
-                     <children>
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="290.0" style="-fx-background-color: #ffc0cb;" text="SALVAR" />
-                     </children>
-                  </HBox>
-               </children>
+        </HBox>
+        <HBox prefHeight="71.0" prefWidth="538.0">
+            <HBox prefHeight="158.0" prefWidth="269.0">
+                <TextField prefHeight="26.0" prefWidth="230.0"/>
             </HBox>
-         </children>
-      </VBox>
-   </children>
+            <HBox prefHeight="187.0" prefWidth="270.0">
+                <TextField prefHeight="26.0" prefWidth="230.0"/>
+            </HBox>
+        </HBox>
+        <HBox prefHeight="118.0" prefWidth="538.0">
+            <HBox prefHeight="118.0" prefWidth="295.0">
+                <Button contentDisplay="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="262.0"
+                        style="-fx-background-color: #ffc0cb;" text="SAIR" textAlignment="RIGHT">
+                    <opaqueInsets>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                    </opaqueInsets>
+                </Button>
+            </HBox>
+            <HBox prefHeight="118.0" prefWidth="279.0">
+                <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="290.0"
+                        style="-fx-background-color: #ffc0cb;" text="SALVAR"/>
+            </HBox>
+        </HBox>
+    </VBox>
 </AnchorPane>
