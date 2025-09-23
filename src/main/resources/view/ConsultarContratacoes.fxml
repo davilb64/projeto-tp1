@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarContratacoesController">
+    <Label layoutX="148.0" layoutY="14.0" text="Consultar contratações">
+        <font>
+          <Font size="30.0"/>
+        </font>
+    </Label>
+    <Label layoutX="44.0" layoutY="91.0" text="Nome:"/>
+    <TextField layoutX="87.0" layoutY="87.0" prefHeight="25.0" prefWidth="237.0"/>
+    <MenuButton layoutX="332.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Cargo">
+      <items>
+          <MenuItem mnemonicParsing="false" text="Action 1"/>
+          <MenuItem mnemonicParsing="false" text="Action 2"/>
+      </items>
+    </MenuButton>
+    <MenuButton layoutX="461.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0"
+                text="status">
+      <items>
+          <MenuItem mnemonicParsing="false" text="Action 1"/>
+          <MenuItem mnemonicParsing="false" text="Action 2"/>
+      </items>
+    </MenuButton>
+    <Label layoutX="52.0" layoutY="157.0" text="Data inicio:"/>
+    <Label layoutX="332.0" layoutY="157.0" text="Data fim:"/>
+    <DatePicker layoutX="119.0" layoutY="153.0"/>
+    <DatePicker layoutX="384.0" layoutY="153.0"/>
+    <TableView layoutX="33.0" layoutY="212.0" prefHeight="268.0" prefWidth="556.0">
+      <columns>
+          <TableColumn prefWidth="128.0" text="Nome"/>
+          <TableColumn minWidth="0.0" prefWidth="162.0" text="Cargo"/>
+          <TableColumn minWidth="0.0" prefWidth="145.0" text="Data de contrato"/>
+          <TableColumn minWidth="0.0" prefWidth="118.0" text="Status"/>
+      </columns>
+    </TableView>
+    <Button layoutX="418.0" layoutY="501.0" mnemonicParsing="false" text="Atualizar lista"/>
+    <Button layoutX="525.0" layoutY="501.0" mnemonicParsing="false" text="Voltar"/>
+</AnchorPane>

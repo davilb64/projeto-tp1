@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+    <HBox id="cabecalho" alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+        <ImageView fitHeight="74.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../logo-humanize-branca.png" />
+        </ImageView>
+        <Text id="title" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Humanize" textAlignment="CENTER" wrappingWidth="522.0">
+            <font>
+                <Font name="Corbel" size="43.0" />
+            </font>
+        </Text>
+    </HBox>
+    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+        <VBox.margin>
+            <Insets />
+        </VBox.margin>
+        <Pane prefHeight="200.0" prefWidth="200.0" />
+        <VBox alignment="CENTER" prefHeight="308.0" prefWidth="343.0" spacing="20.0">
+            <Pane prefHeight="83.0" prefWidth="295.0" />
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                <Text fill="#505050" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: ubuntu;" text="Usuário:">
+                    <font>
+                        <Font name="Ubuntu Bold" size="20.0" />
+                    </font>
+                </Text>
+                <TextField prefHeight="25.0" prefWidth="288.0" stylesheets="@../css/style.css">
+                    <cursor>
+                        <Cursor fx:constant="TEXT" />
+                    </cursor>
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </TextField>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+                <Text fill="#505050" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: ubuntu;" text="Senha:">
+                    <font>
+                        <Font name="Ubuntu Bold" size="20.0" />
+                    </font>
+                </Text>
+                <PasswordField prefHeight="25.0" prefWidth="288.0" stylesheets="@../css/style.css">
+                    <cursor>
+                        <Cursor fx:constant="TEXT" />
+                    </cursor>
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </PasswordField>
+            </HBox>
+            <VBox alignment="CENTER" prefHeight="186.0" prefWidth="343.0" spacing="15.0">
+                <Button id="buttonAtivo" contentDisplay="TEXT_ONLY" mnemonicParsing="false" onAction="#entrarAdm"
+                        prefHeight="40.0" prefWidth="210.0" text="Entrar (administrador)" textFill="#505050">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#entrarGestor" prefHeight="40.0" prefWidth="210.0"
+                        text="Entrar (gestor)">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#entrarRecrutador" prefHeight="40.0" prefWidth="210.0"
+                        text="Entrar (recrutador)">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+                <Button mnemonicParsing="false" onAction="#entrarFuncionario" prefHeight="40.0" prefWidth="210.0"
+                        text="Entrar (funcionario)">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Button>
+            </VBox>
+            <Pane prefHeight="40.0" prefWidth="343.0" />
+        </VBox>
+        <Pane prefHeight="200.0" prefWidth="200.0" />
+    </HBox>
+    <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." />
+</VBox>

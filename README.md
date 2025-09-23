@@ -1,5 +1,5 @@
 
-# 🏢 Sistema de Gestão de Recursos Humanos — Grupo 07 (UnB)
+# 🏢 Humanize — Grupo 07 (UnB)
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Maven](https://img.shields.io/badge/build-Maven-blue)
@@ -18,14 +18,14 @@ O objetivo do sistema é **gerenciar candidatos, vagas, entrevistas, funcionári
 O projeto utiliza **Maven** e segue uma **arquitetura MVC** com camadas organizadas:
 
 projeto-tp1/<br>
-├── src/main/java/<br>
-│   ├── view/             # Interfaces gráficas (JavaFX)<br>
+├── src/main/java/   
 │   ├── controller/       # Lógica de controle e integração<br>
 │   ├── model/            # Entidades e regras de negócio<br>
 │   ├── repository/       # Persistência de dados (arquivos e CSV)<br>
 │   ├── util/             # Validações, helpers e cálculos<br>
 │   └── Main.java         # Ponto de entrada do sistema<br>
 ├── src/main/resources/   # Arquivos de configuração e assets<br>
+│   └── view/             # Interfaces gráficas (JavaFX)<br>
 ├── pom.xml               # Configurações do Maven<br>
 └── README.md<br>
 
@@ -43,7 +43,7 @@ projeto-tp1/<br>
 ---
 
 ## 🛠️ Tecnologias Utilizadas
-- **Java 17** → Linguagem principal
+- **Java 22** → Linguagem principal
 - **JavaFX** → Interface gráfica
 - **Maven** → Gerenciamento de dependências
 - **JUnit 5** → Testes unitários
@@ -53,7 +53,7 @@ projeto-tp1/<br>
 
 ## ⚡ Configuração do Ambiente
 ### **Pré-requisitos**
-- [Java 17+](https://jdk.java.net/)
+- [Java 22](https://jdk.java.net/)
 - [Maven](https://maven.apache.org/)
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 - [Git](https://git-scm.com/)
@@ -89,10 +89,10 @@ mvn javafx:run
 ## 🧑‍💻 Contribuidores
 | Aluno | Módulo | GitHub |
 |--------|-------------------------------|-------------------------|
-| **Aluno 1** | Administração e autenticação | [Davi Lopes](https://github.com/davilb64) |
-| **Aluno 2** | Candidatos e candidaturas    | [Valquíria Machado](https://github.com/valquiria11) |
-| **Aluno 3** | Vagas, entrevistas, contratações | [Ricado Rian](https://github.com/RianRSM) |
-| **Aluno 4** | Financeiro e folha de pagamento | [Samara Gomes](https://github.com/samaragomess) |
+| **Aluno 1** | Administração e Gestão | [Davi Lopes](https://github.com/davilb64) |
+| **Aluno 2** | Candidatura    | [Valquíria Machado](https://github.com/valquiria11) |
+| **Aluno 3** | Recrutamento | [Ricado Rian](https://github.com/RianRSM) |
+| **Aluno 4** | Financeiro | [Samara Gomes](https://github.com/samaragomess) |
 
 
 ---
@@ -105,7 +105,6 @@ Sinta-se livre para modificar e utilizar, desde que mantenha os créditos.
 
 ## 🌟 Observações
 - Utilize **Git Flow** para criar features, releases e hotfixes.
-- Sempre crie **pull requests** para integração de novas funcionalidades.
 
 ---
 Feito com ❤️ pelo **Grupo 07** — UnB, 2025.
