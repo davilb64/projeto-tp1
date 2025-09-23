@@ -1,5 +1,5 @@
 
-# 🏢 Humanize — Grupo 07 (UnB)
+# 🏢 Humanize — Grupo 07
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Maven](https://img.shields.io/badge/build-Maven-blue)
@@ -10,7 +10,7 @@
 
 ## 📌 Sobre o Projeto
 Este é o **Trabalho Prático** da disciplina de **Técnicas de Programação 1** da **UnB**.  
-O objetivo do sistema é **gerenciar candidatos, vagas, entrevistas, funcionários, prestadores de serviço e folha de pagamento**, oferecendo uma interface interativa e relatórios completos.
+O objetivo do sistema é **automatizar os principais processos relacionados aos colaboradores em uma organização de recursos humanos**, oferecendo uma interface interativa e relatórios completos.
 
 ---
 
@@ -39,6 +39,7 @@ projeto-tp1/<br>
 - 🧾 **Gestão de prestadores e contratos**.
 - 📊 **Geração de relatórios** em **Excel, PDF e CSV**.
 - 🎨 Interface intuitiva com **JavaFX**.
+- E muito mais...
 
 ---
 
