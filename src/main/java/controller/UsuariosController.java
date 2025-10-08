@@ -17,7 +17,6 @@ public class UsuariosController {
     @FXML
     private Label tituloLabel;
 
-    // Método de inicialização (chamado automaticamente ao carregar o FXML)
     @FXML
     public void initialize() {
         tituloLabel.setText("Gestão de Usuários");
