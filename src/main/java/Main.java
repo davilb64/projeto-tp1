@@ -6,7 +6,11 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         ScreenController.setStage(stage);
-        ScreenController.changeScene("/view/LoginView.fxml"); // Tela inicial
+        ScreenController.changeScene("/view/LoginView.fxml");
     }
 
+    public static void main(String[] args) {
+        launch(args); // ponto de entrada do JavaFX
+    }
 }
+
