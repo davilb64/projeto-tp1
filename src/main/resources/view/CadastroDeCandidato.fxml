@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:controller="controller.CadastroDeCandidatoController" prefHeight="500.0" prefWidth="600.0"
+<AnchorPane fx:controller="app.humanize.controller.CadastroDeCandidatoController" prefHeight="500.0" prefWidth="600.0"
             stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <Label layoutX="14.0" layoutY="60.0" prefHeight="17.0" prefWidth="114.0" text="Nome Completo:"/>
     <TextField layoutX="127.0" layoutY="180.0" prefHeight="25.0" prefWidth="459.0"/>

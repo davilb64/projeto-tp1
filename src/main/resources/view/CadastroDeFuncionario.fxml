@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/24.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CadastroDeFuncionarioController">
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CadastroDeFuncionarioController">
     <VBox layoutX="3.0" prefHeight="502.0" prefWidth="577.0" spacing="10.0">
         <padding>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
