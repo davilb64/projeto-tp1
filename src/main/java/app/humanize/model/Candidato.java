@@ -2,48 +2,37 @@ package app.humanize.model;
 
 import java.time.LocalDate;
 
-public class Candidato extends Pessoa {
+public class Candidato extends Pessoa{
     private String formacao;
     private String experiencia;
-    private double pretensaoSalarial;
+    private double pretencaoSalarial;
     private String disponibilidade;
     private LocalDate dataCadastro;
 
     //construtores
-    public Candidato(int id, String nome, String cpf, Endereco endereco, String email, String formacao, String experiencia, double pretensaoSalarial, String disponibilidade, LocalDate dataCadastro) {
+
+    public Candidato(String nome, String cpf, Endereco endereco, String email, String formacao, String experiencia, double pretencaoSalarial, String disponibilidade, LocalDate dataCadastro) {
         super(nome, cpf, endereco, email);
         this.formacao = formacao;
         this.experiencia = experiencia;
-        this.pretensaoSalarial = pretensaoSalarial;
+        this.pretencaoSalarial = pretencaoSalarial;
         this.disponibilidade = disponibilidade;
         this.dataCadastro = dataCadastro;
     }
-    public Candidato() {}
+
+
+    public Candidato() {
+    }
 
     //metodos especiais
 
-    public String getFormacao() {
-        return formacao;
+
+    public LocalDate getDataCadastro() {
+        return dataCadastro;
     }
 
-    public void setFormacao(String formacao) {
-        this.formacao = formacao;
-    }
-
-    public String getExperiencia() {
-        return experiencia;
-    }
-
-    public void setExperiencia(String experiencia) {
-        this.experiencia = experiencia;
-    }
-
-    public double getPretensaoSalarial() {
-        return pretensaoSalarial;
-    }
-
-    public void setPretensaoSalarial(double pretensaoSalarial) {
-        this.pretensaoSalarial = pretensaoSalarial;
+    public void setDataCadastro(LocalDate dataCadastro) {
+        this.dataCadastro = dataCadastro;
     }
 
     public String getDisponibilidade() {
@@ -54,11 +43,27 @@ public class Candidato extends Pessoa {
         this.disponibilidade = disponibilidade;
     }
 
-    public LocalDate getDataCadastro() {
-        return dataCadastro;
+    public double getPretencaoSalarial() {
+        return pretencaoSalarial;
     }
 
-    public void setDataCadastro(LocalDate dataCadastro) {
-        this.dataCadastro = dataCadastro;
+    public void setPretencaoSalarial(double pretencaoSalarial) {
+        this.pretencaoSalarial = pretencaoSalarial;
+    }
+
+    public String getExperiencia() {
+        return experiencia;
+    }
+
+    public void setExperiencia(String experiencia) {
+        this.experiencia = experiencia;
+    }
+
+    public String getFormacao() {
+        return formacao;
+    }
+
+    public void setFormacao(String formacao) {
+        this.formacao = formacao;
     }
 }
