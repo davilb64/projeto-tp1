@@ -1,22 +1,25 @@
 package app.humanize.model;
 
-import java.util.List;
-
 public abstract class Usuario extends Pessoa {
     private String login;
     private String senha;
     private Perfil perfil;
 
-    //construtores
-    public Usuario(String nome, String cpf, Endereco endereco, String email, String login, String senha) {
+    // Construtores
+    public Usuario(String nome, String cpf, Endereco endereco, String email, String login, String senha, Perfil perfil) {
         super(nome, cpf, endereco, email);
         this.login = login;
         this.senha = senha;
+        this.perfil = perfil;
+    }
+
+    protected Usuario(String nome, String cpf, Endereco endereco, String email) {
+        super(nome, cpf, endereco, email);
     }
 
     public Usuario() {}
 
-    //metodos especiais
+
     public String getLogin() {
         return login;
     }
@@ -34,11 +37,11 @@ public abstract class Usuario extends Pessoa {
     }
 
     public Perfil getPerfil() { return perfil; }
-    public void setPerfil(Perfil perfis) { this.perfil = perfil; }
 
-    //metodos
-    public boolean temPerfil(Perfil perfil) {
+    public void setPerfil(Perfil perfil) { this.perfil = perfil; }
+
+    // metodos
+    public boolean temPerfil() {
         return this.perfil != null;
     }
-
 }

@@ -10,15 +10,59 @@ public class Endereco {
 
     //construtores
 
-    public Endereco(String logradouro, String cep, String bairro, int numero, String cidade, String estado) {
-        this.logradouro = logradouro;
-        this.cep = cep;
-        this.bairro = bairro;
-        this.numero = numero;
-        this.cidade = cidade;
-        this.estado = estado;
+private Endereco(EnderecoBuilder builder) {
+        this.logradouro = builder.logradouro;
+        this.cep = builder.cep;
+        this.bairro = builder.bairro;
+        this.numero = builder.numero;
+        this.cidade = builder.cidade;
+        this.estado = builder.estado;
     }
-    public Endereco() {}
+
+    public static class EnderecoBuilder {
+        private String logradouro;
+        private int numero;
+        private String bairro;
+        private String cidade;
+        private String estado;
+        private String cep;
+
+        public EnderecoBuilder logradouro(String logradouro) {
+            this.logradouro = logradouro;
+            return this;
+        }
+
+        public EnderecoBuilder numero(int numero) {
+            this.numero = numero;
+            return this;
+        }
+
+        public EnderecoBuilder bairro(String bairro) {
+            this.bairro = bairro;
+            return this;
+        }
+
+        public EnderecoBuilder cidade(String cidade) {
+            this.cidade = cidade;
+            return this;
+        }
+
+        public EnderecoBuilder estado(String estado) {
+            this.estado = estado;
+            return this;
+        }
+
+        public EnderecoBuilder cep(String cep) {
+            this.cep = cep;
+            return this;
+        }
+
+        public Endereco build() {
+            return new Endereco(this);
+        }
+    }
+
+
 
     //metodos especiais
 

@@ -1,32 +1,30 @@
 package app.humanize.model;
 
 public abstract class Pessoa {
-    private static int  idCounter = 0;
-    private int id;
+    private static int idCounter = 0;
+    private final int id; // ID deve ser final após a criação
     private String nome;
     private String cpf;
     private String email;
     private Endereco endereco;
 
-    //construtores
-
+    // Construtor
     public Pessoa(String nome, String cpf, Endereco endereco, String email) {
-        this.id = idCounter++;
+        this.id = ++idCounter;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
         this.email = email;
     }
-    public Pessoa(){}
 
-    //metodos especiais
+    public Pessoa() {
+        this.id = ++idCounter;
+    }
+
+    // metodos especiais
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {
@@ -60,5 +58,4 @@ public abstract class Pessoa {
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
-
 }

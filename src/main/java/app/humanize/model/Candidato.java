@@ -11,17 +11,72 @@ public class Candidato extends Pessoa{
 
     //construtores
 
-    public Candidato(String nome, String cpf, Endereco endereco, String email, String formacao, String experiencia, double pretencaoSalarial, String disponibilidade, LocalDate dataCadastro) {
-        super(nome, cpf, endereco, email);
-        this.formacao = formacao;
-        this.experiencia = experiencia;
-        this.pretencaoSalarial = pretencaoSalarial;
-        this.disponibilidade = disponibilidade;
-        this.dataCadastro = dataCadastro;
+    private Candidato(CandidatoBuilder builder) {
+        super(builder.nome, builder.cpf, builder.endereco, builder.email);
+        this.formacao = builder.formacao;
+        this.experiencia = builder.experiencia;
+        this.pretencaoSalarial = builder.pretencaoSalarial;
+        this.disponibilidade = builder.disponibilidade;
+        this.dataCadastro = builder.dataCadastro;
     }
 
-
     public Candidato() {
+    }
+
+    //builder
+
+    public static class CandidatoBuilder {
+        private String formacao;
+        private String experiencia;
+        private double pretencaoSalarial;
+        private String disponibilidade;
+        private LocalDate dataCadastro;
+        //campos de pessoa
+        private String nome;
+        private String cpf;
+        private String email;
+        private Endereco endereco;
+
+        public CandidatoBuilder nome(String nome) {
+            this.nome = nome;
+            return this;
+        }
+        public CandidatoBuilder cpf(String cpf) {
+            this.cpf = cpf;
+            return this;
+        }
+        public CandidatoBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+        public CandidatoBuilder endereco(Endereco endereco) {
+            this.endereco = endereco;
+            return this;
+        }
+
+        public CandidatoBuilder formacao(String formacao) {
+            this.formacao = formacao;
+            return this;
+        }
+        public CandidatoBuilder disponibilidade(String disponibilidade) {
+            this.disponibilidade = disponibilidade;
+            return this;
+        }
+        public CandidatoBuilder dataCadastro(LocalDate dataCadastro) {
+            this.dataCadastro = dataCadastro;
+            return this;
+        }
+        public CandidatoBuilder pretencaoSalarial(double pretencao) {
+            this.pretencaoSalarial = pretencao;
+            return this;
+        }
+        public CandidatoBuilder experiencia(String experiencia) {
+            this.experiencia = experiencia;
+            return this;
+        }
+        public Candidato build(CandidatoBuilder builder) {
+            return new Candidato(builder);
+        }
     }
 
     //metodos especiais
