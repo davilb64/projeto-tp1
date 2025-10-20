@@ -2,7 +2,7 @@ package app.humanize.model;
 
 public abstract class Pessoa {
     private static int idCounter = 0;
-    private final int id; // ID deve ser final após a criação
+    private int id;
     private String nome;
     private String cpf;
     private String email;
@@ -22,6 +22,10 @@ public abstract class Pessoa {
     }
 
     // metodos especiais
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

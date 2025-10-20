@@ -1,0 +1,5 @@
+ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;DataEmissao;Receita;Despesas;Salario;
+1;Ana Silva;111.222.333-44;ana.silva@email.com;Rua das Flores,123,Centro,São Paulo,SP,01000-000;ana;ana123;FUNCIONARIO;101010;8;2023-05-15;5000.0;1500.0;3500.0;
+2;Carlos Souza;555.666.777-88;carlos.souza@email.com;Avenida Principal,789,Norte,Rio de Janeiro,RJ,20000-000;carlos;carlos123;ADMINISTRADOR;202020;12;2022-10-20;7000.0;2500.0;5000.0;
+3;Ana Silva;111.222.333-44;ana.silva@email.com;Rua das Flores,123,Centro,São Paulo,SP,01000-000;ana;ana123;FUNCIONARIO;101010;8;2023-05-15;5000.0;1500.0;3500.0;
+4;Carlos Souza;555.666.777-88;carlos.souza@email.com;Avenida Principal,789,Norte,Rio de Janeiro,RJ,20000-000;carlos;carlos123;FUNCIONARIO;202020;12;2022-10-20;7000.0;2500.0;5000.0;
