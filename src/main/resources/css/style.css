@@ -3,7 +3,7 @@
     -fx-font-family: "Ubuntu", sans-serif;
 }
 
-.button {
+.button, .toggle-button {
     -fx-background-radius: 10;
     -fx-border-radius: 15;
     -fx-background-insets: 0;
@@ -11,6 +11,10 @@
     -fx-border-color: #000000;
     -fx-border-width: 0;
     -fx-font: bold 16px "Ubuntu", sans-serif;
+}
+
+.button:hover, .toggle-button:hover{
+    -fx-cursor: hand;
 }
 
 .password-field, .text-field {

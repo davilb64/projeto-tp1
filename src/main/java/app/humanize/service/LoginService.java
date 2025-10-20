@@ -10,10 +10,13 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.util.Optional;
 
 public class LoginService {
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+
     public LoginService() {
-        usuarioRepository = new UsuarioRepository();
+        this.usuarioRepository = UsuarioRepository.getInstance();
     }
+
+
 
     public Usuario autenticar(String login, String senha) throws ValidacaoException, SenhaIncorretaException, UsuarioNaoEncontradoException {
         if (login == null || login.isEmpty() || senha == null || senha.isEmpty()) {
@@ -33,4 +36,6 @@ public class LoginService {
 
         return usuario;
     }
+
+
 }

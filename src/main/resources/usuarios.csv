@@ -1,5 +1,2 @@
 ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;DataEmissao;Receita;Despesas;Salario;
-1;Ana Silva;111.222.333-44;ana.silva@email.com;Rua das Flores,123,Centro,São Paulo,SP,01000-000;ana;$2a$10$.g6Y33C8BKU/wSQ5O3CA3.fxT5GCib1XerU9oKxetgJJLDa4eZ0L2;FUNCIONARIO;101010;8;2023-05-15;5000.0;1500.0;3500.0;
-2;Carlos Souza;555.666.777-88;carlos.souza@email.com;Avenida Principal,789,Norte,Rio de Janeiro,RJ,20000-000;carlos;$2a$10$Yu.IIyJP9GjoiflcqicrG.DTqkwa9VVm.XwypRZT6um2AWO1VMXhC;ADMINISTRADOR;;;;;;;
-3;Jorge Paiva;123.456.789-00;jorge.paiva@email.com;Rua das Flores,123,Centro,São Paulo,SP,01000-000;jorge;$2a$10$1DDwWkjc8CJs8w7xlaX3Ee.TxPIeQW0W.Ve3RfSdWukqNo5BbxQGq;GESTOR;;;;;;;
-4;Maria Oliveira;987.654.321-11;maria.oliveira@email.com;Avenida Principal,789,Norte,Rio de Janeiro,RJ,20000-000;maria;$2a$10$ypoK1hlZfNviqfRXEeFnzeTtXBQ19GfQJzpY0xkENSitwuImz7xmu;RECRUTADOR;;;;;;;
+1;Ana Silva;111.222.333-44;ana.silva@email.com;Rua das Flores,123,Centro,São Paulo,SP,01000-000;ana;$2a$10$.g6Y33C8BKU/wSQ5O3CA3.fxT5GCib1XerU9oKxetgJJLDa4eZ0L2;ADMINISTRADOR;;;;;;;

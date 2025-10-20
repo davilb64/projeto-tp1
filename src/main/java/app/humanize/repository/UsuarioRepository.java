@@ -1,7 +1,6 @@
 package app.humanize.repository;
 
 import app.humanize.model.*;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,12 +9,17 @@ import java.util.Optional;
 
 public class UsuarioRepository {
 
+    private static final UsuarioRepository instance = new UsuarioRepository();
     private final String arquivoCsv = "./src/main/resources/usuarios.csv";
     private final List<Usuario> usuariosEmMemoria;
 
-    public UsuarioRepository() {
+    private UsuarioRepository() {
         this.usuariosEmMemoria = new ArrayList<>();
         this.carregarUsuariosDoCSV();
+    }
+
+    public static UsuarioRepository getInstance() {
+        return instance;
     }
 
     public List<Usuario> getTodosUsuarios() {
@@ -35,12 +39,19 @@ public class UsuarioRepository {
     }
 
     public void escreveUsuarioNovo(Usuario usuario) throws IOException {
-        if (buscaUsuarioPorId(usuario.getId()).isPresent()) {
-            System.out.println("Usuário já cadastrado (ID: " + usuario.getId() + ")");
-            return;
-        }
+        int proximoId = getProximoId();
+        usuario.setId(proximoId);
+
         this.usuariosEmMemoria.add(usuario);
         this.persistirAlteracoesNoCSV();
+    }
+
+    public int getProximoId() {
+        return this.usuariosEmMemoria.stream()
+                .mapToInt(Usuario::getId)
+                .max()
+                .orElse(0)
+                + 1;
     }
 
     private void carregarUsuariosDoCSV() {
@@ -49,7 +60,7 @@ public class UsuarioRepository {
             return;
         }
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
-            leitor.readLine();
+            leitor.readLine(); // Pula o cabeçalho
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 Usuario usuario = parseUsuarioDaLinhaCsv(linha);
@@ -73,44 +84,24 @@ public class UsuarioRepository {
 
     private Usuario parseUsuarioDaLinhaCsv(String linha) {
         String[] campos = linha.split(";", -1);
-        if (campos.length < 14) return null; // Linha inválida
+        if (campos.length < 14) return null;
 
         try {
             int id = Integer.parseInt(campos[0]);
-            String nome = campos[1];
-            String cpf = campos[2];
-            String email = campos[3];
-            String login = campos[5];
-            String senha = campos[6];
-
             Perfil perfil = Perfil.valueOf(campos[7]);
-            String[] partesEndereco = campos[4].split(",");
-            String logradouro = partesEndereco[0].trim();
-            int numero = Integer.parseInt(partesEndereco[1].trim());
-            String bairro = partesEndereco[2].trim();
-            String cidade = partesEndereco[3].trim();
-            String estado = partesEndereco[4].trim();
-            String cep = partesEndereco[5].trim();
 
             Endereco endereco = new Endereco.EnderecoBuilder()
-                    .logradouro(logradouro)
-                    .numero(numero)
-                    .bairro(bairro)
-                    .cidade(cidade)
-                    .estado(estado)
-                    .cep(cep)
+                    .logradouro(campos[4].split(",")[0].trim())
+                    .numero(Integer.parseInt(campos[4].split(",")[1].trim()))
+                    .bairro(campos[4].split(",")[2].trim())
+                    .cidade(campos[4].split(",")[3].trim())
+                    .estado(campos[4].split(",")[4].trim())
+                    .cep(campos[4].split(",")[5].trim())
                     .build();
-            Usuario usuario;
 
+            Usuario usuario;
             if (perfil == Perfil.FUNCIONARIO) {
-                Funcionario funcionario = new Funcionario.FuncionarioBuilder()
-                        .nome(campos[1])
-                        .cpf(campos[2])
-                        .email(campos[3])
-                        .endereco(endereco)
-                        .login(campos[5])
-                        .senha(campos[6])
-                        .perfil(perfil)
+                usuario = new Funcionario.FuncionarioBuilder()
                         .matricula(Integer.parseInt(campos[8]))
                         .periodo(Integer.parseInt(campos[9]))
                         .dataEmissao(LocalDate.parse(campos[10]))
@@ -118,86 +109,59 @@ public class UsuarioRepository {
                         .despesas(Double.parseDouble(campos[12]))
                         .salario(Double.parseDouble(campos[13]))
                         .build();
+            } else if (perfil == Perfil.ADMINISTRADOR) {
+                usuario = new Administrador.AdministradorBuilder().build();
+            } else if (perfil == Perfil.GESTOR) {
+                usuario = new Gestor.GestorBuilder().build();
+            } else { // RECRUTADOR
+                usuario = new Recrutador.RecrutadorBuilder().build();
+            }
 
-                funcionario.setId(Integer.parseInt(campos[0]));
+            usuario.setId(id);
+            usuario.setNome(campos[1]);
+            usuario.setCpf(campos[2]);
+            usuario.setEmail(campos[3]);
+            usuario.setEndereco(endereco);
+            usuario.setLogin(campos[5]);
+            usuario.setSenha(campos[6]);
+            usuario.setPerfil(perfil);
 
-                return funcionario;
-            }
-            else if (perfil == Perfil.ADMINISTRADOR) {
-                Administrador administrador = new Administrador.AdministradorBuilder().nome(campos[1])
-                        .cpf(campos[2])
-                        .email(campos[3])
-                        .endereco(endereco)
-                        .login(campos[5])
-                        .senha(campos[6])
-                        .perfil(perfil)
-                        .build();
-                administrador.setId(Integer.parseInt(campos[0]));
-                return administrador;
-            }
-            else if (perfil == Perfil.GESTOR) {
-                Gestor gestor = new Gestor.GestorBuilder().nome(campos[1])
-                        .cpf(campos[2])
-                        .email(campos[3])
-                        .endereco(endereco)
-                        .login(campos[5])
-                        .senha(campos[6])
-                        .perfil(perfil)
-                        .build();
-                gestor.setId(Integer.parseInt(campos[0]));
-                return gestor;
-            }
-            else if (perfil == Perfil.RECRUTADOR) {
-                Recrutador recrutador = new Recrutador.RecrutadorBuilder().nome(campos[1])
-                        .cpf(campos[2])
-                        .email(campos[3])
-                        .endereco(endereco)
-                        .login(campos[5])
-                        .senha(campos[6])
-                        .perfil(perfil)
-                        .build();
-                recrutador.setId(Integer.parseInt(campos[0]));
-                return recrutador;
-            }
+            return usuario;
 
         } catch (Exception e) {
             System.err.println("Falha ao parsear linha do CSV: '" + linha + "'. Erro: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     private String formatarUsuarioParaCSV(Usuario usuario) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(usuario.getId()).append(";");
-        stringBuilder.append(usuario.getNome()).append(";");
-        stringBuilder.append(usuario.getCpf()).append(";");
-        stringBuilder.append(usuario.getEmail()).append(";");
+        StringBuilder sb = new StringBuilder();
+        sb.append(usuario.getId()).append(";");
+        sb.append(usuario.getNome()).append(";");
+        sb.append(usuario.getCpf()).append(";");
+        sb.append(usuario.getEmail()).append(";");
 
         if (usuario.getEndereco() != null) {
             Endereco end = usuario.getEndereco();
-            String enderecoFormatado = String.join(",",
-                    end.getLogradouro(), String.valueOf(end.getNumero()), end.getBairro(),
-                    end.getCidade(), end.getEstado(), end.getCep());
-            stringBuilder.append(enderecoFormatado);
+            sb.append(String.join(",", end.getLogradouro(), String.valueOf(end.getNumero()), end.getBairro(), end.getCidade(), end.getEstado(), end.getCep()));
         }
-        stringBuilder.append(";");
+        sb.append(";");
 
-        stringBuilder.append(usuario.getLogin()).append(";");
-        stringBuilder.append(usuario.getSenha()).append(";");
-        stringBuilder.append(usuario.getPerfil()).append(";");
+        sb.append(usuario.getLogin()).append(";");
+        sb.append(usuario.getSenha()).append(";");
+        sb.append(usuario.getPerfil()).append(";");
 
         if (usuario instanceof Funcionario f) {
-            stringBuilder.append(f.getMatricula()).append(";");
-            stringBuilder.append(f.getPeriodo()).append(";");
-            stringBuilder.append(f.getDataEmissao()).append(";");
-            stringBuilder.append(f.getReceita()).append(";");
-            stringBuilder.append(f.getDespesas()).append(";");
-            stringBuilder.append(f.getSalario()).append(";");
+            sb.append(f.getMatricula()).append(";");
+            sb.append(f.getPeriodo()).append(";");
+            sb.append(f.getDataEmissao()).append(";");
+            sb.append(f.getReceita()).append(";");
+            sb.append(f.getDespesas()).append(";");
+            sb.append(f.getSalario()).append(";");
         } else {
-            stringBuilder.append(";;;;;;");
+            sb.append(";;;;;;");
         }
-        stringBuilder.append("\n");
-        return stringBuilder.toString();
+        sb.append("\n");
+        return sb.toString();
     }
 }
-
