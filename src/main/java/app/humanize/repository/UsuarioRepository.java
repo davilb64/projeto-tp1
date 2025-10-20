@@ -167,37 +167,37 @@ public class UsuarioRepository {
     }
 
     private String formatarUsuarioParaCSV(Usuario usuario) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(usuario.getId()).append(";");
-        sb.append(usuario.getNome()).append(";");
-        sb.append(usuario.getCpf()).append(";");
-        sb.append(usuario.getEmail()).append(";");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(usuario.getId()).append(";");
+        stringBuilder.append(usuario.getNome()).append(";");
+        stringBuilder.append(usuario.getCpf()).append(";");
+        stringBuilder.append(usuario.getEmail()).append(";");
 
         if (usuario.getEndereco() != null) {
             Endereco end = usuario.getEndereco();
             String enderecoFormatado = String.join(",",
                     end.getLogradouro(), String.valueOf(end.getNumero()), end.getBairro(),
                     end.getCidade(), end.getEstado(), end.getCep());
-            sb.append(enderecoFormatado);
+            stringBuilder.append(enderecoFormatado);
         }
-        sb.append(";");
+        stringBuilder.append(";");
 
-        sb.append(usuario.getLogin()).append(";");
-        sb.append(usuario.getSenha()).append(";");
-        sb.append(usuario.getPerfil()).append(";");
+        stringBuilder.append(usuario.getLogin()).append(";");
+        stringBuilder.append(usuario.getSenha()).append(";");
+        stringBuilder.append(usuario.getPerfil()).append(";");
 
         if (usuario instanceof Funcionario f) {
-            sb.append(f.getMatricula()).append(";");
-            sb.append(f.getPeriodo()).append(";");
-            sb.append(f.getDataEmissao()).append(";");
-            sb.append(f.getReceita()).append(";");
-            sb.append(f.getDespesas()).append(";");
-            sb.append(f.getSalario()).append(";");
+            stringBuilder.append(f.getMatricula()).append(";");
+            stringBuilder.append(f.getPeriodo()).append(";");
+            stringBuilder.append(f.getDataEmissao()).append(";");
+            stringBuilder.append(f.getReceita()).append(";");
+            stringBuilder.append(f.getDespesas()).append(";");
+            stringBuilder.append(f.getSalario()).append(";");
         } else {
-            sb.append(";;;;;;");
+            stringBuilder.append(";;;;;;");
         }
-        sb.append("\n");
-        return sb.toString();
+        stringBuilder.append("\n");
+        return stringBuilder.toString();
     }
 }
 

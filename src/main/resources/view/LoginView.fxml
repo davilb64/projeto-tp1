@@ -7,8 +7,11 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -28,68 +31,62 @@
         <VBox.margin>
             <Insets />
         </VBox.margin>
-        <Pane prefHeight="200.0" prefWidth="200.0" />
-        <VBox alignment="CENTER" prefHeight="308.0" prefWidth="343.0" spacing="20.0">
-            <Pane prefHeight="83.0" prefWidth="295.0" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-                <Text fill="#505050" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: ubuntu;" text="Usuário:">
+        <VBox alignment="CENTER" prefHeight="369.0" prefWidth="471.0" spacing="20.0" style="-fx-background-color: #999999; -fx-background-radius: 10; -fx-border-radius: 10;">
+         <Region prefHeight="30.0" prefWidth="431.0" />
+            <GridPane alignment="BOTTOM_LEFT" hgap="50.0" vgap="10.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="186.0" minWidth="10.0" prefWidth="84.0"/>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="297.0" minWidth="10.0" prefWidth="297.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <Text boundsType="LOGICAL_VERTICAL_CENTER" fontSmoothingType="LCD" strokeType="OUTSIDE"
+                      strokeWidth="0.0" style="-fx-font-family: ubuntu;" text="Usuário:" textAlignment="RIGHT"
+                      wrappingWidth="78.95999908447266">
                     <font>
-                        <Font name="Ubuntu Bold" size="20.0" />
+                        <Font name="Ubuntu Bold" size="20.0"/>
                     </font>
                 </Text>
-                <TextField prefHeight="25.0" prefWidth="288.0" stylesheets="@../css/style.css">
+                <TextField fx:id="txtUsuario" prefHeight="31.0" prefWidth="211.0" stylesheets="@../css/style.css"
+                           GridPane.columnIndex="1">
                     <cursor>
-                        <Cursor fx:constant="TEXT" />
+                        <Cursor fx:constant="TEXT"/>
                     </cursor>
                     <font>
-                        <Font size="15.0" />
+                        <Font size="15.0"/>
                     </font>
                 </TextField>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-                <Text fill="#505050" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: ubuntu;" text="Senha:">
+                <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-family: ubuntu;"
+                      text="Senha:" textAlignment="RIGHT" wrappingWidth="62.86000061035156" GridPane.rowIndex="1">
                     <font>
-                        <Font name="Ubuntu Bold" size="20.0" />
+                        <Font name="Ubuntu Bold" size="20.0"/>
                     </font>
                 </Text>
-                <PasswordField prefHeight="25.0" prefWidth="288.0" stylesheets="@../css/style.css">
+                <PasswordField fx:id="txtSenha" prefHeight="25.0" prefWidth="288.0" stylesheets="@../css/style.css"
+                               GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <cursor>
-                        <Cursor fx:constant="TEXT" />
+                        <Cursor fx:constant="TEXT"/>
                     </cursor>
                     <font>
-                        <Font size="15.0" />
+                        <Font size="15.0"/>
                     </font>
                 </PasswordField>
-            </HBox>
-            <VBox alignment="CENTER" prefHeight="186.0" prefWidth="343.0" spacing="15.0">
-                <Button id="buttonAtivo" contentDisplay="TEXT_ONLY" mnemonicParsing="false" onAction="#entrarAdm"
-                        prefHeight="40.0" prefWidth="210.0" text="Entrar (administrador)" textFill="#505050">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#entrarGestor" prefHeight="40.0" prefWidth="210.0"
-                        text="Entrar (gestor)">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#entrarRecrutador" prefHeight="40.0" prefWidth="210.0"
-                        text="Entrar (recrutador)">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#entrarFuncionario" prefHeight="40.0" prefWidth="210.0"
-                        text="Entrar (funcionario)">
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                </Button>
-            </VBox>
-            <Pane prefHeight="40.0" prefWidth="343.0" />
+            </GridPane>
+         <Region prefHeight="44.0" prefWidth="431.0" />
+         <Button mnemonicParsing="false" onAction="#entrar" prefHeight="40.0" prefWidth="210.0" text="Entrar">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </Button>
+         <HBox.margin>
+            <Insets bottom="150.0" left="150.0" right="150.0" top="150.0" />
+         </HBox.margin>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
         </VBox>
-        <Pane prefHeight="200.0" prefWidth="200.0" />
     </HBox>
     <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." />
 </VBox>
