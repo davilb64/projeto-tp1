@@ -34,6 +34,16 @@ public class UsuarioRepository {
                 .findFirst();
     }
 
+    public Optional<Usuario> buscaPorCpf(String cpf) {
+        return this.usuariosEmMemoria.stream()
+                .filter(u -> u.getCpf().equalsIgnoreCase(cpf))
+                .findFirst();
+    }
+
+    public int getQtdUsuarios(){
+        return this.usuariosEmMemoria.size();
+    }
+
     public void escreveUsuarioNovo(Usuario usuario) throws IOException {
         int proximoId = getProximoId();
         usuario.setId(proximoId);

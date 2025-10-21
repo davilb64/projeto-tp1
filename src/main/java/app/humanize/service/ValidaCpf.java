@@ -1,9 +1,16 @@
 package app.humanize.service;
 
 import app.humanize.exceptions.CpfInvalidoException;
+import app.humanize.model.Usuario;
+import app.humanize.repository.UsuarioRepository;
+
+import java.util.Optional;
 
 public class ValidaCpf {
+    private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     public void validaCpf(String cpf) throws CpfInvalidoException {
+        Optional<Usuario> usuarioCpfIgual = usuarioRepository.buscaPorCpf(cpf);
+        // Verifica se tem todos os digitos
         if (cpf.length() != 11) {
             throw new CpfInvalidoException("CPF invalido (comprimento)");
         }
@@ -15,9 +22,13 @@ public class ValidaCpf {
         if (cpf.matches("(\\d)\\1{10}")) {
             throw new CpfInvalidoException("CPF invalido (dígitos iguais)");
         }
+        // Verifica se alguem tem o mesmo cpf no sistema
+        if (!usuarioCpfIgual.isEmpty()) {
+            throw new CpfInvalidoException("CPF invalido (Já existente)");
+        }
 
         if (!calculaCpf(cpf)) {
-            throw new CpfInvalidoException("CPF invalido (digito verificador)");
+            throw new CpfInvalidoException("CPF invalido (Esse CPF não existe)");
         }
     }
 
