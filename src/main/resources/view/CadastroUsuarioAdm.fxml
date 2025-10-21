@@ -17,7 +17,7 @@
 
 <VBox alignment="CENTER" maxWidth="450.0" minWidth="400.0" spacing="20.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CadastroUsuarioAdmController">
 
-    <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Cadastro de Usuário" />
+    <Label styleClass="screen-title" text="Cadastro de Usuário" />
 
     <GridPane hgap="10.0" vgap="12.0">
         <columnConstraints>

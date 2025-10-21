@@ -106,7 +106,7 @@
                     </HBox>
                 </GridPane>
 
-                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrar" prefHeight="40.0"
+                <Button defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrar" prefHeight="40.0"
                         text="Entrar">
                     <cursor>
                         <Cursor fx:constant="HAND"/>

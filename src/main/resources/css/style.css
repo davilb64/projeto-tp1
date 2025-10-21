@@ -179,3 +179,10 @@
 .stat-card-warning {
     -fx-background-color: #FFC107;
 }
+
+.screen-title {
+    -fx-font-family: "System Bold", "Ubuntu", sans-serif;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
