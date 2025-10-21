@@ -1,10 +1,14 @@
 package app.humanize.controller;
 
+import app.humanize.exceptions.CpfInvalidoException;
+import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.Endereco;
 import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
 import app.humanize.model.factories.UsuarioFactory;
 import app.humanize.repository.UsuarioRepository;
+import app.humanize.service.ValidaCpf;
+import app.humanize.service.ValidaSenha;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,6 +37,8 @@ public class CadastroUsuarioAdmController {
     private Endereco enderecoDoOutroController;
     private final UsuarioFactory usuarioFactory = new UsuarioFactory();
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
+    private final ValidaCpf validaCpf = new ValidaCpf();
+    private final ValidaSenha validaSenha = new ValidaSenha();
 
     private Usuario usuarioParaEditar;
 
@@ -76,7 +82,7 @@ public class CadastroUsuarioAdmController {
             Stage stage = new Stage();
             stage.setTitle("Cadastro de Endereço");
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initOwner((Stage) txtNome.getScene().getWindow());
+            stage.initOwner(txtNome.getScene().getWindow());
             stage.setScene(new Scene(root));
             stage.showAndWait();
 
@@ -85,35 +91,34 @@ public class CadastroUsuarioAdmController {
                 lblEndereco.setText(enderecoDoOutroController.enderecoReduzido());
             }
         } catch (IOException e) {
-            mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela de endereço. Verifique se o arquivo FXML está no local correto: /app/humanize/view/CadastroEndereco.fxml");
-            e.printStackTrace();
+            mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela de endereço. Verifique se o arquivo FXML está no local correto: /app/humanize/view/CadastroEndereco.fxml",null);
         }
     }
 
     private boolean validarCampos() {
         if (txtNome.getText().isBlank() || txtCpf.getText().isBlank() || txtLogin.getText().isBlank()) {
-            mostrarAlerta("Campos Obrigatórios", "Os campos Nome, CPF e Login devem ser preenchidos.");
+            mostrarAlerta("Campos Obrigatórios", "Os campos Nome, CPF e Login devem ser preenchidos.",null);
             return false;
         }
 
         if (usuarioParaEditar == null && txtSenhaOculta.getText().isBlank()) {
-            mostrarAlerta("Campos Obrigatórios", "O campo Senha deve ser preenchido para novos usuários.");
+            mostrarAlerta("Campos Obrigatórios", "O campo Senha deve ser preenchido para novos usuários.",null);
             return false;
         }
 
         if (perfilCombo.getSelectionModel().isEmpty()) {
-            mostrarAlerta("Seleção Obrigatória", "Por favor, selecione um perfil para o usuário.");
+            mostrarAlerta("Seleção Obrigatória", "Por favor, selecione um perfil para o usuário.",null);
             return false;
         }
         if (enderecoDoOutroController == null) {
-            mostrarAlerta("Endereço Obrigatório", "Por favor, cadastre um endereço para o usuário.");
+            mostrarAlerta("Endereço Obrigatório", "Por favor, cadastre um endereço para o usuário.",null);
             return false;
         }
 
         Optional<Usuario> usuarioComEsteLogin = usuarioRepository.buscaUsuarioPorLogin(txtLogin.getText());
         if (usuarioComEsteLogin.isPresent()) {
             if (usuarioParaEditar == null || usuarioParaEditar.getId() != usuarioComEsteLogin.get().getId()) {
-                mostrarAlerta("Login Inválido", "Este login já está em uso por outro usuário.");
+                mostrarAlerta("Login Inválido", "Este login já está em uso por outro usuário.",null);
                 return false;
             }
         }
@@ -122,7 +127,7 @@ public class CadastroUsuarioAdmController {
     }
 
     @FXML
-    private void salvarUsuario() throws IOException {
+    private void salvarUsuario() {
         if (!validarCampos()) {
             return;
         }
@@ -137,34 +142,53 @@ public class CadastroUsuarioAdmController {
         }
 
         if (usuarioParaEditar == null) {
-            Usuario usuario = usuarioFactory.createUsuario(txtNome.getText(), txtCpf.getText(), enderecoDoOutroController,
-                    txtEmail.getText(), txtLogin.getText(), hash, perfilCombo.getValue());
-            usuarioRepository.escreveUsuarioNovo(usuario);
+
+            try{
+                validaCpf.validaCpf(txtCpf.getText());
+                validaSenha.validaSenha(txtSenhaOculta.getText());
+                Usuario usuario = usuarioFactory.createUsuario(txtNome.getText(), txtCpf.getText(), enderecoDoOutroController,
+                        txtEmail.getText(), txtLogin.getText(), hash, perfilCombo.getValue());
+                usuarioRepository.escreveUsuarioNovo(usuario);
+            }catch (CpfInvalidoException e){
+                mostrarAlerta("CPF Inválido", "CPF não atende aos critérios de existência!", e.getMessage());
+                return;
+            }catch (SenhaInvalidaException e){
+                mostrarAlerta("Senha Inválida", "A senha não atende aos critérios de existência!", e.getMessage());
+                return;
+            }catch (Exception e){
+                mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
+            }
+
         } else {
-            usuarioParaEditar.setNome(txtNome.getText());
-            usuarioParaEditar.setCpf(txtCpf.getText());
-            usuarioParaEditar.setEmail(txtEmail.getText());
-            usuarioParaEditar.setLogin(txtLogin.getText());
-            usuarioParaEditar.setPerfil(perfilCombo.getValue());
-            usuarioParaEditar.setEndereco(enderecoDoOutroController);
-            usuarioParaEditar.setSenha(hash);
-            usuarioRepository.atualizarUsuario(usuarioParaEditar);
+            try{
+                usuarioParaEditar.setNome(txtNome.getText());
+                usuarioParaEditar.setCpf(txtCpf.getText());
+                usuarioParaEditar.setEmail(txtEmail.getText());
+                usuarioParaEditar.setLogin(txtLogin.getText());
+                usuarioParaEditar.setPerfil(perfilCombo.getValue());
+                usuarioParaEditar.setEndereco(enderecoDoOutroController);
+                usuarioParaEditar.setSenha(hash);
+                usuarioRepository.atualizarUsuario(usuarioParaEditar);
+            }catch (CpfInvalidoException e){
+                mostrarAlerta("CPF Inválido", "CPF não atende aos critérios de existência!", e.getMessage());
+                return;
+            }catch (SenhaInvalidaException e){
+                mostrarAlerta("Senha Inválida", "A senha não atende aos critérios de existência!", e.getMessage());
+                return;
+            }catch (Exception e){
+                mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
+            }
+
         }
         fecharJanela();
     }
 
 
-    private void mostrarAlerta(String titulo, String mensagem) {
+    private void mostrarAlerta(String titulo, String mensagem, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText(titulo);
         alert.setContentText(mensagem);
-        alert.showAndWait();
-    }
-
-    private void mostrarAlertaInfo(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(titulo);
-        alert.setContentText(mensagem);
+        alert.setContentText(conteudo);
         alert.showAndWait();
     }
 

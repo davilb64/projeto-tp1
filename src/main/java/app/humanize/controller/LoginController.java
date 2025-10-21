@@ -6,6 +6,7 @@ import app.humanize.exceptions.ValidacaoException;
 import app.humanize.model.Usuario;
 import app.humanize.service.LoginService;
 import app.humanize.util.ScreenController;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -18,11 +19,13 @@ public class LoginController {
 
     private final LoginService loginService = new LoginService();
 
+
     @FXML
     public void initialize() {
         txtSenhaAberta.textProperty().bindBidirectional(txtSenhaOculta.textProperty());
         txtSenhaAberta.visibleProperty().bind(btnMostrarSenha.selectedProperty());
         txtSenhaOculta.visibleProperty().bind(btnMostrarSenha.selectedProperty().not());
+        UserSession.getInstance().logout();
     }
 
     @FXML
@@ -31,6 +34,7 @@ public class LoginController {
         String senha = txtSenhaOculta.getText();
         try {
             Usuario usuarioAutenticado = loginService.autenticar(usuario, senha);
+            UserSession.getInstance().login(usuarioAutenticado);
             switch (usuarioAutenticado.getPerfil()) {
                 case ADMINISTRADOR:
                     entrarAdm();
