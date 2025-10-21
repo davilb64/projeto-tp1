@@ -1,6 +1,8 @@
 package app.humanize.repository;
 
 import app.humanize.model.*;
+import app.humanize.util.EstadosBrasileiros;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,12 +26,6 @@ public class UsuarioRepository {
 
     public List<Usuario> getTodosUsuarios() {
         return new ArrayList<>(this.usuariosEmMemoria);
-    }
-
-    public Optional<Usuario> buscaUsuarioPorId(int id) {
-        return this.usuariosEmMemoria.stream()
-                .filter(u -> u.getId() == id)
-                .findFirst();
     }
 
     public Optional<Usuario> buscaUsuarioPorLogin(String login) {
@@ -95,7 +91,7 @@ public class UsuarioRepository {
                     .numero(Integer.parseInt(campos[4].split(",")[1].trim()))
                     .bairro(campos[4].split(",")[2].trim())
                     .cidade(campos[4].split(",")[3].trim())
-                    .estado(campos[4].split(",")[4].trim())
+                    .estado(EstadosBrasileiros.valueOf(campos[4].split(",")[4].trim()))
                     .cep(campos[4].split(",")[5].trim())
                     .build();
 
@@ -142,8 +138,8 @@ public class UsuarioRepository {
         sb.append(usuario.getEmail()).append(";");
 
         if (usuario.getEndereco() != null) {
-            Endereco end = usuario.getEndereco();
-            sb.append(String.join(",", end.getLogradouro(), String.valueOf(end.getNumero()), end.getBairro(), end.getCidade(), end.getEstado(), end.getCep()));
+            Endereco endereco = usuario.getEndereco();
+            sb.append(String.join( ",", endereco.getLogradouro(), String.valueOf(endereco.getNumero()), endereco.getBairro(), endereco.getCidade(), String.valueOf(endereco.getEstado()) , endereco.getCep()));
         }
         sb.append(";");
 
@@ -163,5 +159,19 @@ public class UsuarioRepository {
         }
         sb.append("\n");
         return sb.toString();
+    }
+
+    public void excluirUsuario(Usuario usuarioParaExcluir) throws IOException {
+        if (usuarioParaExcluir == null) {
+            return;
+        }
+        boolean removido = this.usuariosEmMemoria.removeIf(usuario -> usuario.getId() == usuarioParaExcluir.getId());
+        if (removido) {
+            persistirAlteracoesNoCSV();
+        }
+    }
+
+    public void atualizarUsuario(Usuario usuarioAtualizado) throws IOException {
+        persistirAlteracoesNoCSV();
     }
 }

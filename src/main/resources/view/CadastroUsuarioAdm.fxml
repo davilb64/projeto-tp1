@@ -47,7 +47,7 @@
         <Label text="Endereço:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <Label fx:id="lblEndereco" text="Nenhum endereço selecionado" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="+" />
+            <Button mnemonicParsing="false" text="+" onAction="#cadastrarEndereco"/>
         </HBox>
 
         <Label text="E-mail:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />

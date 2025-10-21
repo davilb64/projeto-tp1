@@ -1,32 +1,34 @@
 package app.humanize.controller;
 
-import app.humanize.exceptions.LoginException;
 import app.humanize.exceptions.SenhaIncorretaException;
 import app.humanize.exceptions.UsuarioNaoEncontradoException;
 import app.humanize.exceptions.ValidacaoException;
-import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
-import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.LoginService;
 import app.humanize.util.ScreenController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
-
-import java.util.Optional;
+import javafx.scene.control.*;
 
 public class LoginController {
     @FXML
     private TextField txtUsuario;
-    @FXML
-    private TextField txtSenha;
+    @FXML private PasswordField txtSenhaOculta;
+    @FXML private TextField txtSenhaAberta;
+    @FXML private ToggleButton btnMostrarSenha;
 
-    private LoginService loginService = new LoginService();
+    private final LoginService loginService = new LoginService();
+
+    @FXML
+    public void initialize() {
+        txtSenhaAberta.textProperty().bindBidirectional(txtSenhaOculta.textProperty());
+        txtSenhaAberta.visibleProperty().bind(btnMostrarSenha.selectedProperty());
+        txtSenhaOculta.visibleProperty().bind(btnMostrarSenha.selectedProperty().not());
+    }
 
     @FXML
     private void entrar(){
         String usuario = txtUsuario.getText();
-        String senha = txtSenha.getText();
+        String senha = txtSenhaOculta.getText();
         try {
             Usuario usuarioAutenticado = loginService.autenticar(usuario, senha);
             switch (usuarioAutenticado.getPerfil()) {

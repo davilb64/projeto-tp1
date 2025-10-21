@@ -16,8 +16,6 @@ public class LoginService {
         this.usuarioRepository = UsuarioRepository.getInstance();
     }
 
-
-
     public Usuario autenticar(String login, String senha) throws ValidacaoException, SenhaIncorretaException, UsuarioNaoEncontradoException {
         if (login == null || login.isEmpty() || senha == null || senha.isEmpty()) {
             throw new ValidacaoException("Usuário / senha vazio");
