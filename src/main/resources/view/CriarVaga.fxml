@@ -15,8 +15,7 @@
     <Label layoutX="50" layoutY="150" text="Requisitos:" />
     <TextField fx:id="txtRequisitos" layoutX="175.0" layoutY="146.0" prefWidth="350" />
 
-    <Button layoutX="441.0" layoutY="347.0" style="-fx-background-color: #ffc0cb;" text="Salvar" />
-    <Button layoutX="350.0" layoutY="347.0" style="-fx-background-color: #ffc0cb;" text="Excluir" />
+    <Button fx:id="btnSalvarVaga" layoutX="441.0" layoutY="347.0" style="-fx-background-color: #ffc0cb;" text="Salvar" />
    <Label layoutX="50.0" layoutY="192.0" text="Departamento:" />
-   <TextField fx:id="txtRequisitos1" layoutX="175.0" layoutY="188.0" prefWidth="350" />
+   <TextField fx:id="txtDepartamento" layoutX="175.0" layoutY="188.0" prefWidth="350" />
 </AnchorPane>
