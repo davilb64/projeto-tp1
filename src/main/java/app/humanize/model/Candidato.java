@@ -88,8 +88,8 @@ public class Candidato extends Pessoa{
             this.vaga = vaga;
             return this;
         }
-        public Candidato build(CandidatoBuilder builder) {
-            return new Candidato(builder);
+        public Candidato build() {
+            return new Candidato(this);
         }
     }
 

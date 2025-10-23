@@ -16,11 +16,11 @@
           <Font size="36.0"/>
         </font>
     </Label>
-    <TableView layoutX="22.0" layoutY="84.0" prefHeight="257.0" prefWidth="556.0">
+    <TableView  fx:id="tableCandidaturas" layoutX="22.0" layoutY="84.0" prefHeight="257.0" prefWidth="556.0">
         <columns>
-          <TableColumn prefWidth="315.0" text="Candidato"/>
-          <TableColumn minWidth="0.0" prefWidth="132.0" text="Cargo"/>
-          <TableColumn minWidth="0.0" prefWidth="108.0" text="Status"/>
+          <TableColumn fx:id="colCandidato" prefWidth="315.0" text="Candidato"/>
+          <TableColumn fx:id="colCargo" minWidth="0.0" prefWidth="132.0" text="Cargo"/>
+          <TableColumn fx:id="colStatus" minWidth="0.0" prefWidth="108.0" text="Status"/>
         </columns>
     </TableView>
     <Label layoutX="30.0" layoutY="46.0" text="Filtrar:"/>

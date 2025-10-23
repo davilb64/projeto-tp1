@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import app.humanize.model.Vaga;
 
 import java.time.LocalDate;
 
@@ -20,18 +21,18 @@ public class CadastroDeCandidatoController {
     @FXML private TextField txtDisponibilidade;
     @FXML private TextField txtPretencao;
     @FXML private TextField txtExperiencia;
-    @FXML private ChoiceBox<String> choiceVaga;
+    @FXML private ChoiceBox<Vaga> choiceVaga;
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
 
     @FXML
     private void initialize() {
-        // Inicializa o ChoiceBox com opções de vaga
         choiceVaga.getItems().addAll(
-                "Desenvolvedor Java",
-                "Analista de Dados",
-                "Designer UI/UX",
-                "Estágio em TI"
+                new Vaga("Analista de Dados"),
+                new Vaga("Desenvolvedor Backend"),
+                new Vaga("Designer UI/UX"),
+                new Vaga("Engenheiro de Software"),
+                new Vaga("Gerente de Projetos")
         );
     }
 
@@ -49,6 +50,7 @@ public class CadastroDeCandidatoController {
             //Endereco enderecoFake = new Endereco(); // supondo que tenha construtor padrão
 
             // Monta o candidato usando o builder
+
             Candidato candidato = new Candidato.CandidatoBuilder()
                     .nome(txtNome.getText())
                     .cpf(txtCpf.getText())
@@ -58,8 +60,11 @@ public class CadastroDeCandidatoController {
                     .disponibilidade(txtDisponibilidade.getText())
                     .pretencaoSalarial(pretencao)
                     .experiencia(txtExperiencia.getText())
+                    .vaga(choiceVaga.getValue())
                     .dataCadastro(LocalDate.now())
-                    .build(null); // passa null pois seu builder usa método build(CandidatoBuilder)
+                    .build();
+
+            StatusDaCandidaturaController.adicionarCandidato(candidato);
 
             // Exemplo de confirmação
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
