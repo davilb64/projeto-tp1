@@ -92,7 +92,7 @@ public class PrincipalAdministradorController {
 
     @FXML
     private void showVagas() {
-        loadUI("DashboardAdm");
+        loadUI("Vagas");
         setActiveButton(btnVagas);
     }
 

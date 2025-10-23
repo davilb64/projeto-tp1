@@ -85,7 +85,7 @@ public class PrincipalGestorController {
 
     @FXML
     private void showVagas() {
-        loadUI("AtribuirRecrutadorAVaga");
+        loadUI("Vagas");
         setActiveButton(btnVagas);
     }
 
