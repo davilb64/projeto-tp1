@@ -12,9 +12,9 @@ public class Vaga {
     private String departamento;
     private LocalDate dataVaga;
 
-    public void criar(String nome, String numero){
-        this.cargo = nome;
-        this.salario = numero;
+    public void criar(String cargo, String salario){
+        this.cargo = cargo;
+        this.salario = salario;
     }
 
 
@@ -53,6 +53,7 @@ public class Vaga {
     // toString() define o texto exibido no ChoiceBox
     @Override
     public String toString() {
-        return cargo + salario;
+        return cargo + " R$" + salario;
     }
+
 }
