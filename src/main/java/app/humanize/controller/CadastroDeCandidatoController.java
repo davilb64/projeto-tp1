@@ -25,14 +25,18 @@ public class CadastroDeCandidatoController {
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
 
+    public Vaga v1 =  new Vaga();
+    v1.;
+
     @FXML
     private void initialize() {
         choiceVaga.getItems().addAll(
-                new Vaga("Analista de Dados"),
-                new Vaga("Desenvolvedor Backend"),
-                new Vaga("Designer UI/UX"),
-                new Vaga("Engenheiro de Software"),
-                new Vaga("Gerente de Projetos")
+
+
+                //new Vaga("Desenvolvedor Backend", "123")
+               // new Vaga("Designer UI/UX"),
+                //new Vaga("Engenheiro de Software"),
+                //new Vaga("Gerente de Projetos")
         );
     }
 

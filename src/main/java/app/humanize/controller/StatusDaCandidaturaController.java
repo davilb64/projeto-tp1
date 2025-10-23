@@ -22,7 +22,7 @@ public class StatusDaCandidaturaController {
         colCandidato.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colCargo.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(
-                        cellData.getValue().getVaga() != null ? cellData.getValue().getVaga().getNome() : ""
+                        cellData.getValue().getVaga() != null ? cellData.getValue().getVaga().getCargo() : ""
                 )
         );
         colStatus.setCellValueFactory(cellData ->
