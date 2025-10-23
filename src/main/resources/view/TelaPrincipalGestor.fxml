@@ -25,6 +25,11 @@
             <Button id="buttonLateral" fx:id="btnRecrutadores" onAction="#showRecrutadores" prefWidth="150.0" text="Recrutadores">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
+         <Button id="buttonLateral" fx:id="btnVagas" onAction="#showVagas" prefWidth="150.0" text="Vagas">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </Button>
          <Button id="buttonLateral" fx:id="btnContratacoes" onAction="#showContratacoes" prefWidth="150.0" text="Contratações">
             <cursor>
                <Cursor fx:constant="HAND" />

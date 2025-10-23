@@ -40,6 +40,9 @@ public class PrincipalAdministradorController {
     private Button btnCandidatos;
 
     @FXML
+    private Button btnVagas;
+
+    @FXML
     private Button btnEntrevistas;
 
     @FXML
@@ -85,6 +88,12 @@ public class PrincipalAdministradorController {
     private void showDashboard() {
         loadUI("DashboardAdm");
         setActiveButton(btnDashboard);
+    }
+
+    @FXML
+    private void showVagas() {
+        loadUI("DashboardAdm");
+        setActiveButton(btnVagas);
     }
 
     @FXML
