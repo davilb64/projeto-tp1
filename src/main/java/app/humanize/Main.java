@@ -1,6 +1,7 @@
 package app.humanize;
 
-import app.humanize.util.ScreenController;
+import
+        app.humanize.util.ScreenController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
