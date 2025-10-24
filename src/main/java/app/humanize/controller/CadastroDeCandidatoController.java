@@ -1,14 +1,15 @@
 package app.humanize.controller;
 
 import app.humanize.model.Candidato;
-import app.humanize.model.Endereco;
+import app.humanize.model.Vaga;
+import app.humanize.repository.CandidatoRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import app.humanize.model.Vaga;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 public class CadastroDeCandidatoController {
@@ -25,80 +26,121 @@ public class CadastroDeCandidatoController {
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
 
-    public Vaga v1 =  new Vaga();
-
+    private Candidato candidatoEmEdicao = null; // 🔹 usado quando estiver editando
 
     @FXML
     private void initialize() {
-        v1.criar("Desenvolvedor", "13.0000");
         choiceVaga.getItems().addAll(
-            v1
-
+                criarVaga("Analista de Dados"),
+                criarVaga("Desenvolvedor Backend"),
+                criarVaga("Designer UI/UX"),
+                criarVaga("Engenheiro de Software"),
+                criarVaga("Gerente de Projetos")
         );
     }
 
-    // Ação do botão "Salvar"
+    private Vaga criarVaga(String nome) {
+        Vaga v = new Vaga();
+        v.setCargo(nome);
+        return v;
+    }
+
+    // 🔹 chamado quando clicamos em "Editar" na tabela
+    public void prepararParaEdicao(Candidato candidato) {
+        this.candidatoEmEdicao = candidato;
+        txtNome.setText(candidato.getNome());
+        txtCpf.setText(candidato.getCpf());
+        txtEmail.setText(candidato.getEmail());
+        txtTelefone.setText(candidato.getTelefone());
+        txtFormacao.setText(candidato.getFormacao());
+        txtDisponibilidade.setText(candidato.getDisponibilidade());
+        txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
+        txtExperiencia.setText(candidato.getExperiencia());
+        choiceVaga.setValue(candidato.getVaga());
+    }
+
     @FXML
     private void salvarCandidato() {
         try {
-            // Conversão segura de pretensão salarial
-            double pretencao = 0.0;
-            if (!txtPretencao.getText().trim().isEmpty()) {
-                pretencao = Double.parseDouble(txtPretencao.getText());
+            double pretencao = txtPretencao.getText().isEmpty() ? 0.0 : Double.parseDouble(txtPretencao.getText());
+
+            if (candidatoEmEdicao == null) {
+                // ➕ novo candidato
+                Candidato novo = new Candidato.CandidatoBuilder()
+                        .nome(txtNome.getText())
+                        .cpf(txtCpf.getText())
+                        .email(txtEmail.getText())
+                        .telefone(txtTelefone.getText())
+                        .formacao(txtFormacao.getText())
+                        .disponibilidade(txtDisponibilidade.getText())
+                        .pretencaoSalarial(pretencao)
+                        .experiencia(txtExperiencia.getText())
+                        .vaga(choiceVaga.getValue())
+                        .dataCadastro(LocalDate.now())
+                        .build();
+
+                CandidatoRepository.getInstance().adicionar(novo);
+
+                mostrarAlerta("Cadastro realizado com sucesso!");
+            } else {
+                // ✏️ edição de candidato existente
+                candidatoEmEdicao.setNome(txtNome.getText());
+                candidatoEmEdicao.setCpf(txtCpf.getText());
+                candidatoEmEdicao.setEmail(txtEmail.getText());
+                candidatoEmEdicao.setTelefone(txtTelefone.getText());
+                candidatoEmEdicao.setFormacao(txtFormacao.getText());
+                candidatoEmEdicao.setDisponibilidade(txtDisponibilidade.getText());
+                candidatoEmEdicao.setPretencaoSalarial(pretencao);
+                candidatoEmEdicao.setExperiencia(txtExperiencia.getText());
+                candidatoEmEdicao.setVaga(choiceVaga.getValue());
+
+                CandidatoRepository.getInstance().atualizar();
+
+                mostrarAlerta("Alterações salvas com sucesso!");
+                irParaTelaStatusCandidato();
+
             }
 
-            // Aqui poderia vir um endereço real (mockado por enquanto)
-            //Endereco enderecoFake = new Endereco(); // supondo que tenha construtor padrão
 
-            // Monta o candidato usando o builder
 
-            Candidato candidato = new Candidato.CandidatoBuilder()
-                    .nome(txtNome.getText())
-                    .cpf(txtCpf.getText())
-                    .email(txtEmail.getText())
-                    .telefone(txtTelefone.getText())
-                    .formacao(txtFormacao.getText())
-                    .disponibilidade(txtDisponibilidade.getText())
-                    .pretencaoSalarial(pretencao)
-                    .experiencia(txtExperiencia.getText())
-                    .vaga(choiceVaga.getValue())
-                    .dataCadastro(LocalDate.now())
-                    .build();
-
-            StatusDaCandidaturaController.adicionarCandidato(candidato);
-
-            // Exemplo de confirmação
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Cadastro realizado");
-            alert.setHeaderText("Candidato salvo com sucesso!");
-            alert.setContentText("Nome: " + candidato.getNome() + "\nCPF: " + candidato.getCpf());
-            alert.showAndWait();
-
-            limparCampos();
-
+        } catch (IOException e) {
+            mostrarErro("Erro ao salvar candidato: " + e.getMessage());
         } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro no cadastro");
-            alert.setHeaderText("Não foi possível salvar o candidato");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
+            mostrarErro("Erro inesperado: " + e.getMessage());
         }
     }
 
-    @FXML
-    private void uploadDocumentos() {
-        System.out.println("salvo!");
-        // Aqui você pode implementar FileChooser futuramente
+    public void uploadDocumentos(){
+        mostrarAlerta("Nao funciona ainda, bjos");
+    }
+    private void mostrarAlerta(String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Sucesso");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 
-    private void limparCampos() {
-        txtNome.clear();
-        txtCpf.clear();
-        txtEmail.clear();
-        txtTelefone.clear();
-        txtFormacao.clear();
-        txtDisponibilidade.clear();
-        txtPretencao.clear();
-        txtExperiencia.clear();
+    private void mostrarErro(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erro");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
+
+    private void irParaTelaStatusCandidato() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/StatusDaCandidatura.fxml"));
+            javafx.scene.Parent root = loader.load();
+            javafx.stage.Stage stage = (javafx.stage.Stage) btnSalvar.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setTitle("Status das Candidaturas");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarErro("Erro ao abrir tela de status: " + e.getMessage());
+        }
+    }
+
 }
