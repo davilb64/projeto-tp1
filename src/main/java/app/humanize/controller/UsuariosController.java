@@ -94,6 +94,7 @@ public class UsuariosController {
 
         List<Usuario> usuariosFiltrados = stream.collect(Collectors.toList());
         tblUsuarios.setItems(FXCollections.observableArrayList(usuariosFiltrados));
+        tblUsuarios.refresh();
     }
 
     @FXML
@@ -110,7 +111,8 @@ public class UsuariosController {
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
-        carregarTabela();
+
+        carregarFiltro();
     }
 
     @FXML
@@ -134,7 +136,8 @@ public class UsuariosController {
         stage.initOwner(tblUsuarios.getScene().getWindow());
         stage.showAndWait();
 
-        carregarTabela();
+        // --- CORREÇÃO AQUI ---
+        carregarFiltro();
     }
 
     @FXML
@@ -155,7 +158,8 @@ public class UsuariosController {
                         mostrarAlerta("Erro ao excluir usuário do arquivo.");
                         e.printStackTrace();
                     }
-                    carregarTabela();
+
+                    carregarFiltro();
                 }
             });
 

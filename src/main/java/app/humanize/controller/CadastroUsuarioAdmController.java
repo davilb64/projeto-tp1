@@ -56,12 +56,12 @@ public class CadastroUsuarioAdmController {
     public void prepararParaEdicao(Usuario usuario) {
         this.usuarioParaEditar = usuario;
 
-        lblId.setText(String.valueOf(usuario.getId())); // Define o ID existente
+        lblId.setText(String.valueOf(usuario.getId()));
         txtNome.setText(usuario.getNome());
         txtEmail.setText(usuario.getEmail());
         txtCpf.setText(usuario.getCpf());
         txtLogin.setText(usuario.getLogin());
-        perfilCombo.setValue(usuario.getPerfil()); // Define o perfil no ComboBox
+        perfilCombo.setValue(usuario.getPerfil());
 
         this.enderecoDoOutroController = usuario.getEndereco();
         if (this.enderecoDoOutroController != null) {
@@ -91,38 +91,37 @@ public class CadastroUsuarioAdmController {
                 lblEndereco.setText(enderecoDoOutroController.enderecoReduzido());
             }
         } catch (IOException e) {
-            mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela de endereço. Verifique se o arquivo FXML está no local correto: /app/humanize/view/CadastroEndereco.fxml",null);
+            mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela de endereço.", "Verifique se o arquivo FXML está no local correto: /view/CadastroEndereco.fxml");
         }
     }
 
     private boolean validarCampos() {
         if (txtNome.getText().isBlank() || txtCpf.getText().isBlank() || txtLogin.getText().isBlank()) {
-            mostrarAlerta("Campos Obrigatórios", "Os campos Nome, CPF e Login devem ser preenchidos.",null);
+            mostrarAlerta("Campos Obrigatórios", "Os campos Nome, CPF e Login devem ser preenchidos.", null);
             return false;
         }
 
         if (usuarioParaEditar == null && txtSenhaOculta.getText().isBlank()) {
-            mostrarAlerta("Campos Obrigatórios", "O campo Senha deve ser preenchido para novos usuários.",null);
+            mostrarAlerta("Campos Obrigatórios", "O campo Senha deve ser preenchido para novos usuários.", null);
             return false;
         }
 
         if (perfilCombo.getSelectionModel().isEmpty()) {
-            mostrarAlerta("Seleção Obrigatória", "Por favor, selecione um perfil para o usuário.",null);
+            mostrarAlerta("Seleção Obrigatória", "Por favor, selecione um perfil para o usuário.", null);
             return false;
         }
         if (enderecoDoOutroController == null) {
-            mostrarAlerta("Endereço Obrigatório", "Por favor, cadastre um endereço para o usuário.",null);
+            mostrarAlerta("Endereço Obrigatório", "Por favor, cadastre um endereço para o usuário.", null);
             return false;
         }
 
         Optional<Usuario> usuarioComEsteLogin = usuarioRepository.buscaUsuarioPorLogin(txtLogin.getText());
         if (usuarioComEsteLogin.isPresent()) {
             if (usuarioParaEditar == null || usuarioParaEditar.getId() != usuarioComEsteLogin.get().getId()) {
-                mostrarAlerta("Login Inválido", "Este login já está em uso por outro usuário.",null);
+                mostrarAlerta("Login Inválido", "Este login já está em uso por outro usuário.", null);
                 return false;
             }
         }
-
         return true;
     }
 
@@ -133,61 +132,61 @@ public class CadastroUsuarioAdmController {
         }
 
         String senha = txtSenhaOculta.getText();
+        String cpf = txtCpf.getText();
         String hash;
 
-        if (usuarioParaEditar != null && senha.isBlank()) {
-            hash = usuarioParaEditar.getSenha();
-        } else {
-            hash = BCrypt.hashpw(senha, BCrypt.gensalt());
-        }
-
-        if (usuarioParaEditar == null) {
-
-            try{
-                validaCpf.validaCpf(txtCpf.getText());
-                validaSenha.validaSenha(txtSenhaOculta.getText());
-                Usuario usuario = usuarioFactory.createUsuario(txtNome.getText(), txtCpf.getText(), enderecoDoOutroController,
-                        txtEmail.getText(), txtLogin.getText(), hash, perfilCombo.getValue());
-                usuarioRepository.escreveUsuarioNovo(usuario);
-            }catch (CpfInvalidoException e){
-                mostrarAlerta("CPF Inválido", "CPF não atende aos critérios de existência!", e.getMessage());
-                return;
-            }catch (SenhaInvalidaException e){
-                mostrarAlerta("Senha Inválida", "A senha não atende aos critérios de existência!", e.getMessage());
-                return;
-            }catch (Exception e){
-                mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
+        try {
+            boolean cpfFoiAlterado = (usuarioParaEditar != null && !usuarioParaEditar.getCpf().equals(cpf));
+            if (usuarioParaEditar == null || cpfFoiAlterado) {
+                validaCpf.validaCpf(cpf);
+            }
+            if (usuarioParaEditar == null) {
+                validaSenha.validaSenha(senha);
+                hash = BCrypt.hashpw(senha, BCrypt.gensalt());
+            } else if (!senha.isBlank()) {
+                validaSenha.validaSenha(senha);
+                hash = BCrypt.hashpw(senha, BCrypt.gensalt());
+            } else {
+                hash = usuarioParaEditar.getSenha();
             }
 
-        } else {
-            try{
+            if (usuarioParaEditar == null) {
+                Usuario usuario = usuarioFactory.createUsuario(
+                        txtNome.getText(), cpf, enderecoDoOutroController,
+                        txtEmail.getText(), txtLogin.getText(), hash, perfilCombo.getValue());
+
+                usuarioRepository.escreveUsuarioNovo(usuario);
+
+            } else {
                 usuarioParaEditar.setNome(txtNome.getText());
-                usuarioParaEditar.setCpf(txtCpf.getText());
+                usuarioParaEditar.setCpf(cpf);
                 usuarioParaEditar.setEmail(txtEmail.getText());
                 usuarioParaEditar.setLogin(txtLogin.getText());
                 usuarioParaEditar.setPerfil(perfilCombo.getValue());
                 usuarioParaEditar.setEndereco(enderecoDoOutroController);
                 usuarioParaEditar.setSenha(hash);
+
                 usuarioRepository.atualizarUsuario();
-            }catch (CpfInvalidoException e){
-                mostrarAlerta("CPF Inválido", "CPF não atende aos critérios de existência!", e.getMessage());
-                return;
-            }catch (SenhaInvalidaException e){
-                mostrarAlerta("Senha Inválida", "A senha não atende aos critérios de existência!", e.getMessage());
-                return;
-            }catch (Exception e){
-                mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
             }
 
-        }
-        fecharJanela();
-    }
+            fecharJanela();
 
+        } catch (CpfInvalidoException e) {
+            mostrarAlerta("CPF Inválido", "CPF não atende aos critérios de existência!", e.getMessage());
+        } catch (SenhaInvalidaException e) {
+            mostrarAlerta("Senha Inválida", "A senha não atende aos critérios de existência!", e.getMessage());
+        } catch (IOException e) {
+            mostrarAlerta("Erro de Salvamento", "Falha ao salvar no arquivo CSV.", e.getMessage());
+        } catch (Exception e) {
+            mostrarAlerta("Erro inesperado", "Tente novamente", e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private void mostrarAlerta(String titulo, String mensagem, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(titulo);
-        alert.setContentText(mensagem);
+        alert.setTitle(titulo);
+        alert.setHeaderText(mensagem);
         alert.setContentText(conteudo);
         alert.showAndWait();
     }
@@ -198,3 +197,4 @@ public class CadastroUsuarioAdmController {
         stage.close();
     }
 }
+
