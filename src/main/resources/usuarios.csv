@@ -1,0 +1,5 @@
+ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;DataEmissao;Receita;Despesas;Salario;
+2;Davi Lopes Brito;04935825170;davilopesbrito64@gmail.com;CNB,2,Taguatinga,Brasília,DF,71750000;davi;$2a$10$mCAl1tn.eQsBU.zqCoxOOuLSO7eDZaxQUchlZrS2e.tc1zyLCdVNq;ADMINISTRADOR;;;;;;;
+3;Valquiria dos Santos Machado;08650999107;valquiria.masan@gmail.com;ccsw,1,sudoeste,Brasilia,DF,70680168;valkiki;$2a$10$M1rqLmjlKcSeOTuwCcTUge3u8y5ECe4WPBA4XHw77bCwHxHE1bAXS;ADMINISTRADOR;;;;;;;
+4;Ricardo Rian da Silva Melo;08602279108;rianricardo836@gmail.com;QNO 4 conjunto A,13,Setor O,Ceilandia,DF,72250401;RianRSM;$2a$10$gPiEjS9giFHbo5rQ0fTnYeni9J/PFwBEZtR4TTUUwXaIbpsab/6xG;ADMINISTRADOR;;;;;;;
+5;Recrutador;18854388009;akaka@l;a,1,a,a,AC,2;recrutador;$2a$10$dIQE4nlGaM/yCuQR7xU83.fhLqHMvvVTge/IbSfohHUMs2g5dHJwK;RECRUTADOR;;;;;;;
