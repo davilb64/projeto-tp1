@@ -46,7 +46,7 @@ public class VagaRepository {
                 + 1;
     }
 
-    private void carregarVagaDoCSV() {
+    public void carregarVagaDoCSV() {
         File arquivo = new File(arquivoCsv);
         if (!arquivo.exists()) {
             return;
@@ -90,7 +90,7 @@ public class VagaRepository {
             vaga.setStatus(campos[3]);
             vaga.setRequisitos(campos[4]);
             vaga.setDepartamento(campos[5]);
-            vaga.setDataVaga(LocalDate.parse(campos[6]));
+            vaga.setDataVaga(campos[6] != null && !campos[6].isEmpty() ? LocalDate.parse(campos[6]) : null);
 
             return vaga;
 
@@ -103,12 +103,12 @@ public class VagaRepository {
     private String formatarVagaParaCSV(Vaga vaga) {
         StringBuilder sb = new StringBuilder();
         sb.append(vaga.getId()).append(";");
-        sb.append(vaga.getCargo()).append(";");
-        sb.append(vaga.getSalario()).append(";");
-        sb.append(vaga.getStatus()).append(";");
-        sb.append(vaga.getRequisitos()).append(";");
-        sb.append(vaga.getDepartamento()).append(";");
-        sb.append(vaga.getDataVaga()).append(";");
+        sb.append(vaga.getCargo() == null ? "" : vaga.getCargo()).append(";");
+        sb.append(vaga.getSalario() == null ? "" : vaga.getSalario()).append(";");
+        sb.append(vaga.getStatus() == null ? "" : vaga.getStatus() == null).append(";");
+        sb.append(vaga.getRequisitos() == null ? "" : vaga.getRequisitos() == null).append(";");
+        sb.append(vaga.getDepartamento() == null ? "" : vaga.getDepartamento()).append(";");
+        sb.append(vaga.getDataVaga() == null ? "" : vaga.getDataVaga()).append(";");
         sb.append("\n");
         return sb.toString();
     }

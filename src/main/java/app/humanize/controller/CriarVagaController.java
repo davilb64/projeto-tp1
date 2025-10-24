@@ -30,9 +30,10 @@ public class CriarVagaController {
 
         lblId.setText(String.valueOf(vaga.getId())); // Define o ID existente
         txtCargo.setText(vaga.getCargo());
-        txtSalario.setText(vaga.getSalario().toString());
+        txtSalario.setText(vaga.getSalario());
         txtRequisitos.setText(vaga.getRequisitos());
         txtStatus.setText(vaga.getStatus());
+        vagaRepository.carregarVagaDoCSV();
     }
 
     private boolean validarCampos() {
