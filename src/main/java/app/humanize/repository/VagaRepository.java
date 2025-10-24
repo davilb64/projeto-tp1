@@ -6,6 +6,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class VagaRepository {
 
@@ -105,8 +106,8 @@ public class VagaRepository {
         sb.append(vaga.getId()).append(";");
         sb.append(vaga.getCargo() == null ? "" : vaga.getCargo()).append(";");
         sb.append(vaga.getSalario() == null ? "" : vaga.getSalario()).append(";");
-        sb.append(vaga.getStatus() == null ? "" : vaga.getStatus() == null).append(";");
-        sb.append(vaga.getRequisitos() == null ? "" : vaga.getRequisitos() == null).append(";");
+        sb.append(vaga.getStatus() == null ? "" : vaga.getStatus()).append(";");
+        sb.append(vaga.getRequisitos() == null ? "" : vaga.getRequisitos()).append(";");
         sb.append(vaga.getDepartamento() == null ? "" : vaga.getDepartamento()).append(";");
         sb.append(vaga.getDataVaga() == null ? "" : vaga.getDataVaga()).append(";");
         sb.append("\n");
@@ -124,6 +125,7 @@ public class VagaRepository {
     }
 
     public void atualizarVaga() throws IOException {
+        //this.vagaEmMemoria.replaceAll(v -> v.getId() == vaga.getId() ? vaga : v);
         persistirAlteracoesNoCSV();
     }
 }

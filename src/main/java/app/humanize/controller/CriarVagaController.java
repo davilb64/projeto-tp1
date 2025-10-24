@@ -33,7 +33,6 @@ public class CriarVagaController {
         txtSalario.setText(vaga.getSalario());
         txtRequisitos.setText(vaga.getRequisitos());
         txtStatus.setText(vaga.getStatus());
-        vagaRepository.carregarVagaDoCSV();
     }
 
     private boolean validarCampos() {
