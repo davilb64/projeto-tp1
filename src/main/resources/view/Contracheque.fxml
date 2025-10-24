@@ -11,63 +11,60 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="450.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ContraChequeController">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ContraChequeController">
     <VBox prefHeight="450.0" prefWidth="600.0" spacing="15.0">
         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </padding>
         <Label alignment="CENTER" prefHeight="66.0" prefWidth="767.0" text="Contracheque" underline="true">
             <font>
-                <Font size="36.0"/>
+                <Font size="36.0" />
             </font>
         </Label>
         <HBox prefHeight="0.0" prefWidth="500.0" spacing="20.0">
             <Label text="Nome">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Label>
-            <TextField prefHeight="58.0" prefWidth="342.0"/>
+            <TextField fx:id="txtNome" prefHeight="58.0" prefWidth="342.0" />
         </HBox>
         <HBox prefHeight="19.0" prefWidth="500.0" spacing="20.0">
             <Label text="Cargo">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Label>
-            <TextField prefHeight="63.0" prefWidth="338.0"/>
+            <TextField fx:id="txtCargo" prefHeight="63.0" prefWidth="338.0" />
         </HBox>
         <HBox prefHeight="38.0" prefWidth="500.0" spacing="20.0">
             <Label text="Departamento">
                 <font>
-                    <Font size="24.0"/>
+                    <Font size="24.0" />
                 </font>
             </Label>
-            <TextField prefHeight="68.0" prefWidth="266.0"/>
+            <TextField fx:id="txtDepartamento" prefHeight="68.0" prefWidth="266.0" />
         </HBox>
-        <TableView editable="true" fixedCellSize="3.0" prefHeight="258.0" prefWidth="521.0">
+        <TableView fx:id="tabelaContracheque" editable="true" fixedCellSize="3.0" prefHeight="258.0" prefWidth="521.0">
             <columns>
-                <TableColumn prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Descrição"/>
-                <TableColumn prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Vencimentos"/>
-                <TableColumn prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Descontos"/>
-                <TableColumn prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Saldo"/>
+                <TableColumn fx:id="colunaDesc" prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Descrição" />
+                <TableColumn fx:id="colunaVenci" prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Vencimentos" />
+                <TableColumn fx:id="colunaDescon" prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Descontos" />
+                <TableColumn fx:id="colunaSald" prefWidth="75.0" style="-fx-background-color: #ffc0cb;" text="Saldo" />
             </columns>
             <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
-            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="29.0" prefWidth="198.0"
-                    style="-fx-background-color: #ffc0cb;" text="Imprimir">
+            <Button fx:id="btnImprimir" alignment="CENTER" mnemonicParsing="false" onAction="#imprimirContraCheque" prefHeight="29.0" prefWidth="198.0" style="-fx-background-color: #ffc0cb;" text="Imprimir">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="12.0" prefWidth="216.0"
-                    style="-fx-background-color: #ffc0cb;" text="Exportar">
+            <Button fx:id="btnExportar" mnemonicParsing="false"  onAction="#exportarContraCheque" prefHeight="12.0" prefWidth="216.0" style="-fx-background-color: #ffc0cb;" text="Exportar">
                 <font>
-                    <Font size="18.0"/>
+                    <Font size="18.0" />
                 </font>
             </Button>
         </HBox>
