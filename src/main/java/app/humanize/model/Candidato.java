@@ -136,6 +136,14 @@ public class Candidato extends Pessoa{
         this.formacao = formacao;
     }
 
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
     public void setVaga(Vaga vaga) {
         this.vaga = vaga;
     }

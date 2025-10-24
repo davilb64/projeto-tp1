@@ -25,8 +25,8 @@
     </TableView>
     <Label layoutX="30.0" layoutY="46.0" text="Filtrar:"/>
     <TextField layoutX="71.0" layoutY="42.0"/>
-    <Button layoutX="26.0" layoutY="351.0" mnemonicParsing="false" style="-fx-background-color: #ffc0cb;"
+    <Button layoutX="26.0" layoutY="351.0" mnemonicParsing="false" onAction="#editarCandidato" style="-fx-background-color: #ffc0cb;"
             text="Editar"/>
-    <Button layoutX="421.0" layoutY="351.0" mnemonicParsing="false" style="-fx-background-color: #ffc0cb;"
-            text="Selecionar/Excluir"/>
+    <Button layoutX="421.0" layoutY="351.0" mnemonicParsing="false" onAction="#excluirCandidato" style="-fx-background-color: #ffc0cb;"
+            text="Excluir"/>
 </AnchorPane>
