@@ -1,4 +1,4 @@
-  package controller;
+  package app.humanize.controller;
 
   import javafx.fxml.FXML;
   import javafx.scene.control.Button;
