@@ -83,7 +83,7 @@ public class ConfiguracoesAdmController {
     private void salvarNovaSenha(String novaSenha) throws IOException {
         String hashNovaSenha = BCrypt.hashpw(novaSenha, BCrypt.gensalt());
         usuarioLogado.setSenha(hashNovaSenha);
-        usuarioRepository.atualizarUsuario(usuarioLogado);
+        usuarioRepository.atualizarUsuario();
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sucesso");

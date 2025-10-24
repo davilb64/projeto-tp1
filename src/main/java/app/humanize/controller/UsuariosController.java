@@ -15,9 +15,18 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UsuariosController {
 
+    @FXML
+    private TextField txtId;
+    @FXML
+    private TextField txtNome;
+    @FXML
+    private TextField txtEmail;
     @FXML
     private TableView<Usuario> tblUsuarios;
     @FXML
@@ -28,6 +37,9 @@ public class UsuariosController {
     private TableColumn<Usuario,String> colEmail;
     @FXML
     private TableColumn<Usuario, Perfil> colPerfil;
+    @FXML
+    private ComboBox<Perfil> comboPerfil;
+
 
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
@@ -37,12 +49,56 @@ public class UsuariosController {
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colPerfil.setCellValueFactory(new PropertyValueFactory<>("perfil"));
+        comboPerfil.getItems().setAll(Perfil.values());
         carregarTabela();
     }
 
     private void carregarTabela(){
         ObservableList<Usuario> dados = FXCollections.observableArrayList(usuarioRepository.getTodosUsuarios());
         tblUsuarios.setItems(dados);
+    }
+
+    private void carregarFiltro() {
+        List<Usuario> usuarios = usuarioRepository.getTodosUsuarios();
+
+        Stream<Usuario> stream = usuarios.stream();
+
+        String nomeFiltro = txtNome.getText().trim();
+        if (!nomeFiltro.isEmpty()) {
+            stream = stream.filter(usuario ->
+                    usuario.getNome().toLowerCase().contains(nomeFiltro.toLowerCase())
+            );
+        }
+
+        String idFiltro = txtId.getText().trim();
+        if (!idFiltro.isEmpty()) {
+            try {
+                int id = Integer.parseInt(idFiltro);
+                stream = stream.filter(usuario -> usuario.getId() == id);
+            } catch (NumberFormatException e) {
+                System.err.println("Filtro de ID inválido, ignorado.");
+            }
+        }
+
+        String emailFiltro = txtEmail.getText().trim();
+        if (!emailFiltro.isEmpty()) {
+            stream = stream.filter(usuario ->
+                    usuario.getEmail().toLowerCase().contains(emailFiltro.toLowerCase())
+            );
+        }
+
+        Perfil perfilFiltro = comboPerfil.getSelectionModel().getSelectedItem();
+        if (perfilFiltro != null) {
+            stream = stream.filter(usuario -> usuario.getPerfil() == perfilFiltro);
+        }
+
+        List<Usuario> usuariosFiltrados = stream.collect(Collectors.toList());
+        tblUsuarios.setItems(FXCollections.observableArrayList(usuariosFiltrados));
+    }
+
+    @FXML
+    public void filtra(){
+        carregarFiltro();
     }
 
     @FXML
@@ -75,7 +131,7 @@ public class UsuariosController {
         stage.setTitle("Editar Usuário");
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner((Stage) tblUsuarios.getScene().getWindow());
+        stage.initOwner(tblUsuarios.getScene().getWindow());
         stage.showAndWait();
 
         carregarTabela();

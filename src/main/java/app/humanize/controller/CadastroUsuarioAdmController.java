@@ -168,7 +168,7 @@ public class CadastroUsuarioAdmController {
                 usuarioParaEditar.setPerfil(perfilCombo.getValue());
                 usuarioParaEditar.setEndereco(enderecoDoOutroController);
                 usuarioParaEditar.setSenha(hash);
-                usuarioRepository.atualizarUsuario(usuarioParaEditar);
+                usuarioRepository.atualizarUsuario();
             }catch (CpfInvalidoException e){
                 mostrarAlerta("CPF Inválido", "CPF não atende aos critérios de existência!", e.getMessage());
                 return;
