@@ -61,7 +61,7 @@ public class VagasController {
     }
 
     @FXML
-    private void editarUsuario() throws IOException {
+    private void editarVaga() throws IOException {
         Vaga vaga = tblVagas.getSelectionModel().getSelectedItem();
         if (vaga == null) {
             mostrarAlerta("Nenhum vaga selecionada para editar.");
@@ -85,7 +85,7 @@ public class VagasController {
     }
 
     @FXML
-    private void excluirCadastro() {
+    private void excluirVaga() {
         Vaga vagaSelecionado = tblVagas.getSelectionModel().getSelectedItem();
 
         if (vagaSelecionado != null) {
