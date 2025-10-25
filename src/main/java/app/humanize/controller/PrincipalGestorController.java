@@ -1,6 +1,7 @@
 package app.humanize.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import app.humanize.util.ScreenController;
@@ -40,6 +41,7 @@ public class PrincipalGestorController {
 
     private Button activeButton;
 
+
     @FXML
     public void initialize() {
         showDashboard();
@@ -73,8 +75,19 @@ public class PrincipalGestorController {
 
     @FXML
     private void showDashboard() {
-        loadUI("DashboardGestor");
-        setActiveButton(btnDashboard);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DashboardGestor.fxml"));
+            Parent dashboardNode = loader.load();
+
+            DashboardGestorController dashboardController = loader.getController();
+
+            dashboardController.setMainController(this);
+
+            contentArea.getChildren().setAll(dashboardNode);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -84,7 +97,7 @@ public class PrincipalGestorController {
     }
 
     @FXML
-    private void showVagas() {
+    public void showVagas() {
         loadUI("Vagas");
         setActiveButton(btnVagas);
     }

@@ -22,7 +22,7 @@ public class ScreenController {
             Parent root = FXMLLoader.load(Objects.requireNonNull(ScreenController.class.getResource(fxmlPath)));
             stage.setTitle("Humanize");
             stage.getIcons().add(image);
-            stage.setScene(new Scene(root, 800, 650));
+            stage.setScene(new Scene(root, 900, 650));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
