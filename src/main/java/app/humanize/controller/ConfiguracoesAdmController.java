@@ -3,7 +3,7 @@ package app.humanize.controller;
 import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.Usuario;
 import app.humanize.repository.UsuarioRepository;
-import app.humanize.service.ValidaSenha;
+import app.humanize.service.validacoes.ValidaSenha;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
