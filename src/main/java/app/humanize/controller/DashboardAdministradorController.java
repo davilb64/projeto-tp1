@@ -2,6 +2,7 @@ package app.humanize.controller;
 
 import app.humanize.model.Usuario;
 import app.humanize.repository.UsuarioRepository;
+import app.humanize.repository.VagaRepository;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
@@ -16,8 +17,10 @@ public class DashboardAdministradorController {
     public TableView tblNotificacoes;
 
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
+    private final VagaRepository vagaRepository = VagaRepository.getInstance();
 
     public void initialize(){
+        lblVagasAbertas.setText(Integer.toString(vagaRepository.getQtdVaga()));
         lblTotalUsuarios.setText(Integer.toString(usuarioRepository.getQtdUsuarios()));
     }
 }

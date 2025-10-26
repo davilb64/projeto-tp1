@@ -150,4 +150,9 @@ public class Candidato extends Pessoa{
     public Vaga getVaga() {
         return vaga;
     }
+
+    @Override
+    public String toString() {
+        return this.getNome();
+    }
 }

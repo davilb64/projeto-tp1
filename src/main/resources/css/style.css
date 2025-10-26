@@ -5,6 +5,7 @@
 
 #cabecalho {
     -fx-background-color: #505050;
+    -fx-font-size: 30px;
 }
 
 #title {
@@ -184,5 +185,29 @@
     -fx-font-family: "System Bold", "Ubuntu", sans-serif;
     -fx-font-size: 25px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #505050;
+}
+
+.stat-card-success, .stat-card-warning, .stat-card-info {
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+.stat-card-success {
+    -fx-background-color: #4CAF50;
+}
+.stat-card-warning {
+    -fx-background-color: #FFC107;
+}
+.stat-card-info {
+    -fx-background-color: #2196F3;
+}
+
+.actions-panel {
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: #f0f0f0;
+    -fx-border-width: 1px;
 }

@@ -46,7 +46,7 @@ public class VagasController {
     private void carregarTabela(){
         ObservableList<Vaga> dados = FXCollections.observableArrayList(vagaRepository.getTodasVagas());
         tblVagas.setItems(dados);
-        tblVagas.refresh(); // 🔥 força atualização visual
+        tblVagas.refresh();
     }
 
     @FXML

@@ -3,3 +3,4 @@ ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;DataEmissao;Rece
 3;Valquiria dos Santos Machado;08650999107;valquiria.masan@gmail.com;ccsw,1,sudoeste,Brasilia,DF,70680168;valkiki;$2a$10$M1rqLmjlKcSeOTuwCcTUge3u8y5ECe4WPBA4XHw77bCwHxHE1bAXS;ADMINISTRADOR;;;;;;;
 4;Ricardo Rian da Silva Melo;08602279108;rianricardo836@gmail.com;QNO 4 conjunto A,13,Setor O,Ceilandia,DF,72250401;RianRSM;$2a$10$gPiEjS9giFHbo5rQ0fTnYeni9J/PFwBEZtR4TTUUwXaIbpsab/6xG;ADMINISTRADOR;;;;;;;
 5;Recrutador;18854388009;akaka@l;a,1,a,a,AC,2;recrutador;$2a$10$dIQE4nlGaM/yCuQR7xU83.fhLqHMvvVTge/IbSfohHUMs2g5dHJwK;RECRUTADOR;;;;;;;
+6;Gestor;78852448144;teste@gmail.com;Logradouro,1,Bairro,Cidade,AC,10000000;gestor;$2a$10$EexLdkTKnQzm6jjXooprZOm.Lg7Dr7hg443sElNj662HMgS29rMdy;GESTOR;;;;;;;
