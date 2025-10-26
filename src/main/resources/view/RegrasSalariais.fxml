@@ -62,38 +62,20 @@
         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
             <Region prefHeight="87.0" prefWidth="127.0" />
             <VBox alignment="CENTER" prefHeight="157.0" prefWidth="150.0">
-                <Label text="Descontos">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="txtDescon" />
+            <children>
+                 <Button fx:id="btnSalvar" mnemonicParsing="false" prefHeight="26.0" prefWidth="135.0" style="-fx-background-color: #ffc0cb;" text="Salvar">
+                     <cursor>
+                         <Cursor fx:constant="HAND" />
+                     </cursor>
+                 </Button>
+            </children>
             </VBox>
             <Region prefHeight="87.0" prefWidth="127.0" />
         </HBox>
         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
-                <Label text="Adicionais">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="txtBenef" />
-            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0" />
             <Region prefHeight="90.0" prefWidth="141.0" />
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
-                <Label text="Ajustes">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="txtAjustes" />
-            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0" />
         </HBox>
-        <Button fx:id="btnSalvar" mnemonicParsing="false" prefHeight="26.0" prefWidth="135.0" style="-fx-background-color: #ffc0cb;" text="Salvar">
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
-        </Button>
     </VBox>
 </AnchorPane>
