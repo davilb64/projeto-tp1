@@ -24,6 +24,7 @@ public class Contratacao {
 
     // Getters e setters
     public int getId() { return id; }
+    public void setId(int id) {  this.id = id; }
     public Candidato getCandidato() { return candidato; }
     public void setCandidato(Candidato candidato) { this.candidato = candidato; }
 
