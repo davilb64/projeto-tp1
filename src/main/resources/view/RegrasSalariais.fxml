@@ -75,7 +75,10 @@
         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="200.0">
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0" />
             <Region prefHeight="90.0" prefWidth="141.0" />
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="150.0">
+            <children>
+               <Label />
+            </children></VBox>
         </HBox>
     </VBox>
 </AnchorPane>

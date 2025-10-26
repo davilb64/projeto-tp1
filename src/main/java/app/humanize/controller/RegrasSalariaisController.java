@@ -13,18 +13,13 @@ public class RegrasSalariaisController {
     @FXML private TextField txtCargo;
     @FXML private TextField txtNivel;
     @FXML private TextField txtSalarioBase;
+    @FXML private TextField txtBeneficios;
     @FXML private Button btnSalvar;
 
-    @FXML private Label lblAdicionalNivel;
-    @FXML private Label lblTotalBeneficios;
-    @FXML private Label lblValeRefeicao;
-    @FXML private Label lblPlanoSaude;
-
     private VagaRepository vagaRepository = VagaRepository.getInstance();
-
     private Map<String, String> regrasSalvas = new HashMap<>();
-
     private ObservableList<String> cargosValidos = FXCollections.observableArrayList();
+
 
     private final Map<String, Double> adicionaisPorNivel = Map.of(
             "Júnior", 0.0,
@@ -34,22 +29,20 @@ public class RegrasSalariaisController {
             "Líder", 600.0
     );
 
-    // Benefícios fixos
-    private final double VALE_REFEICAO = 350.00;
-    private final double PLANO_SAUDE = 200.00;
+    private final double VALOR_VALE_REFEICAO = 350.0;
+    private final double VALOR_PLANO_SAUDE = 200.0;
 
     @FXML
     private void initialize() {
-        carregarCargosDoRepository();  // Carrega cargos do VagaRepository
+        carregarCargosDoRepository();
         configurarBotoes();
         configurarValidacoes();
-        configurarBeneficiosFixos();
     }
 
     private void carregarCargosDoRepository() {
         cargosValidos.clear();
         cargosValidos.addAll(vagaRepository.getTodosCargos());
-
+        System.out.println("Cargos carregados: " + cargosValidos.size());
     }
 
     private void configurarBotoes() {
@@ -61,50 +54,41 @@ public class RegrasSalariaisController {
             if (!newValue.isEmpty()) {
                 validarCargo(newValue);
             } else {
-                txtCargo.setStyle("");
+                if (txtCargo != null) txtCargo.setStyle("");
             }
         });
-
-        txtNivel.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                mostrarAdicionalNivel(newValue);
-            } else {
-                lblAdicionalNivel.setText("");
-            }
-        });
-    }
-
-    private void configurarBeneficiosFixos() {
-        lblValeRefeicao.setText("Vale Refeição: R$ " + VALE_REFEICAO);
-        lblPlanoSaude.setText("Plano de Saúde: R$ " + PLANO_SAUDE);
-
-        double totalBeneficios = VALE_REFEICAO + PLANO_SAUDE;
-        lblTotalBeneficios.setText("Total Benefícios: R$ " + totalBeneficios);
-        lblTotalBeneficios.setStyle("-fx-text-fill: blue; -fx-font-weight: bold;");
-    }
-
-    private void mostrarAdicionalNivel(String nivel) {
-        Double adicional = adicionaisPorNivel.get(nivel);
-        if (adicional != null) {
-            lblAdicionalNivel.setText("Adicional " + nivel + ": + R$ " + adicional);
-            lblAdicionalNivel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-        } else {
-            lblAdicionalNivel.setText("Nível inválido");
-            lblAdicionalNivel.setStyle("-fx-text-fill: red;");
-        }
     }
 
     private void validarCargo(String cargo) {
+        if (txtCargo == null) return;
 
-        // verifica se o cargo existe na lista do ricardo
-        boolean cargoValido = cargosValidos.stream()
-                .anyMatch(cargoVAlido -> cargoVAlido.equalsIgnoreCase(cargo.trim()));
+        boolean encontrado = cargosValidos.stream()
+                .anyMatch(cargoLista -> cargoLista.equalsIgnoreCase(cargo.trim()));
 
-        if (cargoValido) {
+        if (encontrado) {
             txtCargo.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
         } else {
             txtCargo.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
         }
+    }
+
+    private double calcularValorBeneficios(String textoBeneficios) {
+        if (textoBeneficios == null || textoBeneficios.trim().isEmpty()) {
+            return 0.0;
+        }
+
+        double totalBeneficios = 0.0;
+        String texto = textoBeneficios.toLowerCase().trim();
+
+        if (texto.contains("vale refeicao") || texto.contains("vr") || texto.contains("vale refeição")) {
+            totalBeneficios += VALOR_VALE_REFEICAO;
+        }
+
+        if (texto.contains("plano de saude") || texto.contains("saude") || texto.contains("plano saúde") || texto.contains("saúde")) {
+            totalBeneficios += VALOR_PLANO_SAUDE;
+        }
+
+        return totalBeneficios;
     }
 
     private void salvarRegra() {
@@ -116,13 +100,13 @@ public class RegrasSalariaisController {
 
             String cargo = txtCargo.getText().trim();
 
-            boolean cargoValido = cargosValidos.stream()
-                    .anyMatch(cargoVAlido -> cargoVAlido.equalsIgnoreCase(cargo));
+            boolean cargoEncontrado = cargosValidos.stream()
+                    .anyMatch(cargoLista -> cargoLista.equalsIgnoreCase(cargo));
 
-            if (!cargoValido) {
+            if (!cargoEncontrado) {
                 StringBuilder cargosDisponiveis = new StringBuilder("Cargos válidos:\n");
-                for (String cargoVAlido : cargosValidos) {
-                    cargosDisponiveis.append("• ").append(cargoVAlido).append("\n");
+                for (String cargoValido : cargosValidos) {
+                    cargosDisponiveis.append("• ").append(cargoValido).append("\n");
                 }
 
                 mostrarAlerta("Cargo Inválido",
@@ -149,26 +133,28 @@ public class RegrasSalariaisController {
                 return;
             }
 
-            // Cálculos
-            double totalBeneficios = VALE_REFEICAO + PLANO_SAUDE;
-            double salarioTotal = salarioBase + adicionalNivel + totalBeneficios;
+            String textoBeneficios = txtBeneficios.getText().trim();
+            double valorBeneficios = calcularValorBeneficios(textoBeneficios);
+            double salarioTotal = salarioBase + adicionalNivel + valorBeneficios;
 
-            // Salvar a regra
+            String mensagemSucesso =
+                    " **REGRA SALARIAL SALVA COM SUCESSO!**\n\n" +
+                            " **DETALHAMENTO DOS VALORES:**\n" +
+                            "────────────────────────────\n" +
+                            "• Cargo: " + cargo + "\n" +
+                            "• Nível: " + nivel + "\n" +
+                            "• Salário Base: R$ " + String.format("%.2f", salarioBase) + "\n" +
+                            "• Adicional do Nível: R$ " + String.format("%.2f", adicionalNivel) + "\n" +
+                            "• Benefícios: R$ " + String.format("%.2f", valorBeneficios) + "\n" +
+                            "────────────────────────────\n" +
+                            " **SALÁRIO TOTAL: R$ " + String.format("%.2f", salarioTotal) + "**";
+
             String chave = cargo + "_" + nivel;
-            String valor = String.format("Salário Base: R$ %.2f | Adicional: R$ %.2f | Benefícios: R$ %.2f | TOTAL: R$ %.2f",
-                    salarioBase, adicionalNivel, totalBeneficios, salarioTotal);
+            String valor = String.format("Base: R$ %.2f | Adicional: R$ %.2f | Benefícios: R$ %.2f | TOTAL: R$ %.2f",
+                    salarioBase, adicionalNivel, valorBeneficios, salarioTotal);
             regrasSalvas.put(chave, valor);
 
-            mostrarAlerta("Sucesso",
-                    "Regra salarial salva com sucesso!\n" +
-                            "Cargo: " + cargo + "\n" +
-                            "Nível: " + nivel + " (+ R$ " + adicionalNivel + ")\n" +
-                            "Salário Base: R$ " + salarioBase + "\n" +
-                            "Vale Refeição: R$ " + VALE_REFEICAO + "\n" +
-                            "Plano de Saúde: R$ " + PLANO_SAUDE + "\n" +
-                            "Total Benefícios: R$ " + totalBeneficios + "\n" +
-                            "TOTAL: R$ " + salarioTotal,
-                    Alert.AlertType.INFORMATION);
+            mostrarAlerta("✅ Sucesso", mensagemSucesso, Alert.AlertType.INFORMATION);
 
             limparCampos();
 
@@ -180,9 +166,10 @@ public class RegrasSalariaisController {
     }
 
     private boolean validarCampos() {
-        return !txtCargo.getText().trim().isEmpty() &&
-                !txtNivel.getText().trim().isEmpty() &&
-                !txtSalarioBase.getText().trim().isEmpty();
+        return txtCargo != null && !txtCargo.getText().trim().isEmpty() &&
+                txtNivel != null && !txtNivel.getText().trim().isEmpty() &&
+                txtSalarioBase != null && !txtSalarioBase.getText().trim().isEmpty() &&
+                txtBeneficios != null && !txtBeneficios.getText().trim().isEmpty();
     }
 
     private double validarEConverterDouble(String valor, String campo) throws NumberFormatException {
@@ -194,11 +181,13 @@ public class RegrasSalariaisController {
     }
 
     private void limparCampos() {
-        txtCargo.clear();
-        txtNivel.clear();
-        txtSalarioBase.clear();
-        txtCargo.setStyle("");
-        lblAdicionalNivel.setText("");
+        if (txtCargo != null) {
+            txtCargo.clear();
+            txtCargo.setStyle("");
+        }
+        if (txtNivel != null) txtNivel.clear();
+        if (txtSalarioBase != null) txtSalarioBase.clear();
+        if (txtBeneficios != null) txtBeneficios.clear();
     }
 
     private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
