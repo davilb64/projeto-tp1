@@ -211,3 +211,10 @@
     -fx-background-color: #f0f0f0;
     -fx-border-width: 1px;
 }
+
+.section-title {
+    -fx-font-family: "System", "Ubuntu", sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #444444;
+}
