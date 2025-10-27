@@ -1,6 +1,6 @@
 package app.humanize.repository;
 
-import app.humanize.model.factories.RegraSalarial;
+import app.humanize.model.RegraSalarial;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

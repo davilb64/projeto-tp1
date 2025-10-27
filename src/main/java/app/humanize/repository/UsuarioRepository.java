@@ -89,7 +89,7 @@ public class UsuarioRepository {
             return;
         }
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
-            leitor.readLine(); // Pula o cabeçalho
+            leitor.readLine();
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 Usuario usuario = parseUsuarioDaLinhaCsv(linha);
@@ -104,7 +104,8 @@ public class UsuarioRepository {
 
     private void persistirAlteracoesNoCSV() throws IOException {
         try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
-            escritor.write("ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;DataEmissao;Receita;Despesas;Salario;\n");
+            // 1. ADICIONADO "Cargo" AO CABEÇALHO
+            escritor.write("ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;DataEmissao;Receita;Despesas;Salario;Cargo;Regime;\n");
             for (Usuario usuario : this.usuariosEmMemoria) {
                 escritor.write(formatarUsuarioParaCSV(usuario));
             }
@@ -113,20 +114,32 @@ public class UsuarioRepository {
 
     private Usuario parseUsuarioDaLinhaCsv(String linha) {
         String[] campos = linha.split(";", -1);
-        if (campos.length < 14) return null;
+        // 2. NÚMERO DE CAMPOS AUMENTADO PARA 16
+        if (campos.length < 16) {
+            System.err.println("Linha CSV inválida (poucos campos, esperado 16): " + linha);
+            return null;
+        }
 
         try {
             int id = Integer.parseInt(campos[0]);
-            Perfil perfil = Perfil.valueOf(campos[7]);
+            Perfil perfil = Perfil.valueOf(campos[7].trim().toUpperCase());
 
-            Endereco endereco = new Endereco.EnderecoBuilder()
-                    .logradouro(campos[4].split(",")[0].trim())
-                    .numero(Integer.parseInt(campos[4].split(",")[1].trim()))
-                    .bairro(campos[4].split(",")[2].trim())
-                    .cidade(campos[4].split(",")[3].trim())
-                    .estado(EstadosBrasileiros.valueOf(campos[4].split(",")[4].trim()))
-                    .cep(campos[4].split(",")[5].trim())
-                    .build();
+            Endereco endereco = null;
+            if (!campos[4].trim().isEmpty()) {
+                String[] partesEndereco = campos[4].split(",");
+                if (partesEndereco.length == 6) {
+                    endereco = new Endereco.EnderecoBuilder()
+                            .logradouro(partesEndereco[0].trim())
+                            .numero(Integer.parseInt(partesEndereco[1].trim()))
+                            .bairro(partesEndereco[2].trim())
+                            .cidade(partesEndereco[3].trim())
+                            .estado(EstadosBrasileiros.valueOf(partesEndereco[4].trim().toUpperCase()))
+                            .cep(partesEndereco[5].trim())
+                            .build();
+                } else {
+                    System.err.println("Formato de endereço inválido na linha: " + linha);
+                }
+            }
 
             Usuario usuario;
             if (perfil == Perfil.FUNCIONARIO) {
@@ -142,14 +155,29 @@ public class UsuarioRepository {
                     }
                 }
 
-                usuario = new Funcionario.FuncionarioBuilder()
-                        .matricula(Integer.parseInt(campos[8]))
-                        .periodo(Integer.parseInt(campos[9]))
-                        .dataEmissao(dataEmissao) // Usa a variável corrigida
-                        .receita(Double.parseDouble(campos[11]))
-                        .despesas(Double.parseDouble(campos[12]))
-                        .salario(Double.parseDouble(campos[13]))
-                        .build();
+                String cargo = campos[14].trim();
+
+                Regime regime = null;
+                String regimeStr = campos[15].trim();
+                if (!regimeStr.isEmpty()) {
+                    try {
+                        regime = Regime.valueOf(regimeStr.toUpperCase());
+                    } catch (IllegalArgumentException iae) {
+                        System.err.println("Valor de Regime inválido na linha: '" + linha + "'. Campo regime: '" + regimeStr + "'");
+                    }
+                }
+
+                Funcionario.FuncionarioBuilder builder = new Funcionario.FuncionarioBuilder()
+                        .matricula(Integer.parseInt(campos[8].trim().isEmpty() ? "0" : campos[8].trim()))
+                        .periodo(Integer.parseInt(campos[9].trim().isEmpty() ? "0" : campos[9].trim()))
+                        .dataEmissao(dataEmissao)
+                        .receita(Double.parseDouble(campos[11].trim().isEmpty() ? "0.0" : campos[11].trim()))
+                        .despesas(Double.parseDouble(campos[12].trim().isEmpty() ? "0.0" : campos[12].trim()))
+                        .salario(Double.parseDouble(campos[13].trim().isEmpty() ? "0.0" : campos[13].trim()))
+                        .cargo(cargo) // 4. ADICIONADO AO BUILDER
+                        .regime(regime);
+
+                usuario = builder.build();
 
             } else if (perfil == Perfil.ADMINISTRADOR) {
                 usuario = new Administrador.AdministradorBuilder().build();
@@ -172,6 +200,7 @@ public class UsuarioRepository {
 
         } catch (Exception e) {
             System.err.println("Falha ao parsear linha do CSV: '" + linha + "'. Erro: " + e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -200,8 +229,10 @@ public class UsuarioRepository {
             sb.append(f.getReceita()).append(";");
             sb.append(f.getDespesas()).append(";");
             sb.append(f.getSalario()).append(";");
+            sb.append(f.getCargo() == null ? "" : f.getCargo()).append(";");
+            sb.append(f.getRegime() == null ? "" : f.getRegime().name()).append(";");
         } else {
-            sb.append(";;;;;;");
+            sb.append(";;;;;;;;");
         }
         sb.append("\n");
         return sb.toString();
@@ -217,7 +248,18 @@ public class UsuarioRepository {
         }
     }
 
-    public void atualizarUsuario(Usuario usuario) throws IOException {
-        persistirAlteracoesNoCSV();
+    public void atualizarUsuario(Usuario usuarioAtualizado) throws IOException {
+        Optional<Usuario> usuarioAntigoOpt = buscaUsuarioPorId(usuarioAtualizado.getId());
+        if (usuarioAntigoOpt.isPresent()) {
+            int index = this.usuariosEmMemoria.indexOf(usuarioAntigoOpt.get());
+            if (index != -1) {
+                this.usuariosEmMemoria.set(index, usuarioAtualizado);
+                persistirAlteracoesNoCSV();
+            } else {
+                throw new IOException("Erro interno: Usuário encontrado mas índice não localizado.");
+            }
+        } else {
+            throw new IOException("Usuário com ID " + usuarioAtualizado.getId() + " não encontrado para atualizar.");
+        }
     }
 }

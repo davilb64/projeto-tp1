@@ -1,6 +1,6 @@
 package app.humanize.repository;
 
-import app.humanize.model.factories.FolhaPag;
+import app.humanize.model.FolhaPag;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
