@@ -3,6 +3,15 @@ package app.humanize.model;
 import javafx.beans.property.*;
 
 public class RegraSalarial {
+
+    public RegraSalarial() {
+        this.cargo = new SimpleStringProperty("");
+        this.nivel = new SimpleStringProperty("");
+        this.salarioBase = new SimpleDoubleProperty(0.0);
+        this.adicionalNivel = new SimpleDoubleProperty(0.0);
+        this.beneficios = new SimpleDoubleProperty(0.0);
+        this.salarioTotal = new SimpleDoubleProperty(0.0);
+    }
     private final StringProperty cargo;
     private final StringProperty nivel;
     private final DoubleProperty salarioBase;
