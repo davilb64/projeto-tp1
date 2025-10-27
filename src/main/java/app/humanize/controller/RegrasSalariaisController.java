@@ -2,7 +2,7 @@ package app.humanize.controller;
 
 import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.VagaRepository;
-import app.humanize.model.factories.RegraSalarial;
+import app.humanize.model.RegraSalarial;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.ObservableList;
@@ -24,10 +24,10 @@ public class RegrasSalariaisController {
     @FXML private TableColumn<RegraSalarial, String> colunaNivel;
     @FXML private TableColumn<RegraSalarial, Double> colunaSalarioTotal;
 
-    private SalarioRepository salarioRepository = SalarioRepository.getInstance();
-    private VagaRepository vagaRepository = VagaRepository.getInstance();
-    private ObservableList<RegraSalarial> regrasSalariais = FXCollections.observableArrayList();
-    private ObservableList<String> cargosValidos = FXCollections.observableArrayList();
+    private final SalarioRepository salarioRepository = SalarioRepository.getInstance();
+    private final VagaRepository vagaRepository = VagaRepository.getInstance();
+    private final ObservableList<RegraSalarial> regrasSalariais = FXCollections.observableArrayList();
+    private final ObservableList<String> cargosValidos = FXCollections.observableArrayList();
 
     public enum NivelExperiencia {
         JUNIOR("Júnior", 0.0),

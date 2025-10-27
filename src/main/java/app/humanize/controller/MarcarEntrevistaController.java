@@ -159,7 +159,7 @@ public class MarcarEntrevistaController {
 
     // 🔹 Fecha a janela
     @FXML
-    private void fecharJanela(ActionEvent event) {
+    private void fecharJanela() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }

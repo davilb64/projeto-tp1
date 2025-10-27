@@ -9,6 +9,8 @@ public class Funcionario extends Usuario {
     private double receita;
     private double despesas;
     private double salario;
+    private String cargo;
+    private Regime regime;
 
     // builder
     public static class FuncionarioBuilder {
@@ -18,6 +20,8 @@ public class Funcionario extends Usuario {
         private double receita;
         private double despesas;
         private double salario;
+        private String cargo;
+        private Regime regime;
 
         // Atributos de Usuario/Pessoa
         private String login;
@@ -27,6 +31,16 @@ public class Funcionario extends Usuario {
         private String cpf;
         private String email;
         private Endereco endereco;
+
+        public FuncionarioBuilder regime(Regime regime) {
+            this.regime = regime;
+            return this;
+        }
+
+        public FuncionarioBuilder cargo(String cargo) {
+            this.cargo = cargo;
+            return this;
+        }
 
         public FuncionarioBuilder nome(String nome) {
             this.nome = nome;
@@ -107,6 +121,8 @@ public class Funcionario extends Usuario {
         this.receita = builder.receita;
         this.despesas = builder.despesas;
         this.salario = builder.salario;
+        this.cargo = builder.cargo;
+        this.regime = builder.regime;
     }
 
     public int getMatricula() {
@@ -161,4 +177,19 @@ public class Funcionario extends Usuario {
         return (this.receita + this.salario) - this.despesas;
     }
 
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public Regime getRegime() {
+        return regime;
+    }
+
+    public void setRegime(Regime regime) {
+        this.regime = regime;
+    }
 }

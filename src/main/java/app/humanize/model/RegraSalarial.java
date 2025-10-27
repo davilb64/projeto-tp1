@@ -1,14 +1,8 @@
-package app.humanize.model.factories;
+package app.humanize.model;
 
 import javafx.beans.property.*;
 
 public class RegraSalarial {
-    private final StringProperty cargo;
-    private final StringProperty nivel;
-    private final DoubleProperty salarioBase;
-    private final DoubleProperty adicionalNivel;
-    private final DoubleProperty beneficios;
-    private final DoubleProperty salarioTotal;
 
     public RegraSalarial() {
         this.cargo = new SimpleStringProperty("");
@@ -18,6 +12,12 @@ public class RegraSalarial {
         this.beneficios = new SimpleDoubleProperty(0.0);
         this.salarioTotal = new SimpleDoubleProperty(0.0);
     }
+    private final StringProperty cargo;
+    private final StringProperty nivel;
+    private final DoubleProperty salarioBase;
+    private final DoubleProperty adicionalNivel;
+    private final DoubleProperty beneficios;
+    private final DoubleProperty salarioTotal;
 
     public RegraSalarial(String cargo, String nivel, double salarioBase,
                          double adicionalNivel, double beneficios, double salarioTotal) {

@@ -1,6 +1,6 @@
 package app.humanize.repository;
 
-import app.humanize.model.factories.RegraSalarial;
+import app.humanize.model.RegraSalarial;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +43,11 @@ public class SalarioRepository {
                 if (campos.length >= 6) {
                     String cargo = campos[0];
                     String nivel = campos[1];
-                    double salarioBase = Double.parseDouble(campos[2]);
-                    double adicionalNivel = Double.parseDouble(campos[3]);
-                    double beneficios = Double.parseDouble(campos[4]);
-                    double salarioTotal = Double.parseDouble(campos[5]);
+
+                    double salarioBase = Double.parseDouble(campos[2].replace(",", "."));
+                    double adicionalNivel = Double.parseDouble(campos[3].replace(",", "."));
+                    double beneficios = Double.parseDouble(campos[4].replace(",", "."));
+                    double salarioTotal = Double.parseDouble(campos[5].replace(",", "."));
 
                     RegraSalarial regra = new RegraSalarial(cargo, nivel, salarioBase, adicionalNivel, beneficios, salarioTotal);
                     regras.add(regra);
