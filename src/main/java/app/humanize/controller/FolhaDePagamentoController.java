@@ -6,8 +6,10 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.VagaRepository;
+import app.humanize.model.RegraSalarial;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 
 public class FolhaDePagamentoController {
@@ -33,7 +35,6 @@ public class FolhaDePagamentoController {
     private SalarioRepository salarioRepo = SalarioRepository.getInstance();
     private VagaRepository vagaRepo = VagaRepository.getInstance();
     private ObservableList<Map<String, Object>> funcionarios;
-
 
     private final double ADICIONAL_HORAS_EXTRAS = 100.0;
     private final double DESCONTO_ATRASO = 50.0;
@@ -73,13 +74,19 @@ public class FolhaDePagamentoController {
     private void configurarEventos() {
         btnEmitir.setOnAction(e -> emitirFolhaPagamento());
 
-        MenuItem horasExtras = menuAdic.getItems().get(0);
-        horasExtras.setOnAction(e -> adicionarHorasExtras());
 
-        MenuItem atraso = menuDesc.getItems().get(0);
-        MenuItem multa = menuDesc.getItems().get(1);
-        atraso.setOnAction(e -> aplicarDescontoAtraso());
-        multa.setOnAction(e -> aplicarDescontoMulta());
+        if (!menuAdic.getItems().isEmpty()) {
+            MenuItem horasExtras = menuAdic.getItems().get(0);
+            horasExtras.setOnAction(e -> adicionarHorasExtras());
+        }
+
+        if (!menuDesc.getItems().isEmpty()) {
+            MenuItem atraso = menuDesc.getItems().get(0);
+            MenuItem multa = menuDesc.getItems().size() > 1 ? menuDesc.getItems().get(1) : null;
+
+            if (atraso != null) atraso.setOnAction(e -> aplicarDescontoAtraso());
+            if (multa != null) multa.setOnAction(e -> aplicarDescontoMulta());
+        }
     }
 
     @FXML
@@ -106,8 +113,8 @@ public class FolhaDePagamentoController {
             return;
         }
 
-        Double salarioBase = buscarSalarioBaseDoRepository(cargoNome, nivelNome);
-        if (salarioBase == null) {
+        RegraSalarial regra = buscarRegraSalarial(cargoNome, nivelNome);
+        if (regra == null) {
             mostrarAlerta("Regra Salarial Não Encontrada",
                     "Não foi encontrada uma regra salarial para:\n" +
                             "Cargo: " + cargoNome + "\n" +
@@ -116,17 +123,18 @@ public class FolhaDePagamentoController {
             return;
         }
 
-        double adicionalNivel = adicionaisPorNivel.get(nivelNome);
-        double salarioTotal = salarioBase + adicionalNivel;
+        double salarioBase = regra.getSalarioBase();
+        double adicionalNivel = regra.getAdicionalNivel();
+        double beneficios = regra.getBeneficios();
+        double salarioTotal = salarioBase + adicionalNivel + beneficios;
 
-
-               // temporario enquanto nao tenho o funcioanrio
         Map<String, Object> funcionario = new HashMap<>();
         funcionario.put("nome", nome);
         funcionario.put("cargo", cargoNome);
         funcionario.put("nivel", nivelNome);
         funcionario.put("salarioBase", salarioBase);
         funcionario.put("adicionalNivel", adicionalNivel);
+        funcionario.put("beneficios", beneficios);
         funcionario.put("adicionais", 0.0);
         funcionario.put("descontos", 0.0);
         funcionario.put("salarioLiquido", salarioTotal);
@@ -135,6 +143,20 @@ public class FolhaDePagamentoController {
 
         atualizarTabelaSalario(salarioTotal);
         limparCampos();
+
+        mostrarAlerta("Sucesso", "Folha de pagamento emitida com sucesso para " + nome);
+    }
+
+    private RegraSalarial buscarRegraSalarial(String cargo, String nivel) {
+        List<RegraSalarial> regras = salarioRepo.carregarTodasRegras();
+
+        for (RegraSalarial regra : regras) {
+            if (regra.getCargo().equalsIgnoreCase(cargo.trim()) &&
+                    regra.getNivel().equalsIgnoreCase(nivel.trim())) {
+                return regra;
+            }
+        }
+        return null;
     }
 
     private boolean validarCargo(String cargoNome) {
@@ -144,26 +166,6 @@ public class FolhaDePagamentoController {
 
     private boolean validarNivel(String nivelNome) {
         return adicionaisPorNivel.containsKey(nivelNome);
-    }
-
-    private Double buscarSalarioBaseDoRepository(String cargo, String nivel) {
-        try {
-            String chave = cargo + "_" + nivel;
-            String regraSalarial = salarioRepo.buscarRegra(chave);
-
-            if (regraSalarial != null && !regraSalarial.isEmpty()) {
-
-                String[] partes = regraSalarial.split("Base: R\\$");
-                if (partes.length > 1) {
-                    String valorParte = partes[1].split("\\|")[0].trim();
-                    return Double.parseDouble(valorParte.replace(",", "."));
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            System.err.println("Erro ao buscar salário base: " + e.getMessage());
-            return null;
-        }
     }
 
     private String listarCargosDisponiveis() {
@@ -179,7 +181,6 @@ public class FolhaDePagamentoController {
         if (selecionado != null) {
             double adicionaisAtuais = (double) selecionado.get("adicionais");
             double salarioLiquidoAtual = (double) selecionado.get("salarioLiquido");
-
 
             selecionado.put("adicionais", adicionaisAtuais + ADICIONAL_HORAS_EXTRAS);
             selecionado.put("salarioLiquido", salarioLiquidoAtual + ADICIONAL_HORAS_EXTRAS);

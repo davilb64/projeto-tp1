@@ -1,92 +1,77 @@
 package app.humanize.repository;
 
+import app.humanize.model.RegraSalarial;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SalarioRepository {
 
     private static final SalarioRepository instance = new SalarioRepository();
     private final String arquivoCsv = "./src/main/resources/regras_salariais.csv";
 
-    private final Map<String, String> regrasEmMemoria;
-
-    private SalarioRepository() {
-        this.regrasEmMemoria = new HashMap<>();
-        this.carregarRegrasDoCSV();
-    }
+    private SalarioRepository() {}
 
     public static SalarioRepository getInstance() {
         return instance;
     }
 
-    public Map<String, String> getTodasRegras() {
-        return new HashMap<>(this.regrasEmMemoria);
+    public void salvarRegra(RegraSalarial regra) throws IOException {
+        List<RegraSalarial> regrasExistentes = carregarTodasRegras();
+
+        regrasExistentes.removeIf(existente ->
+                existente.getCargo().equals(regra.getCargo()) &&
+                        existente.getNivel().equals(regra.getNivel()));
+
+        regrasExistentes.add(regra);
+        salvarTodasRegras(regrasExistentes);
     }
 
-    public void salvarRegra(String chave, String valor) throws IOException {
-        this.regrasEmMemoria.put(chave, valor);
-        this.persistirAlteracoesNoCSV();
-    }
-
-    public String buscarRegra(String chave) {
-        return this.regrasEmMemoria.get(chave);
-    }
-
-    public boolean existeRegra(String chave) {
-        return this.regrasEmMemoria.containsKey(chave);
-    }
-
-    public void excluirRegra(String chave) throws IOException {
-        if (this.regrasEmMemoria.remove(chave) != null) {
-            persistirAlteracoesNoCSV();
-        }
-    }
-
-    public void carregarRegrasDoCSV() {
+    public List<RegraSalarial> carregarTodasRegras() {
+        List<RegraSalarial> regras = new ArrayList<>();
         File arquivo = new File(arquivoCsv);
+
         if (!arquivo.exists()) {
-            return;
+            return regras;
         }
+
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
             leitor.readLine();
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 String[] campos = linha.split(";", -1);
-                if (campos.length >= 2) {
-                    String chave = campos[0];
-                    String valor = campos[1];
-                    this.regrasEmMemoria.put(chave, valor);
+                if (campos.length >= 6) {
+                    String cargo = campos[0];
+                    String nivel = campos[1];
+                    double salarioBase = Double.parseDouble(campos[2]);
+                    double adicionalNivel = Double.parseDouble(campos[3]);
+                    double beneficios = Double.parseDouble(campos[4]);
+                    double salarioTotal = Double.parseDouble(campos[5]);
+
+                    RegraSalarial regra = new RegraSalarial(cargo, nivel, salarioBase, adicionalNivel, beneficios, salarioTotal);
+                    regras.add(regra);
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar regras do arquivo CSV: " + e.getMessage());
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Erro ao carregar regras do CSV: " + e.getMessage());
         }
+
+        return regras;
     }
 
-    private void persistirAlteracoesNoCSV() throws IOException {
+    private void salvarTodasRegras(List<RegraSalarial> regras) throws IOException {
         try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
-            escritor.write("Chave;Valor\n");
-            for (Map.Entry<String, String> entry : this.regrasEmMemoria.entrySet()) {
-                escritor.write(entry.getKey() + ";" + entry.getValue() + ";\n");
+            escritor.write("Cargo;Nivel;SalarioBase;AdicionalNivel;Beneficios;SalarioTotal\n");
+
+            for (RegraSalarial regra : regras) {
+                escritor.write(String.format("%s;%s;%.2f;%.2f;%.2f;%.2f\n",
+                        regra.getCargo(),
+                        regra.getNivel(),
+                        regra.getSalarioBase(),
+                        regra.getAdicionalNivel(),
+                        regra.getBeneficios(),
+                        regra.getSalarioTotal()));
             }
         }
-    }
-
-    public List<String> getTodosCargos() {
-        List<String> cargos = new ArrayList<>();
-        for (String chave : regrasEmMemoria.keySet()) {
-            String[] partes = chave.split("_");
-            if (partes.length > 0) {
-                cargos.add(partes[0]);
-            }
-        }
-        return cargos;
-    }
-
-    public int getQuantidadeRegras() {
-        return this.regrasEmMemoria.size();
     }
 }
