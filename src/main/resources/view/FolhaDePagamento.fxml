@@ -5,6 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -15,75 +18,118 @@
         <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </padding>
-        <Label alignment="CENTER" prefHeight="94.0" prefWidth="760.0" text=" Folha de Pagamento" underline="true">
+        <Label alignment="CENTER" prefHeight="59.0" prefWidth="579.0" text=" Folha de Pagamento" underline="true">
             <font>
                 <Font size="36.0" />
             </font>
         </Label>
-        <HBox prefHeight="121.0" prefWidth="760.0">
-            <HBox prefHeight="110.0" prefWidth="287.0">
-                <MenuButton fx:id="menubtnIdentidade" alignment="CENTER" mnemonicParsing="false" prefHeight="46.0" prefWidth="215.0" style="-fx-background-color: #fff0f5;" text="Identidade">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Nome" />
-                        <MenuItem mnemonicParsing="false" text="CPF" />
-                        <MenuItem mnemonicParsing="false" text="Cargo" />
-                    </items>
-                    <font>
-                        <Font size="22.0" />
-                    </font>
-                </MenuButton>
+        <HBox prefHeight="24.0" prefWidth="579.0">
+         <children>
+            <HBox prefHeight="30.0" prefWidth="369.0">
+               <children>
+                  <Label text="Nome">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Label>
+               </children>
             </HBox>
-            <HBox prefHeight="82.0" prefWidth="278.0">
-                <MenuButton fx:id="menuBtnObservacoes" mnemonicParsing="false" prefHeight="46.0" prefWidth="265.0" style="-fx-background-color: #fff0f5;;" text="Observações">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Data" />
-                    </items>
-                    <font>
+            <HBox prefHeight="28.0" prefWidth="236.0">
+               <children>
+                  <Label text="Cargo">
+                     <font>
                         <Font size="20.0" />
-                    </font>
-                </MenuButton>
+                     </font>
+                  </Label>
+               </children>
             </HBox>
-        </HBox>
-        <HBox prefHeight="128.0" prefWidth="760.0">
-            <HBox prefHeight="100.0" prefWidth="222.0" />
-            <HBox prefHeight="119.0" prefWidth="320.0">
-                <MenuButton fx:id="menuBtnResumo" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="46.0" prefWidth="322.0" style="-fx-background-color: #fff0f5;" text="Resumo">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Total ganhos" />
-                        <MenuItem mnemonicParsing="false" text="Total de Descontos" />
-                        <MenuItem mnemonicParsing="false" text="Liquido a receber" />
-                    </items>
-                    <font>
-                        <Font size="24.0" />
-                    </font>
-                </MenuButton>
+            <HBox prefHeight="28.0" prefWidth="209.0" />
+            <HBox prefHeight="28.0" prefWidth="236.0">
+               <children>
+                  <Label text="Nivel">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
             </HBox>
-            <HBox prefHeight="100.0" prefWidth="222.0" />
+         </children>
         </HBox>
-        <HBox prefHeight="112.0" prefWidth="760.0">
-            <HBox prefHeight="115.0" prefWidth="254.0" />
-            <HBox prefHeight="101.0" prefWidth="330.0">
-                <MenuButton fx:id="menuBtnPagamento" alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="366.0" style="-fx-background-color: #fff0f5;" text="Pagamento">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Banco" />
-                        <MenuItem mnemonicParsing="false" text="Agencia" />
-                        <MenuItem mnemonicParsing="false" text="Conta" />
-                    </items>
-                    <font>
-                        <Font size="24.0" />
-                    </font>
-                </MenuButton>
+        <HBox prefHeight="42.0" prefWidth="579.0">
+            <HBox prefHeight="50.0" prefWidth="213.0">
+            <children>
+               <TextField fx:id="txtNome" />
+            </children></HBox>
+            <HBox prefHeight="50.0" prefWidth="212.0">
+            <children>
+               <TextField fx:id="txtCargo" />
+            </children>
             </HBox>
-            <HBox prefHeight="115.0" prefWidth="262.0" />
+         <HBox prefHeight="50.0" prefWidth="178.0">
+            <children>
+               <TextField fx:id="txtNivel" prefHeight="26.0" prefWidth="161.0" />
+            </children>
+         </HBox>
         </HBox>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="230.0">
-                <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="359.0" style="-fx-background-color: #ffc0cb;" text="Emitir">
-                    <font>
-                        <Font size="18.0" />
-                    </font>
-                </Button>
-            </HBox>
+        <HBox prefHeight="114.0" prefWidth="579.0">
+            <HBox prefHeight="114.0" prefWidth="148.0">
+            <children>
+               <TableView fx:id="tabelinhaSalario" prefHeight="114.0" prefWidth="149.0" style="-fx-background-color: #fff0f5;">
+                 <columns>
+                     <TableColumn prefWidth="75.0" text="Salario Total" />
+                 </columns>
+               </TableView>
+            </children></HBox>
+         <HBox prefHeight="114.0" prefWidth="204.0">
+            <children>
+               <MenuButton fx:id="menuAdic" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="28.0" prefWidth="194.0" style="-fx-background-color: #fff0f5;" text="Adicionais" textAlignment="JUSTIFY">
+                 <items>
+                   <MenuItem mnemonicParsing="false" text="Horas extras" />
+                 </items>
+                  <font>
+                     <Font size="19.0" />
+                  </font>
+               </MenuButton>
+            </children>
+         </HBox>
+         <MenuButton fx:id="menuDesc" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="28.0" prefWidth="194.0" style="-fx-background-color: #fff0f5;" text="Descontos" textAlignment="JUSTIFY">
+            <items>
+               <MenuItem mnemonicParsing="false" text="Atraso" />
+               <MenuItem mnemonicParsing="false" text="Multa" />
+            </items>
+            <font>
+               <Font size="19.0" />
+            </font>
+         </MenuButton>
         </HBox>
+      <HBox prefHeight="10.0" prefWidth="579.0" />
+      <HBox prefHeight="182.0" prefWidth="579.0">
+         <children>
+            <TableView fx:id="tabelaFolhaPagamento" prefHeight="154.0" prefWidth="580.0">
+              <columns>
+                <TableColumn fx:id="colunaNome" prefWidth="120.79996144771576" style="-fx-background-color: #fff0f5;" text="Nome" />
+                <TableColumn fx:id="colunaCargo" prefWidth="116.00006866455078" style="-fx-background-color: #fff0f5;" text="Cargo" />
+                  <TableColumn fx:id="colunaSalario" prefWidth="98.39996337890625" style="-fx-background-color: #fff0f5;" text="Salario" />
+                  <TableColumn fx:id="colunaDescon" prefWidth="101.60003662109375" style="-fx-background-color: #fff0f5;" text="Descontos" />
+                  <TableColumn fx:id="colunaLiquid" prefWidth="140.79998779296875" style="-fx-background-color: #fff0f5;" text="Total Liquido" />
+              </columns>
+            </TableView>
+         </children>
+      </HBox>
+      <HBox prefHeight="44.0" prefWidth="579.0">
+         <children>
+            <VBox prefHeight="44.0" prefWidth="196.0" />
+            <VBox prefHeight="44.0" prefWidth="210.0">
+               <children>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="212.0" style="-fx-background-color: #ffc0cb;" text="Emitir">
+                     <font>
+                        <Font size="45.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="44.0" prefWidth="179.0" />
+         </children>
+      </HBox>
     </VBox>
 </AnchorPane>
