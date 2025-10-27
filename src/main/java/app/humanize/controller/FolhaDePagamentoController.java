@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.VagaRepository;
-import app.humanize.model.factories.RegraSalarial;
+import app.humanize.model.RegraSalarial;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;

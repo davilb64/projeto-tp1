@@ -1,4 +1,4 @@
-package app.humanize.model.factories;
+package app.humanize.model;
 
 public class FolhaPag {
     private String nome;

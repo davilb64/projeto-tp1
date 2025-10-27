@@ -26,6 +26,13 @@ public class CandidaturaAVagaController {
     @FXML private Button btnSalvar;
     @FXML private Button btnCancelar;
 
+    private CandidatosAdmController controllerPai;
+
+    public void setControllerPai(CandidatosAdmController controllerPai) {
+        this.controllerPai = controllerPai;
+    }
+
+
     private CandidaturaRepository candidaturaRepository;
     private CandidatoRepository candidatoRepository;
     private VagaRepository vagaRepository;
@@ -131,6 +138,9 @@ public class CandidaturaAVagaController {
 
             mostrarSucesso("Candidatura associada com sucesso!");
             limparSelecoes();
+            if (controllerPai != null) {
+                controllerPai.showStatus(); // volta para tela de status
+            }
 
         } catch (Exception e) {
             mostrarErro("Erro ao associar candidatura: " + e.getMessage());

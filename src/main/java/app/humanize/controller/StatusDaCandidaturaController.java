@@ -5,16 +5,13 @@ import app.humanize.repository.CandidatoRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import app.humanize.repository.CandidaturaRepository;
+import app.humanize.model.Candidatura;
 
 import java.io.IOException;
 
@@ -24,6 +21,8 @@ public class StatusDaCandidaturaController {
     @FXML private TableColumn<Candidato, String> colCandidato;
     @FXML private TableColumn<Candidato, String> colCargo;
     @FXML private TableColumn<Candidato, String> colStatus;
+
+    private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
 
     private CandidatosAdmController controllerPai;
 
@@ -43,8 +42,11 @@ public class StatusDaCandidaturaController {
                 )
         );
         colStatus.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty("Em análise")
+                new javafx.beans.property.SimpleStringProperty(
+                        candidaturaRepository.getStatusPorCandidato(cellData.getValue())
+                )
         );
+
 
         listaCandidatos.addAll(candidatoRepository.getTodos());
         tableCandidaturas.setItems(listaCandidatos);
@@ -98,6 +100,18 @@ public class StatusDaCandidaturaController {
                 }
             }
         });
+    }
+
+    public void atualizarTabela() {
+        ObservableList<Candidato> candidatos = FXCollections.observableArrayList();
+
+        // para cada candidatura no CSV, adiciona o candidato correspondente
+        for (Candidatura c : candidaturaRepository.getTodas()) {
+            candidatos.add(c.getCandidato());
+        }
+
+        tableCandidaturas.setItems(candidatos);
+        tableCandidaturas.refresh();
     }
 
     private void mostrarAlerta(String msg) {

@@ -16,7 +16,7 @@
 <ScrollPane fitToWidth="true" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.FinanceiroUsuarioController">
     <VBox spacing="15.0">
 
-        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Financeiro - [Nome Funcionário]" />
+        <Label fx:id="lblTitulo" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Financeiro - [Nome Funcionário]" />
 
         <VBox spacing="10.0" styleClass="card-configuracao">
             <padding>

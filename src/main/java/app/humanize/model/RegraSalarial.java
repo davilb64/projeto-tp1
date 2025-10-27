@@ -1,4 +1,4 @@
-package app.humanize.model.factories;
+package app.humanize.model;
 
 import javafx.beans.property.*;
 
