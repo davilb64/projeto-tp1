@@ -13,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +54,7 @@ public class CandidaturaAVagaController {
         listVagas.getItems().setAll(vagasAbertas);
 
         // Carregar todos os candidatos
-        List<Candidato> candidatos = candidatoRepository.getTodosCandidatos();
+        List<Candidato> candidatos = candidatoRepository.getTodos();
         listCandidatos.getItems().setAll(candidatos);
     }
 
@@ -123,7 +125,7 @@ public class CandidaturaAVagaController {
             novaCandidatura.setCandidato(candidatoSelecionado);
             novaCandidatura.setVaga(vagaSelecionada);
             novaCandidatura.setStatus(StatusCandidatura.PENDENTE);
-            novaCandidatura.setDataCandidatura(LocalDateTime.now());
+            novaCandidatura.setDataCandidatura(LocalDate.now());
 
             candidaturaRepository.salvar(novaCandidatura);
 

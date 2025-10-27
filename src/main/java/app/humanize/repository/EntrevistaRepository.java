@@ -134,7 +134,14 @@ public class EntrevistaRepository {
             vaga.setId(idVaga);
             vaga.setCargo(campos[11]);
             vaga.setSalario(campos[12]);
-            vaga.setStatus(campos[13]);
+            if (campos[13] != null && !campos[13].isEmpty()) {
+                try {
+                    vaga.setStatus(StatusVaga.valueOf(campos[13]));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Status inválido no CSV: " + campos[13]);
+                    vaga.setStatus(StatusVaga.ABERTA); // valor padrão
+                }
+            }
             vaga.setRequisitos(campos[14]);
             vaga.setDepartamento(campos[15]);
             vaga.setDataVaga(campos[16] != null && !campos[16].isEmpty() ? LocalDate.parse(campos[16]) : null);
