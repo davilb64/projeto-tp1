@@ -10,15 +10,6 @@ public class RegraSalarial {
     private final DoubleProperty beneficios;
     private final DoubleProperty salarioTotal;
 
-    public RegraSalarial() {
-        this.cargo = new SimpleStringProperty("");
-        this.nivel = new SimpleStringProperty("");
-        this.salarioBase = new SimpleDoubleProperty(0.0);
-        this.adicionalNivel = new SimpleDoubleProperty(0.0);
-        this.beneficios = new SimpleDoubleProperty(0.0);
-        this.salarioTotal = new SimpleDoubleProperty(0.0);
-    }
-
     public RegraSalarial(String cargo, String nivel, double salarioBase,
                          double adicionalNivel, double beneficios, double salarioTotal) {
         this.cargo = new SimpleStringProperty(cargo);
