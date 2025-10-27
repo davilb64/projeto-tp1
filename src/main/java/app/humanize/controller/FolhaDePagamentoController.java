@@ -149,7 +149,7 @@ public class FolhaDePagamentoController {
     private Double buscarSalarioBaseDoRepository(String cargo, String nivel) {
         try {
             String chave = cargo + "_" + nivel;
-            String regraSalarial = salarioRepo.buscarRegra(chave);
+            String regraSalarial = ""; ///salarioRepo.buscarRegra(chave);
 
             if (regraSalarial != null && !regraSalarial.isEmpty()) {
 
