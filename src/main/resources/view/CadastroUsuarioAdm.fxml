@@ -15,9 +15,13 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxWidth="450.0" minWidth="400.0" spacing="20.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CadastroUsuarioAdmController">
+<VBox maxWidth="450.0" minWidth="400.0" spacing="15.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CadastroUsuarioAdmController">
 
-    <Label styleClass="screen-title" text="Cadastro de Usuário" />
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 10;" styleClass="screen-title" text="Cadastro de Usuário" VBox.vgrow="ALWAYS">
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Label>
 
     <GridPane hgap="10.0" vgap="12.0">
         <columnConstraints>
@@ -35,37 +39,37 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label text="ID:" GridPane.halignment="RIGHT" />
+        <Label styleClass="filter-label" text="ID:" GridPane.halignment="RIGHT" />
         <Label fx:id="lblId" text="Automático" GridPane.columnIndex="1" />
 
-        <Label text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
         <TextField fx:id="txtNome" promptText="Nome completo do usuário" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label text="CPF:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Label styleClass="filter-label" text="CPF:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
         <TextField fx:id="txtCpf" promptText="000.000.000-00" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-        <Label text="Endereço:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <Label styleClass="filter-label" text="Endereço:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <Label fx:id="lblEndereco" text="Nenhum endereço selecionado" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" text="+" onAction="#cadastrarEndereco"/>
+            <Button mnemonicParsing="false" onAction="#cadastrarEndereco" text="+" />
         </HBox>
 
-        <Label text="E-mail:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+        <Label styleClass="filter-label" text="E-mail:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
         <TextField fx:id="txtEmail" promptText="exemplo@email.com" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-        <Label text="Login:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+        <Label styleClass="filter-label" text="Login:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
         <TextField fx:id="txtLogin" promptText="Nome de usuário para login" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-        <Label text="Senha:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+        <Label styleClass="filter-label" text="Senha:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
             <StackPane HBox.hgrow="ALWAYS">
                 <PasswordField fx:id="txtSenhaOculta" promptText="Senha" />
                 <TextField fx:id="txtSenhaVisivel" promptText="Senha" />
             </StackPane>
-            <ToggleButton fx:id="btnMostrarSenha" mnemonicParsing="false" text="Ver" />
+            <ToggleButton fx:id="btnMostrarSenha" mnemonicParsing="false" text="👁" />
         </HBox>
 
-        <Label text="Perfil:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
+        <Label styleClass="filter-label" text="Perfil:" GridPane.halignment="RIGHT" GridPane.rowIndex="7" />
         <ComboBox fx:id="perfilCombo" maxWidth="1.7976931348623157E308" promptText="Selecione um perfil" GridPane.columnIndex="1" GridPane.rowIndex="7" />
     </GridPane>
 
@@ -78,7 +82,7 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button defaultButton="true" onAction="#salvarUsuario" style="-fx-base: #4CAF50;" text="Salvar">
+        <Button defaultButton="true" onAction="#salvarUsuario" styleClass="primary-action-button" text="Salvar">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

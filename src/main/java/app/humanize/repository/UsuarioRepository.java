@@ -28,6 +28,16 @@ public class UsuarioRepository {
         return new ArrayList<>(this.usuariosEmMemoria);
     }
 
+    public List<Usuario> getRecrutadores() {
+        List<Usuario> recrutadores = new ArrayList<>();
+        for(Usuario usuario : this.usuariosEmMemoria) {
+            if (usuario instanceof Recrutador) {
+                recrutadores.add(usuario);
+            }
+        }
+        return recrutadores;
+    }
+
     public Optional<Usuario> buscaUsuarioPorLogin(String login) {
         return this.usuariosEmMemoria.stream()
                 .filter(u -> u.getLogin().equalsIgnoreCase(login))
@@ -120,14 +130,27 @@ public class UsuarioRepository {
 
             Usuario usuario;
             if (perfil == Perfil.FUNCIONARIO) {
+
+                LocalDate dataEmissao = null;
+                String dataEmissaoStr = campos[10].trim();
+                if (!dataEmissaoStr.isEmpty() && !dataEmissaoStr.equalsIgnoreCase("null")) {
+                    try {
+                        dataEmissao = LocalDate.parse(dataEmissaoStr);
+                    } catch (java.time.format.DateTimeParseException dtpe) {
+                        System.err.println("Formato de data inválido na linha: '" + linha + "'. Campo data: '" + dataEmissaoStr + "'");
+                        return null;
+                    }
+                }
+
                 usuario = new Funcionario.FuncionarioBuilder()
                         .matricula(Integer.parseInt(campos[8]))
                         .periodo(Integer.parseInt(campos[9]))
-                        .dataEmissao(LocalDate.parse(campos[10]))
+                        .dataEmissao(dataEmissao) // Usa a variável corrigida
                         .receita(Double.parseDouble(campos[11]))
                         .despesas(Double.parseDouble(campos[12]))
                         .salario(Double.parseDouble(campos[13]))
                         .build();
+
             } else if (perfil == Perfil.ADMINISTRADOR) {
                 usuario = new Administrador.AdministradorBuilder().build();
             } else if (perfil == Perfil.GESTOR) {
@@ -173,7 +196,7 @@ public class UsuarioRepository {
         if (usuario instanceof Funcionario f) {
             sb.append(f.getMatricula()).append(";");
             sb.append(f.getPeriodo()).append(";");
-            sb.append(f.getDataEmissao()).append(";");
+            sb.append(f.getDataEmissao() == null ? "" : f.getDataEmissao().toString()).append(";");
             sb.append(f.getReceita()).append(";");
             sb.append(f.getDespesas()).append(";");
             sb.append(f.getSalario()).append(";");
@@ -194,7 +217,7 @@ public class UsuarioRepository {
         }
     }
 
-    public void atualizarUsuario() throws IOException {
+    public void atualizarUsuario(Usuario usuario) throws IOException {
         persistirAlteracoesNoCSV();
     }
 }

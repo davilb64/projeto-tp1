@@ -53,7 +53,7 @@ public class CadastroEnderecoController {
             }
         });
         txtCep.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) { // Se perdeu o foco
+            if (!newValue) {
                 String cepNumerico = txtCep.getText().replaceAll("[^0-9]", "");
                 if (cepNumerico.length() == 8) {
                     buscarEnderecoPorCep(cepNumerico);
@@ -82,7 +82,6 @@ public class CadastroEnderecoController {
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() == 200) {
-                    // Converte a resposta JSON para o objeto DTO
                     return objectMapper.readValue(response.body(), EnderecoViaCep.class);
                 } else {
                     throw new RuntimeException("Falha na API ViaCEP: Código " + response.statusCode());
@@ -90,32 +89,27 @@ public class CadastroEnderecoController {
             }
         };
 
-        // O que fazer quando a Task for bem-sucedida (roda na JavaFX Thread)
         task.setOnSucceeded(event -> {
             EnderecoViaCep endereco = task.getValue();
             if (endereco != null && !endereco.isErro()) {
                 preencherCamposEndereco(endereco);
             } else {
                 mostrarAlerta("CEP não encontrado", "O CEP digitado não foi encontrado na base de dados.", null);
-                // Opcional: Limpar campo CEP se não encontrado
-                // txtCep.clear();
             }
             if (progressIndicator != null) {
-                progressIndicator.setVisible(false); // Esconde o progresso
+                progressIndicator.setVisible(false);
             }
         });
 
-        // O que fazer se a Task falhar (roda na JavaFX Thread)
         task.setOnFailed(event -> {
             Throwable ex = task.getException();
             mostrarAlerta("Erro de Rede", "Não foi possível conectar à API de CEP.", ex.getMessage());
             ex.printStackTrace();
             if (progressIndicator != null) {
-                progressIndicator.setVisible(false); // Esconde o progresso
+                progressIndicator.setVisible(false);
             }
         });
 
-        // Inicia a Task em uma nova Thread
         new Thread(task).start();
     }
 
@@ -146,17 +140,7 @@ public class CadastroEnderecoController {
     }
     @FXML
     private void salvarEndereco(){
-        String numeroTexto = txtNumero.getText();
-        int numero;
-
-        try {
-            numero = Integer.parseInt(numeroTexto);
-        } catch (NumberFormatException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "O campo 'Número' deve conter apenas dígitos.");
-            alert.setHeaderText("Formato Inválido");
-            alert.showAndWait();
-            return;
-        }
+        txtNumero.getText();
 
         if (txtLogradouro.getText().isBlank() || estadoCombo.getSelectionModel().isEmpty()){
             new Alert(Alert.AlertType.WARNING, "Preencha todos os campos.").showAndWait();

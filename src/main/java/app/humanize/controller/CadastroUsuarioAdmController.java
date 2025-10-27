@@ -171,7 +171,7 @@ public class CadastroUsuarioAdmController {
                 usuarioParaEditar.setEndereco(enderecoDoOutroController);
                 usuarioParaEditar.setSenha(hash);
 
-                usuarioRepository.atualizarUsuario();
+                usuarioRepository.atualizarUsuario(usuarioParaEditar);
             }
 
             fecharJanela();

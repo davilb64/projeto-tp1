@@ -14,10 +14,10 @@ import java.time.LocalDate;
 public class SolicitarContratacoesController
 {
     @FXML
-    private ChoiceBox<Candidato> cbCandidato;
+    private ComboBox<Candidato> cbCandidato;
 
     @FXML
-    private ChoiceBox<Vaga> cbVaga;
+    private ComboBox<Vaga> cbVaga;
 
     @FXML
     private DatePicker dpDataContratacao;
@@ -69,7 +69,7 @@ public class SolicitarContratacoesController
             contratacaoRepository.escreveContracaoNova(contratacao);
 
             // Mostra mensagem de sucesso
-            mostrarMensagemSucesso("Sucesso", "Contratação salva com sucesso!");
+            mostrarMensagemSucesso();
 
             // Limpa os campos da tela
             limparCampos();
@@ -107,7 +107,7 @@ public class SolicitarContratacoesController
             erros.append("- Digite o regime (ex: CLT, Estágio, PJ).\n");
         }
 
-        if (erros.length() > 0) {
+        if (!erros.isEmpty()) {
             mostrarAlerta("Campos obrigatórios", erros.toString(), null);
             return false;
         }
@@ -123,11 +123,11 @@ public class SolicitarContratacoesController
         alert.showAndWait();
     }
 
-    private void mostrarMensagemSucesso(String titulo, String mensagem) {
+    private void mostrarMensagemSucesso() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(titulo);
+        alert.setTitle("Sucesso");
         alert.setHeaderText(null);
-        alert.setContentText(mensagem);
+        alert.setContentText("Contratação salva com sucesso!");
         alert.showAndWait();
     }
 }
