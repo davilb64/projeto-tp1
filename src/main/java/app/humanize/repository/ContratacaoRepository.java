@@ -158,4 +158,12 @@ public class ContratacaoRepository {
     public void atualizarContratacao() throws IOException {
         persistirAlteracoesNoCSV();
     }
+
+    public List<String> getTodosNomes() {
+        List<String> nome = new ArrayList<>();
+        for(Contratacao contratacao : this.contratacoesEmMemoria) {
+            nome.add(contratacao.getCandidato() != null ? contratacao.getCandidato().getNome() : "");
+        }
+        return nome;
+    }
 }
