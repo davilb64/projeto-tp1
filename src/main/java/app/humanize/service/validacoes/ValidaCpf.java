@@ -1,4 +1,4 @@
-package app.humanize.service;
+package app.humanize.service.validacoes;
 
 import app.humanize.exceptions.CpfInvalidoException;
 import app.humanize.model.Usuario;
