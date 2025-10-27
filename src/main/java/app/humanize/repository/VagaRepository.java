@@ -97,7 +97,7 @@ public class VagaRepository {
             vaga.setId(id);
             vaga.setCargo(campos[1]);
             vaga.setSalario(campos[2]);
-            vaga.setStatus(campos[3]);
+            vaga.setStatus(StatusVaga.valueOf(campos[3]));
             vaga.setRequisitos(campos[4]);
             vaga.setDepartamento(campos[5]);
             vaga.setDataVaga(campos[6] != null && !campos[6].isEmpty() ? LocalDate.parse(campos[6]) : null);

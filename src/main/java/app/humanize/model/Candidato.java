@@ -10,6 +10,7 @@ public class Candidato extends Pessoa{
     private String telefone;
     private LocalDate dataCadastro;
     private Vaga vaga;
+    private String caminhoDocumento;
 
     //construtores
 
@@ -142,6 +143,13 @@ public class Candidato extends Pessoa{
 
     public String getTelefone() {
         return telefone;
+    }
+    public String getCaminhoDocumento() {
+        return caminhoDocumento;
+    }
+
+    public void setCaminhoDocumento(String caminhoDocumento) {
+        this.caminhoDocumento = caminhoDocumento;
     }
 
     public void setVaga(Vaga vaga) {

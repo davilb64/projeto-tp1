@@ -79,7 +79,7 @@ public class CandidatoRepository {
 
     private void persistirNoCSV() throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoCsv))) {
-            writer.write("Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Vaga\n");
+            writer.write("Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Vaga;DataCadastro;Documento\n");
             for (Candidato c : candidatosEmMemoria) {
                 writer.write(formatarCandidato(c));
                 writer.newLine();
@@ -96,7 +96,9 @@ public class CandidatoRepository {
                 c.getFormacao(),
                 c.getDisponibilidade(),
                 String.valueOf(c.getPretencaoSalarial()),
-                c.getVaga() != null ? c.getVaga().getCargo() : ""
+                c.getVaga() != null ? c.getVaga().getCargo() : "",
+                c.getCaminhoDocumento() != null ? c.getCaminhoDocumento() : ""
+
         );
     }
 }
