@@ -34,6 +34,12 @@ public class UsuarioRepository {
                 .findFirst();
     }
 
+    public Optional<Usuario> buscaUsuarioPorId(int id) {
+        return this.usuariosEmMemoria.stream()
+                .filter(u -> u.getId() == id)
+                .findFirst();
+    }
+
 
     public Optional<Usuario> buscaPorCpf(String cpf) {
         return this.usuariosEmMemoria.stream()

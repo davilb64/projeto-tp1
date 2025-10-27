@@ -66,7 +66,9 @@
     <center>
         <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1; -fx-padding: 20;">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu">
-                <font><Font size="21.0" /></font>
+                <font>
+               <Font size="21.0" />
+            </font>
             </Text>
         </StackPane>
     </center>

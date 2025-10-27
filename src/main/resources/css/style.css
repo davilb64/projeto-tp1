@@ -211,3 +211,22 @@
     -fx-background-color: #f0f0f0;
     -fx-border-width: 1px;
 }
+
+.section-title {
+    -fx-font-family: "System", "Ubuntu", sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #444444;
+}
+
+.sub-navigation-button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 5px 5px;
+    -fx-alignment: CENTER;
+}
+
+
+.sub-navigation-button:selected, .sub-navigation-button:focused, .sub-navigation-button-active {
+    -fx-background-color: #e0e0e0;
+}

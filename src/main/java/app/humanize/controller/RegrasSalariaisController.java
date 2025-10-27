@@ -1,12 +1,15 @@
 package app.humanize.controller;
 
+import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.VagaRepository;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.IOException;
 
 public class RegrasSalariaisController {
 
@@ -16,6 +19,7 @@ public class RegrasSalariaisController {
     @FXML private TextField txtBeneficios;
     @FXML private Button btnSalvar;
 
+    private SalarioRepository regraRepo = SalarioRepository.getInstance();
     private VagaRepository vagaRepository = VagaRepository.getInstance();
     private Map<String, String> regrasSalvas = new HashMap<>();
     private ObservableList<String> cargosValidos = FXCollections.observableArrayList();
@@ -155,6 +159,12 @@ public class RegrasSalariaisController {
             regrasSalvas.put(chave, valor);
 
             mostrarAlerta("✅ Sucesso", mensagemSucesso, Alert.AlertType.INFORMATION);
+
+            try {
+                regraRepo.salvarRegra(chave, valor);
+            } catch (IOException e) {
+                System.err.println("Erro ao salvar no arquivo: " + e.getMessage());
+            }
 
             limparCampos();
 

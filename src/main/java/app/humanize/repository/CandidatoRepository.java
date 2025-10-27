@@ -26,6 +26,10 @@ public class CandidatoRepository {
         return new ArrayList<>(candidatosEmMemoria);
     }
 
+    public int getQtdCandidatos() {
+        return candidatosEmMemoria.size();
+    }
+
     public void adicionar(Candidato candidato) throws IOException {
         candidatosEmMemoria.add(candidato);
         persistirNoCSV();
