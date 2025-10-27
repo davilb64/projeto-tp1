@@ -27,6 +27,7 @@ public class VagaRepository {
         return new ArrayList<>(this.vagaEmMemoria);
     }
 
+
     public List<String> getTodosCargos() {
         List<String> cargos = new ArrayList<>();
         for(Vaga vaga : this.vagaEmMemoria) {

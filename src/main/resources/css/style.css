@@ -218,3 +218,15 @@
     -fx-font-weight: bold;
     -fx-text-fill: #444444;
 }
+
+.sub-navigation-button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 5px 5px;
+    -fx-alignment: CENTER;
+}
+
+
+.sub-navigation-button:selected, .sub-navigation-button:focused, .sub-navigation-button-active {
+    -fx-background-color: #e0e0e0;
+}
