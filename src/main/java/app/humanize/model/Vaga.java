@@ -1,7 +1,5 @@
 package app.humanize.model;
 
-//to pondo isso pra poder testar, se apagar me avisa :) -kiki
-
 import java.time.LocalDate;
 
 
@@ -9,15 +7,16 @@ public class Vaga {
     private static int idCounter = 0;
     private int id;
     private String cargo;
-    private String status;
+
     private String salario;
     private String requisitos;
     private String departamento;
     private LocalDate dataVaga;
+    private StatusVaga status;
 
     public Vaga(){}
 
-    public Vaga(String cargo, String status, String salario, String requisitos){
+    public Vaga(String cargo, StatusVaga status, String salario, String requisitos){
         this.id = ++idCounter;
         this.cargo = cargo;
         this.status = status;
@@ -46,11 +45,11 @@ public class Vaga {
         this.cargo = cargo;
     }
 
-    public String getStatus() {
+    public StatusVaga getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusVaga status) {
         this.status = status;
     }
 
@@ -85,6 +84,8 @@ public class Vaga {
     public void setDataVaga(LocalDate dataVaga) {
         this.dataVaga = dataVaga;
     }
+
+
 
     // toString() define o texto exibido no ChoiceBox
     @Override

@@ -32,7 +32,9 @@ public class CriarVagaController {
         txtCargo.setText(vaga.getCargo());
         txtSalario.setText(vaga.getSalario());
         txtRequisitos.setText(vaga.getRequisitos());
-        txtStatus.setText(vaga.getStatus());
+
+        // CORREÇÃO: Converter enum para String
+        txtStatus.setText(vaga.getStatus().name());
     }
 
     private boolean validarCampos() {
@@ -77,9 +79,9 @@ public class CriarVagaController {
 
     private void mostrarAlerta(String titulo, String mensagem, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(titulo);
-        alert.setContentText(mensagem);
-        alert.setContentText(conteudo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(mensagem);
+        alert.setContentText(conteudo != null ? conteudo : "");
         alert.showAndWait();
     }
 

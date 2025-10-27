@@ -25,6 +25,12 @@ public class StatusDaCandidaturaController {
     @FXML private TableColumn<Candidato, String> colCargo;
     @FXML private TableColumn<Candidato, String> colStatus;
 
+    private CandidatosAdmController controllerPai;
+
+    public void setControllerPai(CandidatosAdmController controllerPai) {
+        this.controllerPai = controllerPai;
+    }
+
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final ObservableList<Candidato> listaCandidatos = FXCollections.observableArrayList();
 
@@ -54,7 +60,7 @@ public class StatusDaCandidaturaController {
 
     // 🔹 ABRIR A TELA DE EDIÇÃO
     @FXML
-    private void editarCandidato() throws IOException {
+    private void editarCandidato() {
         Candidato candidatoSelecionado = tableCandidaturas.getSelectionModel().getSelectedItem();
 
         if (candidatoSelecionado == null) {
@@ -62,23 +68,13 @@ public class StatusDaCandidaturaController {
             return;
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
-        Parent root = loader.load();
-
-        // Passa o candidato para o controller de cadastro
-        CadastroDeCandidatoController controller = loader.getController();
-        controller.prepararParaEdicao(candidatoSelecionado);
-
-        Stage stage = new Stage();
-        stage.setTitle("Editar Candidato");
-        stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.showAndWait();
-
-        // Atualiza a tabela depois que a janela fechar
-        listaCandidatos.setAll(candidatoRepository.getTodos());
-        tableCandidaturas.refresh();
+        if (controllerPai != null) {
+            controllerPai.editarCandidatoExistente(candidatoSelecionado);
+        } else {
+            mostrarAlerta("Erro: A referência ao controller principal não foi configurada.");
+        }
     }
+
 
     @FXML
     private void excluirCandidato() {

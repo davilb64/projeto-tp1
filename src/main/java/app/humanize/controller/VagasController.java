@@ -162,7 +162,7 @@ public class VagasController {
         String statusFiltro = txtStatus.getText().trim();
         if (!statusFiltro.isEmpty()) {
             stream = stream.filter(vaga ->
-                    vaga.getStatus().toLowerCase().contains(statusFiltro.toLowerCase())
+                    vaga.getStatus().name().toLowerCase().contains(statusFiltro.toLowerCase())
             );
         }
 
