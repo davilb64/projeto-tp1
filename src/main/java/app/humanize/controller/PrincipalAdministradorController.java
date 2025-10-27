@@ -149,7 +149,7 @@ public class PrincipalAdministradorController {
 
     @FXML
     private void showEntrevistas() {
-        loadUI("MarcarEntrevista");
+        loadUI("GestaoEntrevista");
         setActiveButton(btnEntrevistas);
     }
 

@@ -47,6 +47,12 @@ public class UsuarioRepository {
                 .findFirst();
     }
 
+    public List<Usuario> buscaPorPerfil(Perfil perfil) {
+        return this.usuariosEmMemoria.stream()
+                .filter(u -> u.getPerfil().equals(perfil))
+                .toList();
+    }
+
     public int getQtdUsuarios(){
         return this.usuariosEmMemoria.size();
     }
