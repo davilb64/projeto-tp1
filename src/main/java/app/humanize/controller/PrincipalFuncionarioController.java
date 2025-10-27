@@ -2,14 +2,15 @@ package app.humanize.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import app.humanize.util.ScreenController;
 
 import java.io.IOException;
-import java.net.URL;
+import java.util.Objects;
 
 public class PrincipalFuncionarioController {
     public BorderPane root;
@@ -22,22 +23,44 @@ public class PrincipalFuncionarioController {
 
     private Button activeButton;
 
-    private void loadUI(String fxml) {
-        try {
-            URL resource = getClass().getResource("/view/" + fxml + ".fxml");
-            System.out.println(">> Tentando carregar: " + resource);
+    @FXML private void initialize(){
+        showFinanceiro();
+    }
 
-            if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxml);
+    private void loadUI(String fxmlPath) {
+        try {
+            System.out.println(">> Tentando carregar: " + getClass().getResource(fxmlPath));
+
+            Node view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
+
+            if (view != null) {
+                contentArea.getChildren().setAll(view);
+            } else {
+                System.err.println("Erro: FXML não carregado ou nulo: " + fxmlPath);
+                mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela: " + fxmlPath, "Verifique o console para detalhes.");
             }
 
-            Pane pane = FXMLLoader.load(resource);
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(pane);
-
         } catch (IOException e) {
+            System.err.println("Erro de IO ao carregar FXML: " + fxmlPath);
             e.printStackTrace();
+            mostrarAlerta("Erro ao Carregar Tela", "Não foi possível carregar a interface.", e.getMessage());
+        } catch (NullPointerException e) {
+            System.err.println("Erro: Recurso FXML não encontrado: " + fxmlPath);
+            e.printStackTrace();
+            mostrarAlerta("Erro Crítico", "Arquivo da interface não encontrado.", "Caminho: " + fxmlPath);
+        } catch (Exception e) {
+            System.err.println("Erro inesperado ao carregar FXML: " + fxmlPath);
+            e.printStackTrace();
+            mostrarAlerta("Erro Inesperado", "Ocorreu um erro ao tentar carregar a tela.", e.getMessage());
         }
+    }
+
+    private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo != null ? conteudo : "");
+        alert.showAndWait();
     }
 
     private void setActiveButton(Button button) {
@@ -50,14 +73,14 @@ public class PrincipalFuncionarioController {
 
     @FXML
     private void showFinanceiro() {
-        loadUI("FinanceiroUsuario");
+        loadUI("/view/FinanceiroUsuario.fxml");
         setActiveButton(btnFinanceiro);
     }
 
 
     @FXML
     private void showConfiguracoes() {
-        loadUI("ConfiguracoesAdm");
+        loadUI("/view/ConfiguracoesAdm.fxml");
         setActiveButton(btnConfig);
     }
 

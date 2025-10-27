@@ -1,14 +1,16 @@
 package app.humanize.controller;
 
 import app.humanize.exceptions.CpfInvalidoException;
+import app.humanize.exceptions.EmailInvalidoException;
 import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.Endereco;
 import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
 import app.humanize.model.factories.UsuarioFactory;
 import app.humanize.repository.UsuarioRepository;
-import app.humanize.service.ValidaCpf;
-import app.humanize.service.ValidaSenha;
+import app.humanize.service.validacoes.ValidaCpf;
+import app.humanize.service.validacoes.ValidaEmail;
+import app.humanize.service.validacoes.ValidaSenha;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,6 +41,7 @@ public class CadastroUsuarioAdmController {
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final ValidaCpf validaCpf = new ValidaCpf();
     private final ValidaSenha validaSenha = new ValidaSenha();
+    private final ValidaEmail validaEmail = new ValidaEmail();
 
     private Usuario usuarioParaEditar;
 
@@ -133,6 +136,7 @@ public class CadastroUsuarioAdmController {
 
         String senha = txtSenhaOculta.getText();
         String cpf = txtCpf.getText();
+        String email = txtEmail.getText();
         String hash;
 
         try {
@@ -140,6 +144,7 @@ public class CadastroUsuarioAdmController {
             if (usuarioParaEditar == null || cpfFoiAlterado) {
                 validaCpf.validaCpf(cpf);
             }
+            validaEmail.validaEmail(email);
             if (usuarioParaEditar == null) {
                 validaSenha.validaSenha(senha);
                 hash = BCrypt.hashpw(senha, BCrypt.gensalt());
@@ -160,13 +165,13 @@ public class CadastroUsuarioAdmController {
             } else {
                 usuarioParaEditar.setNome(txtNome.getText());
                 usuarioParaEditar.setCpf(cpf);
-                usuarioParaEditar.setEmail(txtEmail.getText());
+                usuarioParaEditar.setEmail(email);
                 usuarioParaEditar.setLogin(txtLogin.getText());
                 usuarioParaEditar.setPerfil(perfilCombo.getValue());
                 usuarioParaEditar.setEndereco(enderecoDoOutroController);
                 usuarioParaEditar.setSenha(hash);
 
-                usuarioRepository.atualizarUsuario();
+                usuarioRepository.atualizarUsuario(usuarioParaEditar);
             }
 
             fecharJanela();
@@ -175,6 +180,8 @@ public class CadastroUsuarioAdmController {
             mostrarAlerta("CPF Inválido", "CPF não atende aos critérios de existência!", e.getMessage());
         } catch (SenhaInvalidaException e) {
             mostrarAlerta("Senha Inválida", "A senha não atende aos critérios de existência!", e.getMessage());
+        } catch (EmailInvalidoException e) { 
+            mostrarAlerta("E-mail Inválido", "O E-mail informado não é válido.", e.getMessage());
         } catch (IOException e) {
             mostrarAlerta("Erro de Salvamento", "Falha ao salvar no arquivo CSV.", e.getMessage());
         } catch (Exception e) {

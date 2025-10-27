@@ -1,6 +1,7 @@
 package app.humanize.controller;
 
 import app.humanize.model.Perfil;
+import app.humanize.model.Usuario;
 import app.humanize.model.Vaga;
 import app.humanize.repository.VagaRepository;
 import javafx.collections.FXCollections;
@@ -9,18 +10,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class VagasController {
 
+    @FXML
+    private TextField txtId;
+    @FXML
+    private TextField txtCargo;
+    @FXML
+    private TextField txtStatus;
+    @FXML
+    private TextField txtSalario;
     @FXML
     private TableView<Vaga> tblVagas;
     @FXML
@@ -30,7 +39,9 @@ public class VagasController {
     @FXML
     private TableColumn<Vaga,String> colSalario;
     @FXML
-    private TableColumn<Vaga, Perfil> colStatus;
+    private TableColumn<Vaga, String> colStatus;
+    @FXML
+    private TableColumn<Vaga, String> colRequisitos;
 
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
 
@@ -40,6 +51,7 @@ public class VagasController {
         colCargo.setCellValueFactory(new PropertyValueFactory<>("cargo"));
         colSalario.setCellValueFactory(new PropertyValueFactory<>("salario"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colRequisitos.setCellValueFactory(new PropertyValueFactory<>("requisitos"));
         carregarTabela();
     }
 
@@ -118,5 +130,51 @@ public class VagasController {
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
+    }
+
+    @FXML
+    public void filtra(){
+        carregarFiltro();
+    }
+
+    private void carregarFiltro() {
+        List<Vaga> vagas = vagaRepository.getTodasVagas();
+
+        Stream<Vaga> stream = vagas.stream();
+
+        String cargoFiltro = txtCargo.getText().trim();
+        if (!cargoFiltro.isEmpty()) {
+            stream = stream.filter(vaga ->
+                    vaga.getCargo().toLowerCase().contains(cargoFiltro.toLowerCase())
+            );
+        }
+
+        String idFiltro = txtId.getText().trim();
+        if (!idFiltro.isEmpty()) {
+            try {
+                int id = Integer.parseInt(idFiltro);
+                stream = stream.filter(vaga -> vaga.getId() == id);
+            } catch (NumberFormatException e) {
+                System.err.println("Filtro de ID inválido, ignorado.");
+            }
+        }
+
+        String statusFiltro = txtStatus.getText().trim();
+        if (!statusFiltro.isEmpty()) {
+            stream = stream.filter(vaga ->
+                    vaga.getStatus().toLowerCase().contains(statusFiltro.toLowerCase())
+            );
+        }
+
+        String salarioFiltro = txtSalario.getText().trim();
+        if (!salarioFiltro.isEmpty()) {
+            stream = stream.filter(vaga ->
+                    vaga.getSalario().toLowerCase().contains(salarioFiltro.toLowerCase())
+            );
+        }
+
+        List<Vaga> vagasFiltrados = stream.collect(Collectors.toList());
+        tblVagas.setItems(FXCollections.observableArrayList(vagasFiltrados));
+        tblVagas.refresh();
     }
 }

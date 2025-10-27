@@ -15,26 +15,19 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.LoginController">
+<BorderPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.LoginController">
 
     <top>
-        <StackPane id="cabecalho" prefHeight="100.0">
+        <StackPane id="cabecalho">
             <padding>
                 <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
             </padding>
-
             <ImageView fitHeight="74.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
                 <Image url="@../logo-humanize-branca.png" />
             </ImageView>
-
-            <Text id="title" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Humanize" textAlignment="CENTER">
-                <font>
-                    <Font name="Corbel" size="43.0" />
-                </font>
-            </Text>
+            <Text id="title" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Humanize" textAlignment="CENTER" />
         </StackPane>
     </top>
 
@@ -46,73 +39,52 @@
             <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." />
         </HBox>
     </bottom>
+
     <center>
-        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-            <VBox alignment="CENTER" maxWidth="450.0" spacing="20.0"
-                  style="-fx-background-color: #999999; -fx-background-radius: 10; -fx-border-radius: 10;">
+        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+            <VBox alignment="CENTER" maxWidth="450.0" spacing="20.0" styleClass="login-panel">
                 <padding>
-                    <Insets bottom="30.0" left="30.0" right="30.0" top="30.0"/>
+                    <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                 </padding>
 
                 <GridPane alignment="CENTER" hgap="10.0" vgap="15.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity"/>
+                        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
 
-                    <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0"
-                          style="-fx-font-family: ubuntu;" text="Usuário:" textAlignment="RIGHT"
-                          GridPane.halignment="RIGHT">
-                        <font>
-                            <Font name="Ubuntu Bold" size="20.0"/>
-                        </font>
-                    </Text>
-                    <TextField fx:id="txtUsuario" promptText="Digite seu usuário" stylesheets="@../css/style.css"
-                               GridPane.columnIndex="1">
-                        <cursor>
-                            <Cursor fx:constant="TEXT"/>
-                        </cursor>
-                        <font>
-                            <Font size="15.0"/>
-                        </font>
-                    </TextField>
+                    <Text fontSmoothingType="LCD" styleClass="filter-label" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuário:" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
+                    <Text fontSmoothingType="LCD" styleClass="filter-label" strokeType="OUTSIDE" strokeWidth="0.0" text="Senha:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
 
-                    <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0"
-                          style="-fx-font-family: ubuntu;" text="Senha:" textAlignment="RIGHT"
-                          GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                        <font>
-                            <Font name="Ubuntu Bold" size="20.0"/>
-                        </font>
-                    </Text>
+                    <TextField fx:id="txtUsuario" promptText="Digite seu usuário" GridPane.columnIndex="1">
+                        <cursor>
+                            <Cursor fx:constant="TEXT" />
+                        </cursor>
+                    </TextField>
 
                     <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                         <StackPane HBox.hgrow="ALWAYS">
-                            <PasswordField fx:id="txtSenhaOculta" promptText="Digite sua senha"
-                                           stylesheets="@../css/style.css">
+                            <PasswordField fx:id="txtSenhaOculta" promptText="Digite sua senha">
                                 <cursor>
-                                    <Cursor fx:constant="TEXT"/>
+                                    <Cursor fx:constant="TEXT" />
                                 </cursor>
-                                <font>
-                                    <Font size="15.0"/>
-                                </font>
                             </PasswordField>
-                            <TextField fx:id="txtSenhaAberta" promptText="Digite sua senha"/>
+                            <TextField fx:id="txtSenhaAberta" promptText="Digite sua senha" />
                         </StackPane>
-                        <ToggleButton fx:id="btnMostrarSenha" mnemonicParsing="false" text="Ver"/>
+                        <ToggleButton fx:id="btnMostrarSenha" mnemonicParsing="false" text="👁" />
                     </HBox>
                 </GridPane>
 
-                <Button defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrar" prefHeight="40.0"
-                        text="Entrar">
+                <Button defaultButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#entrar" text="Entrar">
                     <cursor>
-                        <Cursor fx:constant="HAND"/>
+                        <Cursor fx:constant="HAND" />
                     </cursor>
                     <VBox.margin>
-                        <Insets top="15.0"/>
+                        <Insets top="15.0" />
                     </VBox.margin>
                 </Button>
             </VBox>

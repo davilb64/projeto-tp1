@@ -1,81 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="500.0" prefWidth="700.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.DashboardAdministradorController">
-    <center>
-        <VBox spacing="20.0">
-            <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-            </padding>
+<!-- 1. Raiz trocada para VBox -->
 
-            <HBox alignment="CENTER" spacing="20.0">
-                <VBox alignment="CENTER" style="-fx-background-color: #2196F3; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="Usuários" />
-                    <Label fx:id="lblTotalUsuarios" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: white;" text="120" />
-                </VBox>
-                <VBox alignment="CENTER" style="-fx-background-color: #4CAF50; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="Candidatos" />
-                    <Label fx:id="lblTotalCandidatos" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: white;" text="87" />
-                </VBox>
-                <VBox alignment="CENTER" style="-fx-background-color: #FFC107; -fx-background-radius: 10; -fx-padding: 15;" HBox.hgrow="ALWAYS">
-                    <Label style="-fx-font-size: 14; -fx-text-fill: white;" text="Vagas Abertas" />
-                    <Label fx:id="lblVagasAbertas" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: white;" text="12" />
-                </VBox>
-            </HBox>
+<VBox spacing="20.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.DashboardAdministradorController">
 
-            <HBox spacing="20.0" VBox.vgrow="ALWAYS">
-                <PieChart fx:id="chartCandidaturas" title="Status das Candidaturas" HBox.hgrow="ALWAYS" />
-                <BarChart fx:id="chartFuncionarios" title="Funcionários por Tipo" HBox.hgrow="ALWAYS">
-                    <xAxis>
-                        <CategoryAxis label="Tipo de Contrato" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis label="Quantidade" />
-                    </yAxis>
-                </BarChart>
-            </HBox>
+    <!-- 2. Título integrado ao VBox raiz -->
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Dashboard">
+        <VBox.margin>
+            <Insets bottom="10.0" /> <!-- Espaço abaixo do título -->
+        </VBox.margin>
+    </Label>
 
-            <VBox spacing="10.0" VBox.vgrow="ALWAYS">
-                <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Notificações Recentes" />
-                <TableView fx:id="tblNotificacoes" VBox.vgrow="ALWAYS">
-                    <columns>
-                        <TableColumn prefWidth="120.0" text="Data" />
-                        <TableColumn prefWidth="195.0" text="Descrição" />
-                    </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-                </TableView>
-            </VBox>
+    <!-- 3. Conteúdo (antes no <center>) agora é filho direto do VBox -->
 
+    <!-- Cards de Estatística (com styleClass) -->
+    <HBox alignment="CENTER" spacing="20.0">
+        <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-info" HBox.hgrow="ALWAYS">
+            <Label text="Usuários" /> <Label fx:id="lblTotalUsuarios" styleClass="stat-card-value" text="120" /> </VBox>
+        <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-success" HBox.hgrow="ALWAYS">
+            <Label text="Candidatos" />
+            <Label fx:id="lblTotalCandidatos" styleClass="stat-card-value" text="87" />
         </VBox>
-    </center>
+        <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-warning" HBox.hgrow="ALWAYS">
+            <Label text="Vagas Abertas" />
+            <Label fx:id="lblVagasAbertas" styleClass="stat-card-value" text="12" />
+        </VBox>
+      <padding>
+         <Insets left="10.0" right="10.0" />
+      </padding>
+    </HBox>
 
-    <top>
-        <StackPane id="cabecalho" prefHeight="60.0" BorderPane.alignment="CENTER">
-            <padding>
-                <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
-            </padding>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Dashboard">
-                <font>
-                    <Font name="System Bold" size="25.0" />
-                </font>
-            </Text>
-        </StackPane>
-    </top>
+    <!-- Gráficos (já responsivos) -->
+    <HBox spacing="20.0" VBox.vgrow="ALWAYS">
+        <PieChart fx:id="chartCandidaturas" title="Status das Candidaturas" HBox.hgrow="ALWAYS" />
+        <BarChart fx:id="chartUsuarios" title="Usuários por Perfil" HBox.hgrow="ALWAYS">
+            <xAxis>
+                <CategoryAxis label="Perfil" />
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Quantidade" />
+            </yAxis>
+        </BarChart>
+      <padding>
+         <Insets left="10.0" right="10.0" />
+      </padding>
+    </HBox>
 
-</BorderPane>
+    <!-- Painel de Ações Rápidas -->
+    <VBox spacing="10.0" styleClass="actions-panel">
+        <!-- Título da seção com styleClass -->
+        <Label styleClass="section-title" text="Ações Rápidas " />
+
+        <HBox spacing="15.0">
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#criarUsuarios" text="Criar Usuário" HBox.hgrow="ALWAYS">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#relatorios" text="Relatórios" HBox.hgrow="ALWAYS">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+        </HBox>
+      <padding>
+         <Insets left="10.0" right="10.0" />
+      </padding>
+      <VBox.margin>
+         <Insets left="10.0" right="10.0" />
+      </VBox.margin>
+    </VBox>
+   <padding>
+      <Insets bottom="10.0" />
+   </padding>
+
+</VBox>

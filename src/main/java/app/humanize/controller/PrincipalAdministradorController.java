@@ -2,12 +2,15 @@ package app.humanize.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import app.humanize.util.ScreenController;
 
+import javax.imageio.IIOParam;
 import java.io.IOException;
 import java.net.URL;
 
@@ -54,8 +57,23 @@ public class PrincipalAdministradorController {
     private Button activeButton;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException {
         showDashboard();
+    }
+
+    private boolean isDarkThemeActive() {
+        if (root != null && root.getStyleClass().contains("dark")) {
+            return true;
+        }
+        return contentArea != null && contentArea.getScene() != null && contentArea.getScene().getRoot().getStyleClass().contains("dark");
+    }
+
+    private void applyCurrentTheme(Node node) {
+        if (isDarkThemeActive()) {
+            node.getStyleClass().add("dark");
+        } else {
+            node.getStyleClass().remove("dark");
+        }
     }
 
     private void loadUI(String fxml) {
@@ -67,11 +85,16 @@ public class PrincipalAdministradorController {
                 throw new IllegalStateException("FXML não encontrado: " + fxml);
             }
 
-            Pane pane = FXMLLoader.load(resource);
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(pane);
+             Node view = FXMLLoader.load(resource);
 
+            applyCurrentTheme(view);
+
+            contentArea.getChildren().setAll(view);
         } catch (IOException e) {
+            System.err.println("Erro de IO ao carregar FXML: " + fxml);
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erro inesperado ao carregar UI: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -85,25 +108,38 @@ public class PrincipalAdministradorController {
     }
 
     @FXML
-    private void showDashboard() {
-        loadUI("DashboardAdm");
-        setActiveButton(btnDashboard);
+    private void showDashboard(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DashboardAdm.fxml"));
+            Parent dashboardNode = loader.load();
+
+            DashboardAdministradorController dashboardController = loader.getController();
+
+            dashboardController.setMainController(this);
+
+            contentArea.getChildren().setAll(dashboardNode);
+
+            setActiveButton(btnDashboard);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
-    private void showVagas() {
+    public void showVagas() {
         loadUI("Vagas");
         setActiveButton(btnVagas);
     }
 
     @FXML
-    private void showUsuarios() {
+    public void showUsuarios() {
         loadUI("UsuariosAdm");
         setActiveButton(btnUsuarios);
     }
 
     @FXML
-    private void showRelatorios() {
+    void showRelatorios() {
         loadUI("RelatoriosAdm");
         setActiveButton(btnRelatorios);
     }
@@ -134,7 +170,7 @@ public class PrincipalAdministradorController {
 
     @FXML
     private void showEntrevistas() {
-        loadUI("MarcarEntrevista");
+        loadUI("GestaoEntrevista");
         setActiveButton(btnEntrevistas);
     }
 
