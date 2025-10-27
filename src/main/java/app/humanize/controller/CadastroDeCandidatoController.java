@@ -4,10 +4,7 @@ import app.humanize.model.Candidato;
 import app.humanize.model.Vaga;
 import app.humanize.repository.CandidatoRepository;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,8 +18,8 @@ public class CadastroDeCandidatoController {
     @FXML private TextField txtFormacao;
     @FXML private TextField txtDisponibilidade;
     @FXML private TextField txtPretencao;
-    @FXML private TextField txtExperiencia;
-    @FXML private ChoiceBox<Vaga> choiceVaga;
+    @FXML private TextArea txtExperiencia;
+    @FXML private ComboBox<Vaga> comboVaga;
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
 
@@ -30,7 +27,7 @@ public class CadastroDeCandidatoController {
 
     @FXML
     private void initialize() {
-        choiceVaga.getItems().addAll(
+        comboVaga.getItems().addAll(
                 criarVaga("Analista de Dados"),
                 criarVaga("Desenvolvedor Backend"),
                 criarVaga("Designer UI/UX"),
@@ -56,7 +53,7 @@ public class CadastroDeCandidatoController {
         txtDisponibilidade.setText(candidato.getDisponibilidade());
         txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
         txtExperiencia.setText(candidato.getExperiencia());
-        choiceVaga.setValue(candidato.getVaga());
+        comboVaga.setValue(candidato.getVaga());
     }
 
     @FXML
@@ -75,7 +72,7 @@ public class CadastroDeCandidatoController {
                         .disponibilidade(txtDisponibilidade.getText())
                         .pretencaoSalarial(pretencao)
                         .experiencia(txtExperiencia.getText())
-                        .vaga(choiceVaga.getValue())
+                        .vaga(comboVaga.getValue())
                         .dataCadastro(LocalDate.now())
                         .build();
 
@@ -92,7 +89,7 @@ public class CadastroDeCandidatoController {
                 candidatoEmEdicao.setDisponibilidade(txtDisponibilidade.getText());
                 candidatoEmEdicao.setPretencaoSalarial(pretencao);
                 candidatoEmEdicao.setExperiencia(txtExperiencia.getText());
-                candidatoEmEdicao.setVaga(choiceVaga.getValue());
+                candidatoEmEdicao.setVaga(comboVaga.getValue());
 
                 CandidatoRepository.getInstance().atualizar();
 

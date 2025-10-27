@@ -11,9 +11,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxWidth="450.0" minWidth="400.0" spacing="20.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CriarVagaController">
+<VBox maxWidth="450.0" minWidth="400.0" spacing="15.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CriarVagaController">
 
-    <Label styleClass="screen-title" text="Cadastro de Vaga" />
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 10;" styleClass="screen-title" text="Cadastro de Vaga">
+        <VBox.margin>
+            <Insets bottom="10.0" />
+        </VBox.margin>
+    </Label>
 
     <GridPane hgap="10.0" vgap="12.0">
         <columnConstraints>
@@ -31,19 +35,19 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label text="ID:" GridPane.halignment="RIGHT" />
+        <Label styleClass="filter-label" text="ID:" GridPane.halignment="RIGHT" />
         <Label fx:id="lblId" text="Automático" GridPane.columnIndex="1" />
 
-        <Label text="Cargo:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="Cargo:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
         <TextField fx:id="txtCargo" promptText="Nome do Cargo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label text="Salário:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Label styleClass="filter-label" text="Salário:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
         <TextField fx:id="txtSalario" promptText="R$9.999,99" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-        <Label text="Requisitos:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <Label styleClass="filter-label" text="Requisitos:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
         <TextField fx:id="txtRequisitos" promptText="Requisitos do Cargo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-        <Label text="Status:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+        <Label styleClass="filter-label" text="Status:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
         <TextField fx:id="txtStatus" promptText="Situação da Vaga" GridPane.columnIndex="1" GridPane.rowIndex="4" />
     </GridPane>
 
@@ -56,7 +60,7 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button defaultButton="true" onAction="#salvarVaga" style="-fx-base: #4CAF50;" text="Salvar">
+        <Button defaultButton="true" onAction="#salvarVaga" styleClass="primary-action-button" text="Salvar">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

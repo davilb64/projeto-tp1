@@ -13,10 +13,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" maxWidth="450.0" minWidth="400.0" spacing="10.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CadastroEnderecoController">
+<VBox maxWidth="450.0" minWidth="400.0" spacing="15.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CadastroEnderecoController">
 
-    <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Cadastro de Endereço" />
-   <Label style="-fx-font-size: 15px; -fx-font-weight: bold;" text="Insira o CEP para encontrar endereço automáticamente" />
+    <!-- 2. Título principal -->
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 10;" styleClass="screen-title" text="Cadastro de Endereço" />
+
+    <!-- 3. Subtítulo  -->
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="section-title" text="Insira o CEP para encontrar o endereço automáticamente" />
 
     <GridPane hgap="10.0" vgap="12.0">
         <columnConstraints>
@@ -24,38 +27,48 @@
             <ColumnConstraints hgrow="ALWAYS" minWidth="-Infinity" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-         <RowConstraints />
+            <RowConstraints vgrow="SOMETIMES" /> <!-- 1. CEP -->
+            <RowConstraints vgrow="SOMETIMES" /> <!-- 2. Logradouro -->
+            <RowConstraints vgrow="SOMETIMES" /> <!-- 3. Número -->
+            <RowConstraints vgrow="SOMETIMES" /> <!-- 4. Bairro -->
+            <RowConstraints vgrow="SOMETIMES" /> <!-- 5. Cidade -->
+            <RowConstraints vgrow="SOMETIMES" /> <!-- 6. Estado -->
         </rowConstraints>
 
-        <Label text="CEP:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <!-- LINHA 1: CEP -->
+        <Label styleClass="filter-label" text="CEP:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <TextField fx:id="txtCep" promptText="00000-000" HBox.hgrow="ALWAYS" />
+            <ProgressIndicator fx:id="progressIndicator" prefHeight="25.0" prefWidth="25.0" progress="0.0" />
+        </HBox>
 
-        <Label text="Logradouro:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-        <TextField fx:id="txtLogradouro" promptText="Logradouro" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <!-- LINHA 2: Logradouro -->
+        <Label styleClass="filter-label" text="Logradouro:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="txtLogradouro" promptText="Logradouro" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label text="Número:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-        <TextField fx:id="txtNumero" maxWidth="-Infinity" promptText="Número" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <!-- LINHA 3: Número -->
+        <Label styleClass="filter-label" text="Número:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField fx:id="txtNumero" prefWidth="100.0" promptText="Número" />
+        </HBox>
 
-        <Label text="Bairro:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-        <TextField fx:id="txtBairro" promptText="Bairro" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <!-- LINHA 4: Bairro -->
+        <Label styleClass="filter-label" text="Bairro:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <TextField fx:id="txtBairro" promptText="Bairro" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-        <Label text="Cidade:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-        <TextField fx:id="txtCidade" promptText="Cidade" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <!-- LINHA 5: Cidade -->
+        <Label styleClass="filter-label" text="Cidade:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+        <TextField fx:id="txtCidade" promptText="Cidade" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-        <Label text="Estado:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-        <ComboBox fx:id="estadoCombo" maxWidth="-Infinity" promptText="Selecione um estado" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-        <HBox GridPane.columnIndex="1" GridPane.rowIndex="1">
-            <TextField fx:id="txtCep" promptText="00000-000" HBox.hgrow="ALWAYS"/>
-            <ProgressIndicator fx:id="progressIndicator" progress="0.0"/>
+        <!-- LINHA 6: Estado -->
+        <Label styleClass="filter-label" text="Estado:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <ComboBox fx:id="estadoCombo" prefWidth="150.0" promptText="Selecione um estado" />
         </HBox>
 
     </GridPane>
 
+    <!-- 5. Botões de Ação -->
     <HBox alignment="CENTER_RIGHT" spacing="10.0">
         <padding>
             <Insets top="10.0" />
@@ -65,7 +78,7 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button defaultButton="true" onAction="#salvarEndereco" style="-fx-base: #4CAF50;" text="Salvar">
+        <Button defaultButton="true" onAction="#salvarEndereco" styleClass="primary-action-button" text="Salvar">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

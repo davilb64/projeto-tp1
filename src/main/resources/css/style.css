@@ -1,18 +1,64 @@
+/* === ESTILOS GERAIS === */
 .root {
     -fx-background-color: #d8d8d8;
     -fx-font-family: "Ubuntu", sans-serif;
 }
 
+/* === PAINEL DE LOGIN === */
+.login-panel {
+    -fx-background-color: #999999;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 15, 0, 0, 4);
+}
+
+
+.login-panel .text-field, .login-panel .password-field {
+    -fx-font-size: 15px;
+}
+
+.login-panel .toggle-button {
+    -fx-font-size: 16px;
+    -fx-padding: 6px 12px;
+}
+
+/* === CABEÇALHO E TÍTULOS === */
 #cabecalho {
     -fx-background-color: #505050;
     -fx-font-size: 30px;
 }
 
 #title {
-    -fx-font-family: 'corbel', sans-serif;
+    -fx-font-family: 'Corbel', sans-serif;
+    -fx-font-size: 43px;
     -fx-font-weight: bold;
 }
 
+.screen-title {
+    -fx-font-family: "System Bold", "Ubuntu", sans-serif;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-background-color: #505050;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 15, 0, 0, 4);
+}
+
+.section-title {
+    -fx-font-family: "System", "Ubuntu", sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b6b6b;
+}
+
+.label-underline {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-border-color: #cccccc;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding-bottom: 5px;
+}
+
+/* === CAMPOS DE TEXTO === */
 .text-field, .password-field {
     -fx-background-color: #ffffff;
     -fx-border-color: #cccccc;
@@ -24,12 +70,11 @@
 }
 
 .text-field:focused, .password-field:focused {
-    -fx-border-color: #007bff; /* Cor de destaque */
+    -fx-border-color: #007bff;
     -fx-effect: dropshadow(gaussian, rgba(0, 123, 255, 0.5), 5, 0, 0, 0);
 }
 
-
-/* BOTÕES */
+/* === BOTÕES === */
 .button, .toggle-button {
     -fx-background-color: #fafafa;
     -fx-border-color: #cccccc;
@@ -45,29 +90,14 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 1);
 }
 
+/* ToggleButton específico */
 .toggle-button:selected {
     -fx-background-color: #a5a5a5;
     -fx-text-fill: white;
     -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
 }
 
-
-#buttonLateral {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-width: 0 0 1px 0;
-    -fx-border-color: #cccccc;
-}
-
-#buttonLateralActive {
-    -fx-background-color: #505050;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-border-width: 0;
-}
-
+/* Botões de Ação Específicos */
 .primary-action-button {
     -fx-background-color: #4CAF50;
     -fx-text-fill: white;
@@ -86,8 +116,76 @@
     -fx-background-color: #e53935;
 }
 
-/* ESTILIZAÇÃO PARA TABELAS */
+/* Botões Laterais (Menu) */
+#buttonLateral {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: #cccccc;
+}
 
+#buttonLateralActive {
+    -fx-background-color: #505050;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+}
+
+.buttonLateral {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: #cccccc;
+}
+
+.buttonLateral:selected, .buttonLateral:focused, .buttonLateral-active {
+    -fx-background-color: #505050;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-border-width: 0;
+}
+
+/* Botões de Sub-Navegação (dentro das telas) */
+.sub-navigation-button {
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 10px 20px;
+    -fx-alignment: CENTER;
+}
+
+.sub-navigation-button:selected,
+.sub-navigation-button:focused,
+.sub-navigation-button-active {
+    -fx-background-color: #e0e0e0;
+    -fx-font-weight: bold;
+}
+
+/* Barra de Sub-Navegação */
+.sub-navigation-bar {
+    -fx-background-color: #6b6a6a;
+    -fx-background-radius: 8;
+    -fx-padding: 8px;
+}
+
+.sub-navigation-bar .sub-navigation-button {
+    -fx-background-color: #fafafa;
+    -fx-text-fill: #333;
+}
+
+.sub-navigation-bar .sub-navigation-button:hover {
+    -fx-background-color: #e0e0e0;
+}
+
+.sub-navigation-bar .sub-navigation-button:selected,
+.sub-navigation-bar .sub-navigation-button:focused,
+.sub-navigation-bar .sub-navigation-button-active {
+    -fx-background-color: #d0d0d0;
+    -fx-font-weight: bold;
+}
+
+/* === TABELAS === */
 .table-view {
     -fx-background-color: transparent;
     -fx-border-color: #cccccc;
@@ -97,16 +195,17 @@
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #505050;
+    -fx-background-color: #ffffff;
     -fx-background-radius: 8 8 0 0;
-    -fx-background-insets: 0 0 0 0;
+    -fx-background-insets: 0;
 }
 
 .table-view .column-header {
+    -fx-background-color: transparent;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-    -fx-padding: 10;
+    -fx-padding: 10px;
 }
 
 .table-view .column-header,
@@ -116,7 +215,7 @@
 }
 
 .table-view .table-cell {
-    -fx-padding: 10 8;
+    -fx-padding: 10px 8px;
     -fx-font-size: 13px;
     -fx-border-color: transparent;
     -fx-alignment: CENTER_LEFT;
@@ -130,7 +229,6 @@
 
 .table-view .table-row-cell:odd {
     -fx-background-color: #f7f7f7;
-    -fx-text-fill: #333333;
 }
 
 .table-view .table-row-cell:hover {
@@ -143,90 +241,71 @@
     -fx-text-fill: white;
 }
 
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
 .table-view .placeholder {
     -fx-text-fill: #6b6b6b;
     -fx-font-size: 14px;
+}
 
+/* === CARDS === */
+
+.stat-card-base,.card-configuracao{
+    -fx-padding: 15px;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+/* Cor de fundo específica para cada tipo */
+.stat-card-success { -fx-background-color: #4CAF50; }
+.stat-card-warning { -fx-background-color: #FFC107; }
+.stat-card-info    { -fx-background-color: #2196F3; }
+
+.stat-card-value {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white; /* Garante que o número também seja branco */
 }
 
 .card-configuracao {
     -fx-background-color: #f0f0f0;
-    -fx-border-color: #cccccc;
-    -fx-border-radius: 10;
-    -fx-background-radius: 10;
-    -fx-border-width: 1px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0, 0, 2);
+    -fx-padding: 15px;
 }
 
-.label-underline {
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
-    -fx-border-color: #cccccc;
-    -fx-border-width: 0 0 1px 0;
-    -fx-padding-bottom: 5px;
-}
-
-.stat-card-success, .stat-card-warning {
-    -fx-background-radius: 10;
-    -fx-padding: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
-}
-
-.stat-card-success {
-    -fx-background-color: #4CAF50;
-}
-
-.stat-card-warning {
-    -fx-background-color: #FFC107;
-}
-
-.screen-title {
-    -fx-font-family: "System Bold", "Ubuntu", sans-serif;
-    -fx-font-size: 25px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
-    -fx-background-color: #505050;
-}
-
-.stat-card-success, .stat-card-warning, .stat-card-info {
-    -fx-background-radius: 10;
-    -fx-padding: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
-}
-.stat-card-success {
-    -fx-background-color: #4CAF50;
-}
-.stat-card-warning {
-    -fx-background-color: #FFC107;
-}
-.stat-card-info {
-    -fx-background-color: #2196F3;
-}
-
+/* === OUTROS COMPONENTES === */
 .actions-panel {
     -fx-border-color: #cccccc;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-background-color: #f0f0f0;
     -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-alignment: CENTER_RIGHT;
 }
 
-.section-title {
-    -fx-font-family: "System", "Ubuntu", sans-serif;
-    -fx-font-size: 20px;
+.filter-label {
+    -fx-font-size: 14px;
+    -fx-font-family: "Ubuntu Bold", "Ubuntu", sans-serif;
     -fx-font-weight: bold;
-    -fx-text-fill: #444444;
+    -fx-text-fill: #333333;
 }
 
-.sub-navigation-button {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-padding: 5px 5px;
-    -fx-alignment: CENTER;
+/* Estilo para MenuButtons */
+.secondary-action-button {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 15px;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #cccccc;
 }
 
-
-.sub-navigation-button:selected, .sub-navigation-button:focused, .sub-navigation-button-active {
+.secondary-action-button:hover {
     -fx-background-color: #e0e0e0;
 }

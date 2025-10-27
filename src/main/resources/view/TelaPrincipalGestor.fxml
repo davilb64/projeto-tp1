@@ -1,72 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalGestorController">
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalGestorController">
 
     <left>
-        <VBox alignment="CENTER" prefWidth="150.0" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" minWidth="-Infinity" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
             <ImageView fitHeight="120.0" fitWidth="106.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="@../humanize-logo.png" />
             </ImageView>
 
-            <Button id="buttonLateral" fx:id="btnDashboard" onAction="#showDashboard" prefWidth="150.0" text="Dashboard">
+            <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" onAction="#showDashboard" styleClass="buttonLateral" text="Dashboard">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button fx:id="btnRecrutadores" maxWidth="1.7976931348623157E308" onAction="#showRecrutadores" styleClass="buttonLateral" text="Recrutadores">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="Vagas">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button fx:id="btnContratacoes" maxWidth="1.7976931348623157E308" onAction="#showContratacoes" styleClass="buttonLateral" text="Contratações">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button fx:id="btnRelatorios" maxWidth="1.7976931348623157E308" onAction="#showRelatorios" styleClass="buttonLateral" text="Relatórios">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="Financeiro">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfig" styleClass="buttonLateral" text="Configurações">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
 
-            <Button id="buttonLateral" fx:id="btnRecrutadores" onAction="#showRecrutadores" prefWidth="150.0" text="Recrutadores">
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button maxWidth="1.7976931348623157E308" onAction="#sair" text="Sair">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
-         <Button id="buttonLateral" fx:id="btnVagas" onAction="#showVagas" prefWidth="150.0" text="Vagas">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-         </Button>
-         <Button id="buttonLateral" fx:id="btnContratacoes" onAction="#showContratacoes" prefWidth="150.0" text="Contratações">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-         </Button>
-            <Button id="buttonLateral" fx:id="btnRelatorios" onAction="#showRelatorios" prefWidth="150.0" text="Relatórios">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-            </Button>
-         <Button id="buttonLateral" fx:id="btnFinanceiro" onAction="#showFinanceiro" prefWidth="150.0" text="Financeiro">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor>
-         </Button>
-
-            <Button id="buttonLateral" fx:id="btnConfig" onAction="#showConfig" prefWidth="150.0" text="Configurações">
-                <cursor><Cursor fx:constant="HAND" /></cursor>
-            </Button>
-
-            <VBox alignment="BOTTOM_LEFT" prefHeight="462.0" prefWidth="150.0">
-                <Button onAction="#sair" prefHeight="29.0" prefWidth="59.0" text="Sair">
-                    <cursor><Cursor fx:constant="HAND" /></cursor>
-                </Button>
-            </VBox>
         </VBox>
     </left>
 
     <center>
-        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1; -fx-padding: 20;">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu">
-                <font><Font size="21.0" /></font>
-            </Text>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu" />
         </StackPane>
     </center>
 
     <bottom>
-        <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." BorderPane.alignment="BOTTOM_LEFT" />
+        <HBox alignment="CENTER_LEFT" BorderPane.alignment="CENTER_LEFT">
+            <padding>
+                <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+            </padding>
+            <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." />
+        </HBox>
     </bottom>
 </BorderPane>

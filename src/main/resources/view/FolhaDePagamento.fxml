@@ -8,128 +8,89 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.FolhaDePagamentoController">
-    <VBox prefHeight="500.0" prefWidth="600.0">
-        <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-        </padding>
-        <Label alignment="CENTER" prefHeight="59.0" prefWidth="579.0" text=" Folha de Pagamento" underline="true">
-            <font>
-                <Font size="36.0" />
-            </font>
-        </Label>
-        <HBox prefHeight="24.0" prefWidth="579.0">
-         <children>
-            <HBox prefHeight="30.0" prefWidth="369.0">
-               <children>
-                  <Label text="Nome">
-                     <font>
-                        <Font size="19.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-            <HBox prefHeight="28.0" prefWidth="236.0">
-               <children>
-                  <Label text="Cargo">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-            <HBox prefHeight="28.0" prefWidth="209.0" />
-            <HBox prefHeight="28.0" prefWidth="236.0">
-               <children>
-                  <Label text="Nivel">
-                     <font>
-                        <Font size="20.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-         </children>
-        </HBox>
-        <HBox prefHeight="42.0" prefWidth="579.0">
-            <HBox prefHeight="50.0" prefWidth="213.0">
-            <children>
-               <TextField fx:id="txtNome" />
-            </children></HBox>
-            <HBox prefHeight="50.0" prefWidth="212.0">
-            <children>
-               <TextField fx:id="txtCargo" />
-            </children>
-            </HBox>
-         <HBox prefHeight="50.0" prefWidth="178.0">
-            <children>
-               <TextField fx:id="txtNivel" prefHeight="26.0" prefWidth="161.0" />
-            </children>
-         </HBox>
-        </HBox>
-        <HBox prefHeight="114.0" prefWidth="579.0">
-            <HBox prefHeight="114.0" prefWidth="148.0">
-            <children>
-               <TableView fx:id="tabelinhaSalario" prefHeight="114.0" prefWidth="149.0" style="-fx-background-color: #fff0f5;">
-                 <columns>
-                     <TableColumn prefWidth="75.0" text="Salario Total" />
-                 </columns>
-               </TableView>
-            </children></HBox>
-         <HBox prefHeight="114.0" prefWidth="204.0">
-            <children>
-               <MenuButton fx:id="menuAdic" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="28.0" prefWidth="194.0" style="-fx-background-color: #fff0f5;" text="Adicionais" textAlignment="JUSTIFY">
-                 <items>
-                   <MenuItem mnemonicParsing="false" text="Horas extras" />
-                 </items>
-                  <font>
-                     <Font size="19.0" />
-                  </font>
-               </MenuButton>
-            </children>
-         </HBox>
-         <MenuButton fx:id="menuDesc" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="28.0" prefWidth="194.0" style="-fx-background-color: #fff0f5;" text="Descontos" textAlignment="JUSTIFY">
-            <items>
-               <MenuItem mnemonicParsing="false" text="Atraso" />
-               <MenuItem mnemonicParsing="false" text="Multa" />
-            </items>
-            <font>
-               <Font size="19.0" />
-            </font>
-         </MenuButton>
-        </HBox>
-      <HBox prefHeight="10.0" prefWidth="579.0" />
-      <HBox prefHeight="182.0" prefWidth="579.0">
-         <children>
-            <TableView fx:id="tabelaFolhaPagamento" prefHeight="154.0" prefWidth="580.0">
-              <columns>
-                <TableColumn fx:id="colunaNome" prefWidth="120.79996144771576" style="-fx-background-color: #fff0f5;" text="Nome" />
-                <TableColumn fx:id="colunaCargo" prefWidth="116.00006866455078" style="-fx-background-color: #fff0f5;" text="Cargo" />
-                  <TableColumn fx:id="colunaSalario" prefWidth="98.39996337890625" style="-fx-background-color: #fff0f5;" text="Salario" />
-                  <TableColumn fx:id="colunaDescon" prefWidth="101.60003662109375" style="-fx-background-color: #fff0f5;" text="Descontos" />
-                  <TableColumn fx:id="colunaLiquid" prefWidth="140.79998779296875" style="-fx-background-color: #fff0f5;" text="Total Liquido" />
-              </columns>
+<VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.FolhaDePagamentoController">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Folha de Pagamento" />
+
+    <GridPane hgap="20.0" vgap="10.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="80.0" />
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="80.0" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+
+        <Label styleClass="filter-label" text="Nome:" GridPane.halignment="RIGHT" />
+        <TextField fx:id="txtNome" promptText="Filtrar por nome" GridPane.columnIndex="1" />
+
+        <Label styleClass="filter-label" text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+        <TextField fx:id="txtCargo" promptText="Filtrar por cargo" GridPane.columnIndex="3" />
+
+        <Label styleClass="filter-label" text="Nível:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="txtNivel" promptText="Filtrar por nível" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+        <Label styleClass="filter-label" text="Mês/Ano:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="txtMesAno" promptText="MM/AAAA" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+    </GridPane>
+
+    <HBox spacing="15.0">
+        <VBox alignment="CENTER" styleClass="stat-card-base" HBox.hgrow="ALWAYS">
+            <Label text="Salário Total" />
+            <TableView fx:id="tabelinhaSalario" minHeight="50.0" prefHeight="70.0">
+                <columns>
+                    <TableColumn fx:id="colSalarioTotal" text="Valor Total" />
+                </columns>
+                <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
             </TableView>
-         </children>
-      </HBox>
-      <HBox prefHeight="44.0" prefWidth="579.0">
-         <children>
-            <VBox prefHeight="44.0" prefWidth="196.0" />
-            <VBox prefHeight="44.0" prefWidth="210.0">
-               <children>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="212.0" style="-fx-background-color: #ffc0cb;" text="Emitir">
-                     <font>
-                        <Font size="45.0" />
-                     </font>
-                  </Button>
-               </children>
-            </VBox>
-            <VBox prefHeight="44.0" prefWidth="179.0" />
-         </children>
-      </HBox>
-    </VBox>
-</AnchorPane>
+        </VBox>
+
+        <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+            <MenuButton fx:id="menuAdic" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" styleClass="secondary-action-button" text="Adicionais">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Horas extras" />
+                </items>
+            </MenuButton>
+        </VBox>
+
+        <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+            <MenuButton fx:id="menuDesc" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" styleClass="secondary-action-button" text="Descontos">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Atraso" />
+                    <MenuItem mnemonicParsing="false" text="Multa" />
+                </items>
+            </MenuButton>
+        </VBox>
+    </HBox>
+
+    <HBox VBox.vgrow="ALWAYS">
+        <TableView fx:id="tabelaFolhaPagamento" HBox.hgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colunaNome" prefWidth="120.0" text="Nome" />
+                <TableColumn fx:id="colunaCargo" prefWidth="116.0" text="Cargo" />
+                <TableColumn fx:id="colunaSalario" prefWidth="98.0" text="Salário Bruto" />
+                <TableColumn fx:id="colunaDescon" prefWidth="101.0" text="Descontos" />
+                <TableColumn fx:id="colunaLiquid" prefWidth="140.0" text="Total Líquido" />
+            </columns>
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+        </TableView>
+    </HBox>
+
+    <HBox alignment="CENTER_RIGHT">
+        <Button defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="Emitir Folha">
+        </Button>
+    </HBox>
+
+</VBox>
