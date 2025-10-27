@@ -5,12 +5,15 @@ import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import app.humanize.repository.SalarioRepository;
+import app.humanize.repository.FolhaPagRepository;
 import app.humanize.repository.VagaRepository;
 import app.humanize.model.RegraSalarial;
+import app.humanize.model.FolhaPag;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
+import java.io.IOException;
 
 public class FolhaDePagamentoController {
 
@@ -33,20 +36,45 @@ public class FolhaDePagamentoController {
     @FXML private Button btnEmitir;
 
     private SalarioRepository salarioRepo = SalarioRepository.getInstance();
+    private FolhaPagRepository folhaRepo = FolhaPagRepository.getInstance();
     private VagaRepository vagaRepo = VagaRepository.getInstance();
     private ObservableList<Map<String, Object>> funcionarios;
+
+    private double adicionaisAtuais = 0.0;
+    private double descontosAtuais = 0.0;
 
     private final double ADICIONAL_HORAS_EXTRAS = 100.0;
     private final double DESCONTO_ATRASO = 50.0;
     private final double DESCONTO_MULTA = 80.0;
 
-    private final Map<String, Double> adicionaisPorNivel = Map.of(
-            "Júnior", 0.0,
-            "Pleno", 100.0,
-            "Sênior", 250.0,
-            "Especialista", 400.0,
-            "Líder", 600.0
-    );
+
+    public enum NivelExperiencia {
+        JUNIOR("Júnior", 0.0),
+        PLENO("Pleno", 100.0),
+        SENIOR("Sênior", 250.0),
+        ESPECIALISTA("Especialista", 400.0),
+        LIDER("Líder", 600.0);
+
+        private final String descricao;
+        private final double adicional;
+
+        NivelExperiencia(String descricao, double adicional) {
+            this.descricao = descricao;
+            this.adicional = adicional;
+        }
+
+        public String getDescricao() { return descricao; }
+        public double getAdicional() { return adicional; }
+
+        public static NivelExperiencia fromString(String texto) {
+            for (NivelExperiencia nivel : values()) {
+                if (nivel.descricao.equalsIgnoreCase(texto.trim())) {
+                    return nivel;
+                }
+            }
+            return null;
+        }
+    }
 
     @FXML
     public void initialize() {
@@ -56,7 +84,6 @@ public class FolhaDePagamentoController {
     }
 
     private void configurarTabela() {
-
         colunaNome.setCellValueFactory(cellData ->
                 new SimpleStringProperty((String) cellData.getValue().get("nome")));
         colunaCargo.setCellValueFactory(cellData ->
@@ -73,7 +100,6 @@ public class FolhaDePagamentoController {
 
     private void configurarEventos() {
         btnEmitir.setOnAction(e -> emitirFolhaPagamento());
-
 
         if (!menuAdic.getItems().isEmpty()) {
             MenuItem horasExtras = menuAdic.getItems().get(0);
@@ -106,45 +132,63 @@ public class FolhaDePagamentoController {
             return;
         }
 
-        if (!validarNivel(nivelNome)) {
+        NivelExperiencia nivel = NivelExperiencia.fromString(nivelNome);
+        if (nivel == null) {
             mostrarAlerta("Nível Inválido",
                     "Nível '" + nivelNome + "' não reconhecido.\n\n" +
                             "Níveis válidos: Júnior, Pleno, Sênior, Especialista, Líder");
             return;
         }
 
-        RegraSalarial regra = buscarRegraSalarial(cargoNome, nivelNome);
+        RegraSalarial regra = buscarRegraSalarial(cargoNome, nivel.getDescricao());
         if (regra == null) {
             mostrarAlerta("Regra Salarial Não Encontrada",
                     "Não foi encontrada uma regra salarial para:\n" +
                             "Cargo: " + cargoNome + "\n" +
-                            "Nível: " + nivelNome + "\n\n" +
+                            "Nível: " + nivel.getDescricao() + "\n\n" +
                             "Cadastre primeiro a regra salarial no sistema de Regras Salariais.");
             return;
         }
 
+
         double salarioBase = regra.getSalarioBase();
-        double adicionalNivel = regra.getAdicionalNivel();
+        double adicionalNivel = nivel.getAdicional();
         double beneficios = regra.getBeneficios();
-        double salarioTotal = salarioBase + adicionalNivel + beneficios;
+        double salarioTotal = salarioBase + adicionalNivel + beneficios + adicionaisAtuais - descontosAtuais;
 
         Map<String, Object> funcionario = new HashMap<>();
         funcionario.put("nome", nome);
         funcionario.put("cargo", cargoNome);
-        funcionario.put("nivel", nivelNome);
+        funcionario.put("nivel", nivel.getDescricao());
         funcionario.put("salarioBase", salarioBase);
         funcionario.put("adicionalNivel", adicionalNivel);
         funcionario.put("beneficios", beneficios);
-        funcionario.put("adicionais", 0.0);
-        funcionario.put("descontos", 0.0);
+        funcionario.put("adicionais", adicionaisAtuais);
+        funcionario.put("descontos", descontosAtuais);
         funcionario.put("salarioLiquido", salarioTotal);
 
         funcionarios.add(funcionario);
 
-        atualizarTabelaSalario(salarioTotal);
-        limparCampos();
+        try {
 
-        mostrarAlerta("Sucesso", "Folha de pagamento emitida com sucesso para " + nome);
+            FolhaPag folha = new FolhaPag(nome, cargoNome, nivel.getDescricao(),
+                    salarioBase, adicionalNivel, beneficios, adicionaisAtuais, descontosAtuais, salarioTotal);
+            folhaRepo.salvarFolha(folha);
+        } catch (IOException e) {
+            mostrarAlerta("Erro", "Erro ao salvar folha de pagamento: " + e.getMessage());
+        }
+
+        atualizarTabelaSalario(salarioTotal);
+
+        mostrarAlerta("Sucesso", "Folha de pagamento emitida com sucesso para " + nome +
+                "\nAdicionais: R$ " + String.format("%.2f", adicionaisAtuais) +
+                "\nDescontos: R$ " + String.format("%.2f", descontosAtuais) +
+                "\nSalário Líquido: R$ " + String.format("%.2f", salarioTotal));
+
+
+        adicionaisAtuais = 0.0;
+        descontosAtuais = 0.0;
+        limparCampos();
     }
 
     private RegraSalarial buscarRegraSalarial(String cargo, String nivel) {
@@ -159,13 +203,33 @@ public class FolhaDePagamentoController {
         return null;
     }
 
+    private void adicionarHorasExtras() {
+        adicionaisAtuais += ADICIONAL_HORAS_EXTRAS;
+        mostrarSelecoesAtuais();
+    }
+
+    private void aplicarDescontoAtraso() {
+        descontosAtuais += DESCONTO_ATRASO;
+        mostrarSelecoesAtuais();
+    }
+
+    private void aplicarDescontoMulta() {
+        descontosAtuais += DESCONTO_MULTA;
+        mostrarSelecoesAtuais();
+    }
+
+    private void mostrarSelecoesAtuais() {
+        String mensagem = "Seleções atuais:\n" +
+                "Adicionais: R$ " + String.format("%.2f", adicionaisAtuais) + "\n" +
+                "Descontos: R$ " + String.format("%.2f", descontosAtuais) + "\n\n" +
+                "Clique em EMITIR para finalizar.";
+
+        mostrarAlerta("Seleções", mensagem);
+    }
+
     private boolean validarCargo(String cargoNome) {
         return vagaRepo.getTodosCargos().stream()
                 .anyMatch(cargo -> cargo.equalsIgnoreCase(cargoNome.trim()));
-    }
-
-    private boolean validarNivel(String nivelNome) {
-        return adicionaisPorNivel.containsKey(nivelNome);
     }
 
     private String listarCargosDisponiveis() {
@@ -176,51 +240,9 @@ public class FolhaDePagamentoController {
         return cargos.toString();
     }
 
-    private void adicionarHorasExtras() {
-        Map<String, Object> selecionado = tabelaFolhaPagamento.getSelectionModel().getSelectedItem();
-        if (selecionado != null) {
-            double adicionaisAtuais = (double) selecionado.get("adicionais");
-            double salarioLiquidoAtual = (double) selecionado.get("salarioLiquido");
-
-            selecionado.put("adicionais", adicionaisAtuais + ADICIONAL_HORAS_EXTRAS);
-            selecionado.put("salarioLiquido", salarioLiquidoAtual + ADICIONAL_HORAS_EXTRAS);
-
-            atualizarTabela();
-        } else {
-            mostrarAlerta("Seleção", "Selecione um funcionário na tabela!");
-        }
-    }
-
-    private void aplicarDescontoAtraso() {
-        aplicarDesconto(DESCONTO_ATRASO);
-    }
-
-    private void aplicarDescontoMulta() {
-        aplicarDesconto(DESCONTO_MULTA);
-    }
-
-    private void aplicarDesconto(double valor) {
-        Map<String, Object> selecionado = tabelaFolhaPagamento.getSelectionModel().getSelectedItem();
-        if (selecionado != null) {
-            double descontosAtuais = (double) selecionado.get("descontos");
-            double salarioLiquidoAtual = (double) selecionado.get("salarioLiquido");
-
-            selecionado.put("descontos", descontosAtuais + valor);
-            selecionado.put("salarioLiquido", salarioLiquidoAtual - valor);
-
-            atualizarTabela();
-        } else {
-            mostrarAlerta("Seleção", "Selecione um funcionário na tabela!");
-        }
-    }
-
     private void atualizarTabelaSalario(double salario) {
         ObservableList<Double> salarios = FXCollections.observableArrayList(salario);
         tabelinhaSalario.setItems(salarios);
-    }
-
-    private void atualizarTabela() {
-        tabelaFolhaPagamento.refresh();
     }
 
     private void limparCampos() {
@@ -231,7 +253,7 @@ public class FolhaDePagamentoController {
     }
 
     private void mostrarAlerta(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
