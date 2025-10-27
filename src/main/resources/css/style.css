@@ -186,7 +186,7 @@
 }
 
 .table-view .column-header-background {
-    -fx-background-color: #505050;
+    -fx-background-color: rgba(152, 152, 152, 0);
     -fx-background-radius: 8 8 0 0;
     -fx-background-insets: 0;
 }
@@ -197,12 +197,14 @@
     -fx-font-weight: bold;
     -fx-font-size: 14px;
     -fx-padding: 10px;
+
 }
 
 .table-view .column-header,
 .table-view .filler {
     -fx-border-width: 0 1px 0 0;
     -fx-border-color: #6a6a6a;
+    -fx-text-fill: white;
 }
 
 .table-view .table-cell {
@@ -280,108 +282,3 @@
 .stat-card-success { -fx-background-color: #4CAF50; }
 .stat-card-warning { -fx-background-color: #FFC107; }
 .stat-card-info    { -fx-background-color: #2196F3; }
-
-
-/* ---------------------------------------------------- */
-/* --- ESTILOS PARA O TEMA ESCURO (.dark) --- */
-/* ---------------------------------------------------- */
-
-/* === GERAL/FUNDO === */
-.root.dark {
-    -fx-background-color: #1a1a1a;
-}
-
-.root.dark .label,
-.root.dark .text {
-    -fx-text-fill: #f0f0f0;
-}
-
-.root.dark VBox,
-.root.dark .stack-pane,
-.root.dark .pane,
-.root.dark .border-pane,
-.root.dark .grid-pane,
-.root.dark .hbox {
-    -fx-background-color: transparent;
-}
-
-
-/* === CABEÇALHO e TÍTULOS === */
-.root.dark #cabecalho,
-.root.dark .screen-title {
-    -fx-background-color: #2c2c2c;
-    -fx-text-fill: #ffffff;
-}
-
-.root.dark .section-title,
-.root.dark .filter-label,
-.root.dark .label-underline {
-    -fx-text-fill: #cccccc;
-    -fx-border-color: #444444;
-}
-
-/* === CAMPOS DE TEXTO e SELEÇÃO === */
-.root.dark .text-field,
-.root.dark .password-field,
-.root.dark .combo-box,
-.root.dark .combo-box .list-cell {
-    -fx-background-color: #2c2c2c;
-    -fx-border-color: #444444;
-    -fx-text-fill: #f0f0f0;
-    -fx-prompt-text-fill: #888888;
-}
-.root.dark .date-picker > .text-field {
-    -fx-background-color: #2c2c2c;
-    -fx-border-color: #444444;
-    -fx-text-fill: #f0f0f0;
-}
-
-/* === BOTÕES === */
-.root.dark .button,
-.root.dark .toggle-button,
-.root.dark .secondary-action-button {
-    -fx-background-color: #333333;
-    -fx-border-color: #555555;
-    -fx-text-fill: #f0f0f0;
-}
-
-/* Menu Lateral Ativo */
-.root.dark .buttonLateral:selected,
-.root.dark .buttonLateral:focused,
-.root.dark .buttonLateral-active {
-    -fx-background-color: #555555;
-    -fx-text-fill: white;
-}
-
-/* === CARDS e PAINÉIS === */
-.root.dark .card-configuracao,
-.root.dark .actions-panel,
-.root.dark .login-panel {
-    -fx-background-color: #2c2c2c;
-    -fx-border-color: #444444;
-}
-
-/* === TABELAS === */
-.root.dark .table-view,
-.root.dark .table-view .column-header-background,
-.root.dark .table-view .table-row-cell:filled {
-    -fx-background-color: #2a2a2a;
-    -fx-border-color: #444444;
-}
-
-.root.dark .table-view .table-row-cell:odd {
-    -fx-background-color: #333333;
-}
-
-.root.dark .table-view .table-cell,
-.root.dark .table-view .column-header {
-    -fx-text-fill: #cccccc;
-}
-
-.root.dark {
-    -fx-background-color: #1a1a1a;
-}
-
-.root.dark .stack-pane {
-    -fx-background-color: #1a1a1a;
-}
