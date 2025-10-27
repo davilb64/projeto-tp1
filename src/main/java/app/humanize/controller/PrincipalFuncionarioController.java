@@ -24,6 +24,10 @@ public class PrincipalFuncionarioController {
     private Button activeButton;
 
     @FXML private void initialize(){
+        if (btnFinanceiro != null) {
+            btnFinanceiro.getStyleClass().add("buttonLateral-active");
+            activeButton = btnFinanceiro;
+        }
         showFinanceiro();
     }
 
@@ -65,9 +69,9 @@ public class PrincipalFuncionarioController {
 
     private void setActiveButton(Button button) {
         if (activeButton != null) {
-            activeButton.setId("buttonLateral");
+            activeButton.getStyleClass().remove("buttonLateral-active");
         }
-        button.setId("buttonLateralActive");
+        button.getStyleClass().add("buttonLateral-active");
         activeButton = button;
     }
 

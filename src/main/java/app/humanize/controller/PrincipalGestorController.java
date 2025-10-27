@@ -1,13 +1,13 @@
 package app.humanize.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import app.humanize.util.ScreenController;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,30 +20,27 @@ public class PrincipalGestorController {
 
     @FXML
     private Button btnDashboard;
-
     @FXML
     private Button btnContratacoes;
-
     @FXML
     private Button btnRecrutadores;
-
     @FXML
     private Button btnRelatorios;
-
     @FXML
     private Button btnVagas;
-
     @FXML
     private Button btnFinanceiro;
-
     @FXML
     private Button btnConfig;
 
     private Button activeButton;
 
-
     @FXML
     public void initialize() {
+        if (btnDashboard != null) {
+            btnDashboard.getStyleClass().add("buttonLateral-active");
+            activeButton = btnDashboard;
+        }
         showDashboard();
     }
 
@@ -56,20 +53,22 @@ public class PrincipalGestorController {
                 throw new IllegalStateException("FXML não encontrado: " + fxml);
             }
 
-            Pane pane = FXMLLoader.load(resource);
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(pane);
+            Node view = FXMLLoader.load(resource);
+            contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erro inesperado ao carregar UI: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private void setActiveButton(Button button) {
         if (activeButton != null) {
-            activeButton.setId("buttonLateral");
+            activeButton.getStyleClass().remove("buttonLateral-active");
         }
-        button.setId("buttonLateralActive");
+        button.getStyleClass().add("buttonLateral-active");
         activeButton = button;
     }
 
@@ -80,11 +79,9 @@ public class PrincipalGestorController {
             Parent dashboardNode = loader.load();
 
             DashboardGestorController dashboardController = loader.getController();
-
             dashboardController.setMainController(this);
 
             contentArea.getChildren().setAll(dashboardNode);
-
             setActiveButton(btnDashboard);
 
         } catch (IOException e) {
@@ -103,7 +100,6 @@ public class PrincipalGestorController {
         loadUI("Vagas");
         setActiveButton(btnVagas);
     }
-
 
     @FXML
     private void showRelatorios() {
@@ -128,9 +124,6 @@ public class PrincipalGestorController {
         loadUI("ConfiguracoesAdm");
         setActiveButton(btnConfig);
     }
-
-
-
 
     @FXML
     private void sair() {

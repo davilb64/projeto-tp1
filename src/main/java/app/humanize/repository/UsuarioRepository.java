@@ -38,6 +38,16 @@ public class UsuarioRepository {
         return recrutadores;
     }
 
+    public List<Usuario> getFuncionarios() {
+        List<Usuario> funcionarios = new ArrayList<>();
+        for(Usuario usuario : this.usuariosEmMemoria) {
+            if (usuario instanceof Funcionario) {
+                funcionarios.add(usuario);
+            }
+        }
+        return funcionarios;
+    }
+
     public Optional<Usuario> buscaUsuarioPorLogin(String login) {
         return this.usuariosEmMemoria.stream()
                 .filter(u -> u.getLogin().equalsIgnoreCase(login))

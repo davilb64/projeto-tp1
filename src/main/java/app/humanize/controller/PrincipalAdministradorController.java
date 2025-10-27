@@ -3,14 +3,11 @@ package app.humanize.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import app.humanize.util.ScreenController;
 
-import javax.imageio.IIOParam;
 import java.io.IOException;
 import java.net.URL;
 
@@ -21,43 +18,25 @@ public class PrincipalAdministradorController {
     @FXML
     private StackPane contentArea;
 
-    @FXML
-    private Button btnDashboard;
-
-    @FXML
-    private Button btnUsuarios;
-
-    @FXML
-    private Button btnRelatorios;
-
-    @FXML
-    private Button btnConfig;
-
-    @FXML
-    private Button btnFinanceiro;
-
-    @FXML
-    private Button btnRecrutadores;
-
-    @FXML
-    private Button btnCandidatos;
-
-    @FXML
-    private Button btnVagas;
-
-    @FXML
-    private Button btnEntrevistas;
-
-    @FXML
-    private Button btnContratacoes;
-
-
-
+    @FXML private Button btnDashboard;
+    @FXML private Button btnUsuarios;
+    @FXML private Button btnRelatorios;
+    @FXML private Button btnConfig;
+    @FXML private Button btnFinanceiro;
+    @FXML private Button btnRecrutadores;
+    @FXML private Button btnCandidatos;
+    @FXML private Button btnVagas;
+    @FXML private Button btnEntrevistas;
+    @FXML private Button btnContratacoes;
 
     private Button activeButton;
 
     @FXML
     public void initialize() throws IOException {
+        if (btnDashboard != null) {
+            btnDashboard.getStyleClass().add("buttonLateral-active");
+            activeButton = btnDashboard;
+        }
         showDashboard();
     }
 
@@ -85,7 +64,7 @@ public class PrincipalAdministradorController {
                 throw new IllegalStateException("FXML não encontrado: " + fxml);
             }
 
-             Node view = FXMLLoader.load(resource);
+            Node view = FXMLLoader.load(resource);
 
             applyCurrentTheme(view);
 
@@ -101,30 +80,18 @@ public class PrincipalAdministradorController {
 
     private void setActiveButton(Button button) {
         if (activeButton != null) {
-            activeButton.setId("buttonLateral");
+            activeButton.getStyleClass().remove("buttonLateral-active");
         }
-        button.setId("buttonLateralActive");
+        button.getStyleClass().add("buttonLateral-active");
         activeButton = button;
     }
 
     @FXML
     private void showDashboard(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DashboardAdm.fxml"));
-            Parent dashboardNode = loader.load();
-
-            DashboardAdministradorController dashboardController = loader.getController();
-
-            dashboardController.setMainController(this);
-
-            contentArea.getChildren().setAll(dashboardNode);
-
-            setActiveButton(btnDashboard);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadUI("DashboardAdm");
+        setActiveButton(btnDashboard);
     }
+
 
     @FXML
     public void showVagas() {
