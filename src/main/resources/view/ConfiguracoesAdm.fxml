@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ConfiguracoesAdmController">
+<VBox fx:id="rootVBox" spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ConfiguracoesAdmController">
 
     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Configurações do Sistema" />
 
@@ -52,9 +52,9 @@
                 </ToggleButton>
             </HBox>
         </GridPane>
-      <VBox.margin>
-         <Insets left="10.0" right="10.0" />
-      </VBox.margin>
+        <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+        </VBox.margin>
     </VBox>
 
     <VBox spacing="10.0" styleClass="card-configuracao">
@@ -73,20 +73,20 @@
             </rowConstraints>
             <Label text="Tema:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
             <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <RadioButton mnemonicParsing="false" selected="true" text="Claro">
+                <RadioButton fx:id="radioClaro" mnemonicParsing="false" selected="true" text="Claro">
                     <toggleGroup>
                         <ToggleGroup fx:id="tema" /> </toggleGroup>
                 </RadioButton>
-                <RadioButton mnemonicParsing="false" text="Escuro" toggleGroup="$tema" /> </HBox>
+                <RadioButton fx:id="radioEscuro" mnemonicParsing="false" text="Escuro" toggleGroup="$tema" /> </HBox>
             <Label text="Notificações:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                 <CheckBox mnemonicParsing="false" text="Ativar E-mails" />
                 <CheckBox mnemonicParsing="false" text="Ativar SMS" />
             </HBox>
         </GridPane>
-      <VBox.margin>
-         <Insets left="10.0" right="10.0" />
-      </VBox.margin>
+        <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+        </VBox.margin>
     </VBox>
 
     <VBox spacing="10.0" styleClass="card-configuracao">
@@ -109,23 +109,23 @@
             <Label text="Fuso Horário:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             <ComboBox fx:id="fusoCombo" maxWidth="1.7976931348623157E308" promptText="Selecione o Fuso" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         </GridPane>
-      <VBox.margin>
-         <Insets left="10.0" right="10.0" />
-      </VBox.margin>
+        <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+        </VBox.margin>
     </VBox>
 
     <HBox alignment="CENTER_RIGHT" spacing="15.0">
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
-        <Button mnemonicParsing="false" text="Restaurar Padrões">
+        <Button mnemonicParsing="false" onAction="#restaurarPadroes" text="Restaurar Padrões">
             <cursor><Cursor fx:constant="HAND" /></cursor>
         </Button>
-        <Button defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="Salvar Alterações">
+        <Button defaultButton="true" mnemonicParsing="false" onAction="#salvarAlteracoes" styleClass="primary-action-button" text="Salvar Alterações">
             <cursor><Cursor fx:constant="HAND" /></cursor>
         </Button>
     </HBox>
-   <padding>
-      <Insets bottom="10.0" />
-   </padding>
+    <padding>
+        <Insets bottom="10.0" />
+    </padding>
 </VBox>

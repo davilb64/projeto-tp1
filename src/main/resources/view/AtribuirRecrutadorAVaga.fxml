@@ -18,10 +18,6 @@
             <Label text="Total de Recrutadores" />
             <Label fx:id="lblTotalRecrutadores" styleClass="stat-card-value" text="8" />
         </VBox>
-        <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-success" HBox.hgrow="ALWAYS">
-            <Label text="Recrutadores Ativos" />
-            <Label fx:id="lblRecrutadoresAtivos" styleClass="stat-card-value" text="6" />
-        </VBox>
         <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-warning" HBox.hgrow="ALWAYS">
             <Label text="Vagas sem Recrutador" />
             <Label fx:id="lblVagasSemRecrutador" styleClass="stat-card-value" text="4" />

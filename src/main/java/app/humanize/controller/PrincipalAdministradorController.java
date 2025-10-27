@@ -2,6 +2,7 @@ package app.humanize.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -60,6 +61,21 @@ public class PrincipalAdministradorController {
         showDashboard();
     }
 
+    private boolean isDarkThemeActive() {
+        if (root != null && root.getStyleClass().contains("dark")) {
+            return true;
+        }
+        return contentArea != null && contentArea.getScene() != null && contentArea.getScene().getRoot().getStyleClass().contains("dark");
+    }
+
+    private void applyCurrentTheme(Node node) {
+        if (isDarkThemeActive()) {
+            node.getStyleClass().add("dark");
+        } else {
+            node.getStyleClass().remove("dark");
+        }
+    }
+
     private void loadUI(String fxml) {
         try {
             URL resource = getClass().getResource("/view/" + fxml + ".fxml");
@@ -69,11 +85,16 @@ public class PrincipalAdministradorController {
                 throw new IllegalStateException("FXML não encontrado: " + fxml);
             }
 
-            Pane pane = FXMLLoader.load(resource);
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(pane);
+             Node view = FXMLLoader.load(resource);
 
+            applyCurrentTheme(view);
+
+            contentArea.getChildren().setAll(view);
         } catch (IOException e) {
+            System.err.println("Erro de IO ao carregar FXML: " + fxml);
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erro inesperado ao carregar UI: " + e.getMessage());
             e.printStackTrace();
         }
     }

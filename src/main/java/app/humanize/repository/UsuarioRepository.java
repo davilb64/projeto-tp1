@@ -28,6 +28,16 @@ public class UsuarioRepository {
         return new ArrayList<>(this.usuariosEmMemoria);
     }
 
+    public List<Usuario> getRecrutadores() {
+        List<Usuario> recrutadores = new ArrayList<>();
+        for(Usuario usuario : this.usuariosEmMemoria) {
+            if (usuario instanceof Recrutador) {
+                recrutadores.add(usuario);
+            }
+        }
+        return recrutadores;
+    }
+
     public Optional<Usuario> buscaUsuarioPorLogin(String login) {
         return this.usuariosEmMemoria.stream()
                 .filter(u -> u.getLogin().equalsIgnoreCase(login))
@@ -207,7 +217,7 @@ public class UsuarioRepository {
         }
     }
 
-    public void atualizarUsuario() throws IOException {
+    public void atualizarUsuario(Usuario usuario) throws IOException {
         persistirAlteracoesNoCSV();
     }
 }
