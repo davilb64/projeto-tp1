@@ -85,6 +85,8 @@ public class PrincipalGestorController {
 
             contentArea.getChildren().setAll(dashboardNode);
 
+            setActiveButton(btnDashboard);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

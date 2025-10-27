@@ -67,6 +67,14 @@
             <version>5.0.4</version>
         </dependency>
 
+    <!--API CEPS-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.3</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -107,7 +115,6 @@
                             </filters>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <!-- ATENÇÃO: Use o caminho completo da sua classe Launcher aqui -->
                                     <mainClass>app.humanize.Launcher</mainClass>
                                 </transformer>
                             </transformers>
@@ -115,6 +122,8 @@
                     </execution>
                 </executions>
             </plugin>
+
+
         </plugins>
     </build>
 </project>
