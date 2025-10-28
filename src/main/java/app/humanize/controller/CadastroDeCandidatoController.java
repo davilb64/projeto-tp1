@@ -21,7 +21,6 @@ public class CadastroDeCandidatoController {
     @FXML private TextField txtDisponibilidade;
     @FXML private TextField txtPretencao;
     @FXML private TextArea txtExperiencia;
-    @FXML private ComboBox<Vaga> comboVaga;
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
     @FXML private Button btnVisualizar;
@@ -39,35 +38,6 @@ public class CadastroDeCandidatoController {
 
 
     private Candidato candidatoEmEdicao = null; // 🔹 usado quando estiver editando
-
-    @FXML
-    private void initialize() {
-        try {
-            // Busca todas as vagas do CSV via repositório
-            VagaRepository vagaRepo = VagaRepository.getInstance();
-            comboVaga.getItems().addAll(vagaRepo.getTodasVagas());
-
-            // Define como cada vaga será mostrada (ex: apenas o cargo)
-            comboVaga.setCellFactory(param -> new ListCell<>() {
-                @Override
-                protected void updateItem(Vaga vaga, boolean empty) {
-                    super.updateItem(vaga, empty);
-                    setText((empty || vaga == null) ? null : vaga.getCargo());
-                }
-            });
-            comboVaga.setButtonCell(new ListCell<>() {
-                @Override
-                protected void updateItem(Vaga vaga, boolean empty) {
-                    super.updateItem(vaga, empty);
-                    setText((empty || vaga == null) ? null : vaga.getCargo());
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarErro("Erro ao carregar vagas do arquivo CSV: " + e.getMessage());
-        }
-    }
 
 
     private Vaga criarVaga(String nome) {
@@ -87,7 +57,6 @@ public class CadastroDeCandidatoController {
         txtDisponibilidade.setText(candidato.getDisponibilidade());
         txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
         txtExperiencia.setText(candidato.getExperiencia());
-        comboVaga.setValue(candidato.getVaga());
     }
 
     @FXML
@@ -101,8 +70,7 @@ public class CadastroDeCandidatoController {
                     txtFormacao.getText().trim().isEmpty() ||
                     txtDisponibilidade.getText().trim().isEmpty() ||
                     txtPretencao.getText().trim().isEmpty() ||
-                    txtExperiencia.getText().trim().isEmpty() ||
-                    comboVaga.getValue() == null) {
+                    txtExperiencia.getText().trim().isEmpty()) {
 
                 mostrarErro("Por favor, preencha todos os campos antes de salvar.");
                 return;
@@ -121,7 +89,6 @@ public class CadastroDeCandidatoController {
                         .disponibilidade(txtDisponibilidade.getText())
                         .pretencaoSalarial(pretencao)
                         .experiencia(txtExperiencia.getText())
-                        .vaga(comboVaga.getValue())
                         .dataCadastro(LocalDate.now())
                         .build();
 
@@ -130,7 +97,7 @@ public class CadastroDeCandidatoController {
 
                 mostrarAlerta("Cadastro realizado com sucesso!");
                 if (controllerPai != null) {
-                    controllerPai.showStatus();
+                    controllerPai.showCandidatura();
                 }
             } else {
                 // ✏️ edição de candidato existente
@@ -142,13 +109,12 @@ public class CadastroDeCandidatoController {
                 candidatoEmEdicao.setDisponibilidade(txtDisponibilidade.getText());
                 candidatoEmEdicao.setPretencaoSalarial(pretencao);
                 candidatoEmEdicao.setExperiencia(txtExperiencia.getText());
-                candidatoEmEdicao.setVaga(comboVaga.getValue());
 
                 CandidatoRepository.getInstance().atualizar();
 
                 mostrarAlerta("Alterações salvas com sucesso!");
                 if (controllerPai != null) {
-                    controllerPai.showStatus();
+                    controllerPai.showCandidatura();
                 }
 
             }

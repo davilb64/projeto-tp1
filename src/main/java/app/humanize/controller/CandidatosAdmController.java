@@ -80,7 +80,7 @@ public class CandidatosAdmController {
     }
 
     @FXML
-    private void showCandidatura() {
+    public void showCandidatura() {
         loadUI("/view/CandidaturaAVaga.fxml");
         setActiveButton(btnCandidatura);
     }

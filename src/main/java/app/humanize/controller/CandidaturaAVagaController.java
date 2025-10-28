@@ -25,12 +25,13 @@ public class CandidaturaAVagaController {
     @FXML private ListView<Candidato> listCandidatos;
     @FXML private Button btnSalvar;
     @FXML private Button btnCancelar;
+    @FXML private Button btnExcluirCandidato;
 
-    private CandidatosAdmController controllerPai;
+   /* private CandidatosAdmController controllerPai;
 
     public void setControllerPai(CandidatosAdmController controllerPai) {
         this.controllerPai = controllerPai;
-    }
+    }*/
 
 
     private CandidaturaRepository candidaturaRepository;
@@ -121,31 +122,31 @@ public class CandidaturaAVagaController {
         }
 
         try {
-            // Verificar se já existe candidatura
             if (candidaturaRepository.existeCandidatura(candidatoSelecionado, vagaSelecionada)) {
                 mostrarAlerta("Este candidato já se candidatou a esta vaga");
                 return;
             }
 
-            // Criar nova candidatura
             Candidatura novaCandidatura = new Candidatura();
             novaCandidatura.setCandidato(candidatoSelecionado);
             novaCandidatura.setVaga(vagaSelecionada);
-            novaCandidatura.setStatus(StatusCandidatura.PENDENTE);
+            novaCandidatura.setStatus(StatusCandidatura.EM_ANALISE);
             novaCandidatura.setDataCandidatura(LocalDate.now());
 
             candidaturaRepository.salvar(novaCandidatura);
 
             mostrarSucesso("Candidatura associada com sucesso!");
             limparSelecoes();
-            if (controllerPai != null) {
-                controllerPai.showStatus(); // volta para tela de status
-            }
+
+           /* if (controllerPai != null) {
+                controllerPai.showStatus(); // ✅ vai pra tela StatusDaCandidatura
+            }*/
 
         } catch (Exception e) {
             mostrarErro("Erro ao associar candidatura: " + e.getMessage());
         }
     }
+
 
     private void limparSelecoes() {
         listCandidatos.getSelectionModel().clearSelection();

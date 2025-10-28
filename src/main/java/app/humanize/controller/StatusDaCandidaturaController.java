@@ -17,12 +17,27 @@ import java.io.IOException;
 
 public class StatusDaCandidaturaController {
 
-    @FXML private TableView<Candidato> tableCandidaturas;
-    @FXML private TableColumn<Candidato, String> colCandidato;
-    @FXML private TableColumn<Candidato, String> colCargo;
-    @FXML private TableColumn<Candidato, String> colStatus;
+    @FXML private TableView<Candidatura> tableCandidaturas;
+    @FXML private TableColumn<Candidatura, String> colCandidato;
+    @FXML private TableColumn<Candidatura, String> colCargo;
+    @FXML private TableColumn<Candidatura, String> colStatus;
 
     private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
+    private final ObservableList<Candidatura> listaCandidaturas = FXCollections.observableArrayList();
+
+    @FXML
+    private void initialize() {
+        colCandidato.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getCandidato().getNome()));
+        colCargo.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getVaga().getCargo()));
+        colStatus.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getStatus().name().replace("_", " ")));
+
+        listaCandidaturas.addAll(candidaturaRepository.getTodas());
+        tableCandidaturas.setItems(listaCandidaturas);
+    }
+
 
     private CandidatosAdmController controllerPai;
 
@@ -33,24 +48,6 @@ public class StatusDaCandidaturaController {
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final ObservableList<Candidato> listaCandidatos = FXCollections.observableArrayList();
 
-    @FXML
-    private void initialize() {
-        colCandidato.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colCargo.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(
-                        cellData.getValue().getVaga() != null ? cellData.getValue().getVaga().getCargo() : ""
-                )
-        );
-        colStatus.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(
-                        candidaturaRepository.getStatusPorCandidato(cellData.getValue())
-                )
-        );
-
-
-        listaCandidatos.addAll(candidatoRepository.getTodos());
-        tableCandidaturas.setItems(listaCandidatos);
-    }
 
     public static void adicionarCandidato(Candidato candidato) {
         try {
@@ -60,59 +57,44 @@ public class StatusDaCandidaturaController {
         }
     }
 
-    // 🔹 ABRIR A TELA DE EDIÇÃO
-    @FXML
-    private void editarCandidato() {
-        Candidato candidatoSelecionado = tableCandidaturas.getSelectionModel().getSelectedItem();
-
-        if (candidatoSelecionado == null) {
-            mostrarAlerta("Selecione um candidato para editar!");
-            return;
-        }
-
-        if (controllerPai != null) {
-            controllerPai.editarCandidatoExistente(candidatoSelecionado);
-        } else {
-            mostrarAlerta("Erro: A referência ao controller principal não foi configurada.");
-        }
-    }
-
-
     @FXML
     private void excluirCandidato() {
-        Candidato candidato = tableCandidaturas.getSelectionModel().getSelectedItem();
-        if (candidato == null) {
-            mostrarAlerta("Selecione um candidato para excluir!");
+        Candidatura candidaturaSelecionada = tableCandidaturas.getSelectionModel().getSelectedItem();
+
+        if (candidaturaSelecionada == null) {
+            mostrarAlerta("Selecione uma candidatura para excluir!");
             return;
         }
 
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
-                "Deseja realmente excluir o candidato " + candidato.getNome() + "?",
+                "Deseja realmente excluir a candidatura de " +
+                        candidaturaSelecionada.getCandidato().getNome() +
+                        " para a vaga " + candidaturaSelecionada.getVaga().getCargo() + "?",
                 ButtonType.YES, ButtonType.NO);
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.YES) {
                 try {
-                    candidatoRepository.remover(candidato);
-                    listaCandidatos.remove(candidato);
+                    candidaturaRepository.remover(candidaturaSelecionada);
+                    listaCandidaturas.remove(candidaturaSelecionada);
+                    tableCandidaturas.refresh();
+
+                    Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                    sucesso.setTitle("Sucesso");
+                    sucesso.setHeaderText(null);
+                    sucesso.setContentText("Candidatura excluída com sucesso!");
+                    sucesso.showAndWait();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Alert erro = new Alert(Alert.AlertType.ERROR);
+                    erro.setTitle("Erro");
+                    erro.setHeaderText(null);
+                    erro.setContentText("Erro ao excluir candidatura: " + e.getMessage());
+                    erro.showAndWait();
                 }
             }
         });
     }
 
-    public void atualizarTabela() {
-        ObservableList<Candidato> candidatos = FXCollections.observableArrayList();
-
-        // para cada candidatura no CSV, adiciona o candidato correspondente
-        for (Candidatura c : candidaturaRepository.getTodas()) {
-            candidatos.add(c.getCandidato());
-        }
-
-        tableCandidaturas.setItems(candidatos);
-        tableCandidaturas.refresh();
-    }
 
     private void mostrarAlerta(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
