@@ -3,7 +3,8 @@
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
 ![Maven](https://img.shields.io/badge/build-Maven-blue)
-![Java](https://img.shields.io/badge/java-17-red)
+![Java](https://img.shields.io/badge/java-22-red)
+![Static Badge](https://img.shields.io/badge/UI-JavaFX-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -17,17 +18,31 @@ O objetivo do sistema é **automatizar os principais processos relacionados aos 
 ## 📂 Estrutura do Projeto
 O projeto utiliza **Maven** e segue uma **arquitetura MVC** com camadas organizadas:
 
-projeto-tp1/<br>
-├── src/main/java/   
-│   ├── app.humanize.controller/       # Lógica de controle e integração<br>
-│   ├── app.humanize.model/            # Entidades e regras de negócio<br>
-│   ├── app.humanize.repository/       # Persistência de dados (arquivos e CSV)<br>
-│   ├── app.humanize.util/             # Validações, helpers e cálculos<br>
-│   └── app.humanize.Main.java         # Ponto de entrada do sistema<br>
-├── src/main/resources/   # Arquivos de configuração e assets<br>
-│   └── view/             # Interfaces gráficas (JavaFX)<br>
-├── pom.xml               # Configurações do Maven<br>
-└── README.md<br>
+projeto-tp1/
+<br>├── documentação/          # Armazena relatórios do projeto
+<br>├── src/main/java/
+<br>│   └── app/humanize/
+<br>│       ├── controller/    # Controladores JavaFX (lógica da UI)
+<br>│       ├── exceptions/    # Exceções customizadas (ex: CpfInvalidoException)
+<br>│       ├── model/         # Classes de Domínio (Usuario, Funcionario, Vaga, etc.)
+<br>│       │   └── factories/ 
+<br>│       ├── repository/    # Camada de Persistência (Leitura/Escrita de CSV)
+<br>│       ├── service/       # Camada de Aplicação (Lógica de Negócio)
+<br>│       │   ├── formatters/  # Padrão Strategy: Formatadores (PdfFormatter, CsvFormatter)
+<br>│       │   ├── relatorios/  # Padrão Strategy: Geradores de dados (RelatorioListaUsuarios)
+<br>│       │   └── validacoes/  # Serviços de validação (ValidaCpf, ValidaEmail)
+<br>│       ├── util/          # Classes utilitárias (UserSession, ScreenController)
+<br>│       ├── Launcher.java  # Ponto de entrada do app
+<br>│       └── Main.java      # Classe principal da aplicação JavaFX
+<br>│
+<br>├── src/main/resources/
+<br>│   ├── css/             # StyleSheets do css
+<br>│   ├── fotos_perfil/    # Fotos de perfil dos usuários
+<br>│   ├── uploads/         # (Reservado para uploads de documentos/currículos)
+<br>│   └── view/            # Telas da aplicação (arquivos FXML)
+<br>│
+<br>├── pom.xml                # Dependências e build do Maven
+<br>└── README.md              # Esta documentação
 
 ---
 
@@ -37,7 +52,7 @@ projeto-tp1/<br>
 - 📝 **Gerenciamento de vagas e entrevistas**.
 - 💰 **Controle financeiro** — folha de pagamento e relatórios.
 - 🧾 **Gestão de prestadores e contratos**.
-- 📊 **Geração de relatórios** em **Excel, PDF e CSV**.
+- 📊 **Geração de relatórios** em **PDF e CSV**.
 - 🎨 Interface intuitiva com **JavaFX**.
 - E muito mais...
 
@@ -70,8 +85,7 @@ cd projeto-tp1
 # Compilar o projeto
 mvn clean install
 
-# Executar o projeto
-mvn javafx:run
+# Executar "src/main/java/app/humanize/Launcher.java"
 ```
 
 ---
