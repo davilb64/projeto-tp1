@@ -48,6 +48,9 @@
             <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="Financeiro">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
+            <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="Funcionarios">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
             <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="Configurações">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>

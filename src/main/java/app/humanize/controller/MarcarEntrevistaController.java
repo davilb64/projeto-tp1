@@ -36,6 +36,9 @@ public class MarcarEntrevistaController {
     private DatePicker dtDataEntrevista;
 
     @FXML
+    private ChoiceBox<StatusEntrevista> cbStatus;
+
+    @FXML
     private Button btnSalvar;
 
     @FXML
@@ -113,6 +116,7 @@ public class MarcarEntrevistaController {
             cbCandidato.setItems(FXCollections.observableArrayList(candidatoRepository.getTodos()));
             cbCargo.setItems(FXCollections.observableArrayList(vagaRepository.getTodasVagas()));
             cbRecrutador.setItems(FXCollections.observableArrayList(usuarioRepository.getRecrutadores()));
+            cbStatus.setItems(FXCollections.observableArrayList(StatusEntrevista.values()));
         } catch (Exception e) {
             mostrarAlerta("Erro ao carregar dados", "Falha ao preencher os campos de seleção.", e.getMessage());
         }
@@ -130,8 +134,9 @@ public class MarcarEntrevistaController {
                 Vaga vaga = cbCargo.getValue();
                 Usuario recrutador = cbRecrutador.getValue();
                 LocalDate data = dtDataEntrevista.getValue();
+                StatusEntrevista status = cbStatus.getValue();
 
-                Entrevista entrevista = new Entrevista(recrutador, vaga, candidato, null, data);
+                Entrevista entrevista = new Entrevista(recrutador, vaga, candidato, status, data);
                 entrevistaRepository.escreveEntrevistaNova(entrevista);
 
                 mostrarAlerta("Sucesso", "Entrevista marcada com sucesso!", null);
@@ -148,7 +153,7 @@ public class MarcarEntrevistaController {
                 entrevistaParaEditar.setCandidato(cbCandidato.getValue());
                 entrevistaParaEditar.setRecrutador(cbRecrutador.getValue());
                 entrevistaParaEditar.setDataEntrevista(dtDataEntrevista.getValue());
-
+                entrevistaParaEditar.setStatus(cbStatus.getValue());
                 entrevistaRepository.atualizarEntrevista();
             }catch (Exception e){
                 mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());

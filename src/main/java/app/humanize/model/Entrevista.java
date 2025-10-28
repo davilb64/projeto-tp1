@@ -8,12 +8,12 @@ public class Entrevista {
     private Usuario recrutador;
     private Vaga vaga;
     private Candidato candidato;
-    private String status;
+    private StatusEntrevista status;
     private LocalDate dataEntrevista;
 
     public Entrevista() {}
 
-    public Entrevista(Usuario recrutador, Vaga vaga, Candidato candidato, String status, LocalDate dataEntrevista) {
+    public Entrevista(Usuario recrutador, Vaga vaga, Candidato candidato, StatusEntrevista status, LocalDate dataEntrevista) {
         this.id = ++idCounter;
         this.recrutador = recrutador;
         this.vaga = vaga;
@@ -54,11 +54,11 @@ public class Entrevista {
         this.candidato = candidato;
     }
 
-    public String getStatus() {
+    public StatusEntrevista getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusEntrevista status) {
         this.status = status;
     }
 
