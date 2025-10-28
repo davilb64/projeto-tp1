@@ -54,7 +54,7 @@
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
-        <Button fx:id="btnCadastrar" onAction="#cadastrarUsuario" styleClass="primary-action-button" text="Cadastrar Novo Usuário">
+        <Button fx:id="btnCadastrar" onAction="#cadastrarUsuario" styleClass="primary-action-button" text="Cadastrar Novo Candidato">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
@@ -81,6 +81,11 @@
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
+      <Button fx:id="btnVisualizar" mnemonicParsing="false" onAction="#visualizarCandidato" text="Visualizar Informações">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
         <Button fx:id="btnEditarC" mnemonicParsing="false" onAction="#editarCandidato" text="Editar">
             <cursor>
                 <Cursor fx:constant="HAND" />

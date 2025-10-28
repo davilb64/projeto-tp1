@@ -65,6 +65,7 @@ public class CandidatoRepository {
                             .formacao(campos[4])
                             .disponibilidade(campos[5])
                             .pretencaoSalarial(Double.parseDouble(campos[6]))
+                            .experiencia(campos[7])
                             .dataCadastro(LocalDate.now())
                             .build();
 
@@ -93,6 +94,7 @@ public class CandidatoRepository {
                 c.getEmail(),
                 c.getTelefone(),
                 c.getFormacao(),
+                c.getExperiencia(),
                 c.getDisponibilidade(),
                 String.valueOf(c.getPretencaoSalarial()),
                 c.getCaminhoDocumento() != null ? c.getCaminhoDocumento() : ""
