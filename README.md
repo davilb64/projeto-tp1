@@ -19,11 +19,11 @@ O projeto utiliza **Maven** e segue uma **arquitetura MVC** com camadas organiza
 
 projeto-tp1/<br>
 ├── src/main/java/   
-│   ├── controller/       # Lógica de controle e integração<br>
-│   ├── model/            # Entidades e regras de negócio<br>
-│   ├── repository/       # Persistência de dados (arquivos e CSV)<br>
-│   ├── util/             # Validações, helpers e cálculos<br>
-│   └── Main.java         # Ponto de entrada do sistema<br>
+│   ├── app.humanize.controller/       # Lógica de controle e integração<br>
+│   ├── app.humanize.model/            # Entidades e regras de negócio<br>
+│   ├── app.humanize.repository/       # Persistência de dados (arquivos e CSV)<br>
+│   ├── app.humanize.util/             # Validações, helpers e cálculos<br>
+│   └── app.humanize.Main.java         # Ponto de entrada do sistema<br>
 ├── src/main/resources/   # Arquivos de configuração e assets<br>
 │   └── view/             # Interfaces gráficas (JavaFX)<br>
 ├── pom.xml               # Configurações do Maven<br>

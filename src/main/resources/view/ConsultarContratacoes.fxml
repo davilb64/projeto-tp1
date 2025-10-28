@@ -1,51 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
+<ScrollPane fitToWidth="true" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ConsultarContratacoesController">
+    <VBox spacing="15.0">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+        </padding>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultarContratacoesController">
-    <Label layoutX="148.0" layoutY="14.0" text="Consultar contratações">
-        <font>
-          <Font size="30.0"/>
-        </font>
-    </Label>
-    <Label layoutX="44.0" layoutY="91.0" text="Nome:"/>
-    <TextField layoutX="87.0" layoutY="87.0" prefHeight="25.0" prefWidth="237.0"/>
-    <MenuButton layoutX="332.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Cargo">
-      <items>
-          <MenuItem mnemonicParsing="false" text="Action 1"/>
-          <MenuItem mnemonicParsing="false" text="Action 2"/>
-      </items>
-    </MenuButton>
-    <MenuButton layoutX="461.0" layoutY="87.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="112.0"
-                text="status">
-      <items>
-          <MenuItem mnemonicParsing="false" text="Action 1"/>
-          <MenuItem mnemonicParsing="false" text="Action 2"/>
-      </items>
-    </MenuButton>
-    <Label layoutX="52.0" layoutY="157.0" text="Data inicio:"/>
-    <Label layoutX="332.0" layoutY="157.0" text="Data fim:"/>
-    <DatePicker layoutX="119.0" layoutY="153.0"/>
-    <DatePicker layoutX="384.0" layoutY="153.0"/>
-    <TableView layoutX="33.0" layoutY="212.0" prefHeight="268.0" prefWidth="556.0">
-      <columns>
-          <TableColumn prefWidth="128.0" text="Nome"/>
-          <TableColumn minWidth="0.0" prefWidth="162.0" text="Cargo"/>
-          <TableColumn minWidth="0.0" prefWidth="145.0" text="Data de contrato"/>
-          <TableColumn minWidth="0.0" prefWidth="118.0" text="Status"/>
-      </columns>
-    </TableView>
-    <Button layoutX="418.0" layoutY="501.0" mnemonicParsing="false" text="Atualizar lista"/>
-    <Button layoutX="525.0" layoutY="501.0" mnemonicParsing="false" text="Voltar"/>
-</AnchorPane>
+        <VBox spacing="10.0" styleClass="card-configuracao">
+            <padding>
+                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+            </padding>
+            <Label styleClass="section-title" text="Filtros de Contratação" />
+
+            <GridPane hgap="5.0" vgap="10.0">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+                    <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+
+                <Label styleClass="filter-label" text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                <TextField fx:id="txtNomeFiltro" promptText="Filtrar por nome" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <Label styleClass="filter-label" text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                <ComboBox fx:id="comboCargoFiltro" maxWidth="1.7976931348623157E308" promptText="Todos" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+                <Label styleClass="filter-label" text="Status:" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                <ComboBox fx:id="comboStatusFiltro" maxWidth="1.7976931348623157E308" promptText="Todos" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+
+                <Label styleClass="filter-label" text="Período:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                    <Label text="De:" HBox.hgrow="ALWAYS" />
+                    <DatePicker fx:id="dpInicioFiltro" maxWidth="1.7976931348623157E308" promptText="Data Início" HBox.hgrow="ALWAYS" />
+                    <Label text="Até:" HBox.hgrow="ALWAYS" />
+                    <DatePicker fx:id="dpFimFiltro" maxWidth="1.7976931348623157E308" promptText="Data Fim" HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <Button fx:id="btnFiltrar" mnemonicParsing="false" text="Filtrar" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            </GridPane>
+        </VBox>
+
+        <TableView fx:id="tblContratacoes" minHeight="250.0"> <columns>
+            <TableColumn fx:id="colNome" text="Nome" />
+            <TableColumn fx:id="colCargo" text="Cargo" />
+            <TableColumn fx:id="colData" maxWidth="2000.0" minWidth="120.0" prefWidth="145.0" text="Data de Contrato" />
+            <TableColumn fx:id="colStatus" maxWidth="1500.0" minWidth="100.0" prefWidth="118.0" text="Status" />
+        </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+        </TableView>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="actions-panel">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <VBox.margin>
+                <Insets top="10.0" />
+            </VBox.margin>
+            <Button fx:id="btnAtualizar" mnemonicParsing="false" text="Atualizar Lista">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+            <Button fx:id="btnVoltar" cancelButton="true" mnemonicParsing="false" text="Voltar">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+        </HBox>
+    </VBox>
+</ScrollPane>
