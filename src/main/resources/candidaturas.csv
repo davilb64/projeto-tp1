@@ -1,0 +1,4 @@
+CPF_Candidato;Nome_Candidato;Vaga_ID;Cargo;Data;Status
+345;claudio;1;Limpador de calha;2025-10-27;PENDENTE
+086;valeria;1;Limpador de calha;2025-10-27;PENDENTE
+34;davizera;2;treinador de ia;2025-10-27;EM_ANALISE
