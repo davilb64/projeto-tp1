@@ -31,13 +31,13 @@ public class CandidatosAdmController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
             Node view = loader.load();
 
-            // 🔹 Se o FXML carregado tiver um controller que aceite o pai, passa a referência
+            /* 🔹 Se o FXML carregado tiver um controller que aceite o pai, passa a referência
             Object childController = loader.getController();
             if (childController instanceof CadastroDeCandidatoController cadastroController) {
                 cadastroController.setControllerPai(this);
             } else if (childController instanceof StatusDaCandidaturaController statusController) {
                 statusController.setControllerPai(this);
-            }
+            }*/
 
             contentArea.getChildren().setAll(view);
             //view.getProperties().put("controllerPai", this);
@@ -75,7 +75,7 @@ public class CandidatosAdmController {
 
     @FXML
     public void showCadastro() {
-        loadUI("/view/CadastroDeCandidato.fxml");
+        loadUI("/view/ListaDeCandidatos.fxml");
         setActiveButton(btnCadastro);
     }
 

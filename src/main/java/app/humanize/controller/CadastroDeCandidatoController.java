@@ -8,6 +8,7 @@ import app.humanize.service.validacoes.ValidaCpf;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import app.humanize.repository.VagaRepository;
+import javafx.stage.Stage;
 
 
 import java.io.IOException;
@@ -29,12 +30,6 @@ public class CadastroDeCandidatoController {
     private final ValidaCpf validaCpf = new ValidaCpf();
 
     @FXML private javafx.scene.control.Label lblArquivo;
-
-    private CandidatosAdmController controllerPai;
-
-    public void setControllerPai(CandidatosAdmController controllerPai) {
-        this.controllerPai = controllerPai;
-    }
 
 
     private String caminhoDocumentoAtual = null;
@@ -101,9 +96,8 @@ public class CadastroDeCandidatoController {
                 CandidatoRepository.getInstance().adicionar(novo);
 
                 mostrarAlerta("Cadastro realizado com sucesso!");
-                if (controllerPai != null) {
-                    controllerPai.showCandidatura();
-                }
+                fecharJanela();
+
             } else {
                 String cpf = txtCpf.getText();
                 validaCpf.validaCpf(cpf);
@@ -120,9 +114,7 @@ public class CadastroDeCandidatoController {
                 CandidatoRepository.getInstance().atualizar();
 
                 mostrarAlerta("Alterações salvas com sucesso!");
-                if (controllerPai != null) {
-                    controllerPai.showCandidatura();
-                }
+                fecharJanela();
 
             }
 
@@ -247,6 +239,11 @@ public class CadastroDeCandidatoController {
     }
 
 
+    @FXML
+    private void fecharJanela() {
+        Stage stage = (Stage) txtNome.getScene().getWindow();
+        stage.close();
+    }
 
 
     private void mostrarAlerta(String msg) {
