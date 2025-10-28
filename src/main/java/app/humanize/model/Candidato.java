@@ -9,7 +9,6 @@ public class Candidato extends Pessoa{
     private String disponibilidade;
     private String telefone;
     private LocalDate dataCadastro;
-    private Vaga vaga;
     private String caminhoDocumento;
 
     //construtores
@@ -21,7 +20,6 @@ public class Candidato extends Pessoa{
         this.pretencaoSalarial = builder.pretencaoSalarial;
         this.disponibilidade = builder.disponibilidade;
         this.dataCadastro = builder.dataCadastro;
-        this.vaga = builder.vaga;
         this.telefone = builder.telefone;
     }
 
@@ -37,7 +35,6 @@ public class Candidato extends Pessoa{
         private String disponibilidade;
         private String telefone;
         private LocalDate dataCadastro;
-        private Vaga vaga;
         //campos de pessoa
         private String nome;
         private String cpf;
@@ -85,10 +82,7 @@ public class Candidato extends Pessoa{
             this.experiencia = experiencia;
             return this;
         }
-        public CandidatoBuilder vaga(Vaga vaga) {
-            this.vaga = vaga;
-            return this;
-        }
+
         public Candidato build() {
             return new Candidato(this);
         }
@@ -152,12 +146,6 @@ public class Candidato extends Pessoa{
         this.caminhoDocumento = caminhoDocumento;
     }
 
-    public void setVaga(Vaga vaga) {
-        this.vaga = vaga;
-    }
-    public Vaga getVaga() {
-        return vaga;
-    }
 
     @Override
     public String toString() {
