@@ -27,6 +27,7 @@ public class PrincipalAdministradorController {
     private StackPane contentArea;
 
     @FXML private Button btnDashboard;
+
     @FXML private Button btnUsuarios;
     @FXML private Button btnRelatorios;
     @FXML private Button btnConfig;

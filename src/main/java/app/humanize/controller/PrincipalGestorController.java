@@ -43,6 +43,8 @@ public class PrincipalGestorController {
     private Button btnConfig;
     @FXML
     private Button btnPerfil;
+    @FXML
+    private Button btnEntrevistas;
 
     private Button activeButton;
 
@@ -131,6 +133,12 @@ public class PrincipalGestorController {
     private void showRecrutadores() {
         loadUI("AtribuirRecrutadorAVaga");
         setActiveButton(btnRecrutadores);
+    }
+
+    @FXML
+    private void showEntrevistas() {
+        loadUI("GestaoEntrevista");
+        setActiveButton(btnEntrevistas);
     }
 
     @FXML

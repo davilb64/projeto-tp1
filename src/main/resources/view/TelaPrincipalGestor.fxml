@@ -29,6 +29,11 @@
             <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="Vagas">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
+         <Button fx:id="btnEntrevistas" maxWidth="1.7976931348623157E308" onAction="#showEntrevistas" styleClass="buttonLateral" text="Entrevistas">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </Button>
             <Button fx:id="btnContratacoes" maxWidth="1.7976931348623157E308" onAction="#showContratacoes" styleClass="buttonLateral" text="Contratações">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
