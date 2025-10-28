@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FolhaPagRepository {
 
-    private static final FolhaPagRepository instance = new FolhaPagRepository();
+    public static final FolhaPagRepository instance = new FolhaPagRepository();
     private final String arquivoCsv = "./src/main/resources/folha_pagamento.csv";
 
     private FolhaPagRepository() {}

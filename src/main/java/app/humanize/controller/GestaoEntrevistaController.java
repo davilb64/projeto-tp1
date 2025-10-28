@@ -8,8 +8,13 @@ import app.humanize.repository.VagaRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.List;
@@ -89,13 +94,39 @@ public class GestaoEntrevistaController {
     }
 
     @FXML
-    public void cadastrarEntrevista() {
-
+    public void cadastrarEntrevista() throws IOException{
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MarcarEntrevista.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Marcar Entrevista");
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        carregarTabela();
     }
 
     @FXML
-    public void editarEntrevista() {
+    public void editarEntrevista() throws IOException {
+        Entrevista entrevista = tblEntrevista.getSelectionModel().getSelectedItem();
+        if (entrevista == null) {
+            mostrarAlerta("Nenhum entrevista selecionada para editar.");
+            return;
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MarcarEntrevista.fxml"));
+        Parent root = loader.load();
 
+        MarcarEntrevistaController controllerDoCadastro = loader.getController();
+
+        controllerDoCadastro.prepararParaEdicao(entrevista);
+
+        Stage stage = new Stage();
+        stage.setTitle("Editar Entrevista");
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner((Stage) tblEntrevista.getScene().getWindow());
+        stage.showAndWait();
+
+        carregarTabela();
     }
 
     @FXML
