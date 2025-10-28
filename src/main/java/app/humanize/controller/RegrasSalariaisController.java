@@ -1,7 +1,8 @@
 package app.humanize.controller;
 
+import app.humanize.model.Funcionario;
 import app.humanize.repository.SalarioRepository;
-import app.humanize.repository.VagaRepository;
+import app.humanize.repository.UsuarioRepository;
 import app.humanize.model.RegraSalarial;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -25,7 +26,7 @@ public class RegrasSalariaisController {
     @FXML private TableColumn<RegraSalarial, Double> colunaSalarioTotal;
 
     private final SalarioRepository salarioRepository = SalarioRepository.getInstance();
-    private final VagaRepository vagaRepository = VagaRepository.getInstance();
+    private final UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
     private final ObservableList<RegraSalarial> regrasSalariais = FXCollections.observableArrayList();
     private final ObservableList<String> cargosValidos = FXCollections.observableArrayList();
 
@@ -81,8 +82,17 @@ public class RegrasSalariaisController {
 
     private void carregarCargosDoRepository() {
         cargosValidos.clear();
-        cargosValidos.addAll(vagaRepository.getTodosCargos());
+        cargosValidos.addAll(
+                usuarioRepo.getFuncionarios().stream()
+                        .filter(usuario -> usuario instanceof Funcionario) // ← FILTRA só funcionários
+                        .map(usuario -> (Funcionario) usuario) // ← FAZ o CAST para Funcionario
+                        .map(funcionario -> funcionario.getCargo()) // ← AGORA pode acessar getCargo()
+                        .filter(cargo -> cargo != null && !cargo.trim().isEmpty())
+                        .distinct()
+                        .toList()
+        );
         System.out.println("Cargos carregados: " + cargosValidos.size());
+        System.out.println("Cargos: " + cargosValidos); // Para debug
     }
 
     private void carregarRegrasExistentes() {
@@ -176,10 +186,7 @@ public class RegrasSalariaisController {
             double valorBeneficios = calcularValorBeneficios(textoBeneficios);
             double salarioTotal = salarioBase + nivel.getAdicional() + valorBeneficios;
 
-            // Criar objeto RegraSalarial
             RegraSalarial novaRegra = new RegraSalarial(cargo, nivel.getDescricao(), salarioBase, nivel.getAdicional(), valorBeneficios, salarioTotal);
-
-            // Salvar no repositório
             try {
                 salarioRepository.salvarRegra(novaRegra);
                 regrasSalariais.add(novaRegra);
