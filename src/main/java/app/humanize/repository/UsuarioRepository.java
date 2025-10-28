@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UsuarioRepository {
 
@@ -39,13 +40,9 @@ public class UsuarioRepository {
     }
 
     public List<Usuario> getFuncionarios() {
-        List<Usuario> funcionarios = new ArrayList<>();
-        for(Usuario usuario : this.usuariosEmMemoria) {
-            if (usuario instanceof Funcionario) {
-                funcionarios.add(usuario);
-            }
-        }
-        return funcionarios;
+        return this.usuariosEmMemoria.stream()
+                .filter(usuario -> usuario.getPerfil() == Perfil.FUNCIONARIO)
+                .collect(Collectors.toList());
     }
 
     public Optional<Usuario> buscaUsuarioPorLogin(String login) {
@@ -59,7 +56,6 @@ public class UsuarioRepository {
                 .filter(u -> u.getId() == id)
                 .findFirst();
     }
-
 
     public Optional<Usuario> buscaPorCpf(String cpf) {
         return this.usuariosEmMemoria.stream()
@@ -114,8 +110,8 @@ public class UsuarioRepository {
 
     private void persistirAlteracoesNoCSV() throws IOException {
         try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
-            // 1. ADICIONADO "Cargo" AO CABEÇALHO
-            escritor.write("ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;DataEmissao;Receita;Despesas;Salario;Cargo;Regime;\n");
+            // CABEÇALHO ATUALIZADO (17 COLUNAS)
+            escritor.write("ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;Receita;Despesas;Salario;Cargo;Regime;Departamento;CaminhoFoto;\n");
             for (Usuario usuario : this.usuariosEmMemoria) {
                 escritor.write(formatarUsuarioParaCSV(usuario));
             }
@@ -124,14 +120,19 @@ public class UsuarioRepository {
 
     private Usuario parseUsuarioDaLinhaCsv(String linha) {
         String[] campos = linha.split(";", -1);
-        // 2. NÚMERO DE CAMPOS AUMENTADO PARA 16
-        if (campos.length < 16) {
-            System.err.println("Linha CSV inválida (poucos campos, esperado 16): " + linha);
+        // ATUALIZADO: ESPERA 17 CAMPOS
+        if (campos.length < 17) {
+            System.err.println("Linha CSV inválida (poucos campos, esperado 17): " + linha);
             return null;
         }
 
         try {
             int id = Integer.parseInt(campos[0]);
+            String nome = campos[1];
+            String cpf = campos[2];
+            String email = campos[3];
+            String login = campos[5];
+            String senha = campos[6];
             Perfil perfil = Perfil.valueOf(campos[7].trim().toUpperCase());
 
             Endereco endereco = null;
@@ -151,61 +152,55 @@ public class UsuarioRepository {
                 }
             }
 
-            Usuario usuario;
-            if (perfil == Perfil.FUNCIONARIO) {
+            int matricula = Integer.parseInt(campos[8].trim().isEmpty() ? "0" : campos[8].trim());
+            int periodo = Integer.parseInt(campos[9].trim().isEmpty() ? "0" : campos[9].trim());
+            double receita = Double.parseDouble(campos[10].trim().isEmpty() ? "0.0" : campos[10].trim());
+            double despesas = Double.parseDouble(campos[11].trim().isEmpty() ? "0.0" : campos[11].trim());
+            double salario = Double.parseDouble(campos[12].trim().isEmpty() ? "0.0" : campos[12].trim());
+            String cargo = campos[13].trim();
 
-                LocalDate dataEmissao = null;
-                String dataEmissaoStr = campos[10].trim();
-                if (!dataEmissaoStr.isEmpty() && !dataEmissaoStr.equalsIgnoreCase("null")) {
-                    try {
-                        dataEmissao = LocalDate.parse(dataEmissaoStr);
-                    } catch (java.time.format.DateTimeParseException dtpe) {
-                        System.err.println("Formato de data inválido na linha: '" + linha + "'. Campo data: '" + dataEmissaoStr + "'");
-                        return null;
-                    }
-                }
-
-                String cargo = campos[14].trim();
-
-                Regime regime = null;
-                String regimeStr = campos[15].trim();
-                if (!regimeStr.isEmpty()) {
-                    try {
-                        regime = Regime.valueOf(regimeStr.toUpperCase());
-                    } catch (IllegalArgumentException iae) {
-                        System.err.println("Valor de Regime inválido na linha: '" + linha + "'. Campo regime: '" + regimeStr + "'");
-                    }
-                }
-
-                Funcionario.FuncionarioBuilder builder = new Funcionario.FuncionarioBuilder()
-                        .matricula(Integer.parseInt(campos[8].trim().isEmpty() ? "0" : campos[8].trim()))
-                        .periodo(Integer.parseInt(campos[9].trim().isEmpty() ? "0" : campos[9].trim()))
-                        .dataEmissao(dataEmissao)
-                        .receita(Double.parseDouble(campos[11].trim().isEmpty() ? "0.0" : campos[11].trim()))
-                        .despesas(Double.parseDouble(campos[12].trim().isEmpty() ? "0.0" : campos[12].trim()))
-                        .salario(Double.parseDouble(campos[13].trim().isEmpty() ? "0.0" : campos[13].trim()))
-                        .cargo(cargo) // 4. ADICIONADO AO BUILDER
-                        .regime(regime);
-
-                usuario = builder.build();
-
-            } else if (perfil == Perfil.ADMINISTRADOR) {
-                usuario = new Administrador.AdministradorBuilder().build();
-            } else if (perfil == Perfil.GESTOR) {
-                usuario = new Gestor.GestorBuilder().build();
-            } else { // RECRUTADOR
-                usuario = new Recrutador.RecrutadorBuilder().build();
+            Regime regime = null;
+            String regimeStr = campos[14].trim();
+            if (!regimeStr.isEmpty() && !regimeStr.equalsIgnoreCase("null")) {
+                regime = Regime.valueOf(regimeStr.toUpperCase());
             }
 
-            usuario.setId(id);
-            usuario.setNome(campos[1]);
-            usuario.setCpf(campos[2]);
-            usuario.setEmail(campos[3]);
-            usuario.setEndereco(endereco);
-            usuario.setLogin(campos[5]);
-            usuario.setSenha(campos[6]);
-            usuario.setPerfil(perfil);
+            String departamento = campos[15].trim();
+            String caminhoFoto = campos[16].trim(); // NOVO CAMPO LIDO
 
+            Usuario usuario = switch (perfil) {
+                case ADMINISTRADOR -> new Administrador.AdministradorBuilder()
+                        .nome(nome).cpf(cpf).email(email).endereco(endereco)
+                        .login(login).senha(senha).perfil(perfil)
+                        .matricula(matricula).periodo(periodo).departamento(departamento)
+                        .receita(receita).despesas(despesas).salario(salario)
+                        .cargo(cargo).regime(regime).caminhoFoto(caminhoFoto) // NOVO
+                        .build();
+                case GESTOR -> new Gestor.GestorBuilder()
+                        .nome(nome).cpf(cpf).email(email).endereco(endereco)
+                        .login(login).senha(senha).perfil(perfil)
+                        .matricula(matricula).periodo(periodo).departamento(departamento)
+                        .receita(receita).despesas(despesas).salario(salario)
+                        .cargo(cargo).regime(regime).caminhoFoto(caminhoFoto) // NOVO
+                        .build();
+                case RECRUTADOR -> new Recrutador.RecrutadorBuilder()
+                        .nome(nome).cpf(cpf).email(email).endereco(endereco)
+                        .login(login).senha(senha).perfil(perfil)
+                        .matricula(matricula).periodo(periodo).departamento(departamento)
+                        .receita(receita).despesas(despesas).salario(salario)
+                        .cargo(cargo).regime(regime).caminhoFoto(caminhoFoto) // NOVO
+                        .build();
+                default ->
+                        new Funcionario.FuncionarioBuilder()
+                                .nome(nome).cpf(cpf).email(email).endereco(endereco)
+                                .login(login).senha(senha).perfil(perfil)
+                                .matricula(matricula).periodo(periodo).departamento(departamento)
+                                .receita(receita).despesas(despesas).salario(salario)
+                                .cargo(cargo).regime(regime).caminhoFoto(caminhoFoto) // NOVO
+                                .build();
+            };
+
+            usuario.setId(id);
             return usuario;
 
         } catch (Exception e) {
@@ -224,7 +219,14 @@ public class UsuarioRepository {
 
         if (usuario.getEndereco() != null) {
             Endereco endereco = usuario.getEndereco();
-            sb.append(String.join( ",", endereco.getLogradouro(), String.valueOf(endereco.getNumero()), endereco.getBairro(), endereco.getCidade(), String.valueOf(endereco.getEstado()) , endereco.getCep()));
+            sb.append(String.join( ",",
+                    endereco.getLogradouro(),
+                    String.valueOf(endereco.getNumero()),
+                    endereco.getBairro(),
+                    endereco.getCidade(),
+                    String.valueOf(endereco.getEstado()) ,
+                    endereco.getCep()
+            ));
         }
         sb.append(";");
 
@@ -235,14 +237,15 @@ public class UsuarioRepository {
         if (usuario instanceof Funcionario f) {
             sb.append(f.getMatricula()).append(";");
             sb.append(f.getPeriodo()).append(";");
-            sb.append(f.getDataEmissao() == null ? "" : f.getDataEmissao().toString()).append(";");
             sb.append(f.getReceita()).append(";");
             sb.append(f.getDespesas()).append(";");
             sb.append(f.getSalario()).append(";");
             sb.append(f.getCargo() == null ? "" : f.getCargo()).append(";");
             sb.append(f.getRegime() == null ? "" : f.getRegime().name()).append(";");
+            sb.append(f.getDepartamento() == null ? "" : f.getDepartamento()).append(";");
+            sb.append(f.getCaminhoFoto() == null ? "" : f.getCaminhoFoto()).append(";"); // NOVO CAMPO ESCRITO
         } else {
-            sb.append(";;;;;;;;");
+            sb.append(";;;;;;;;;"); // ATUALIZADO: 9 colunas vazias
         }
         sb.append("\n");
         return sb.toString();
@@ -260,6 +263,7 @@ public class UsuarioRepository {
 
     public void atualizarUsuario(Usuario usuarioAtualizado) throws IOException {
         Optional<Usuario> usuarioAntigoOpt = buscaUsuarioPorId(usuarioAtualizado.getId());
+
         if (usuarioAntigoOpt.isPresent()) {
             int index = this.usuariosEmMemoria.indexOf(usuarioAntigoOpt.get());
             if (index != -1) {
