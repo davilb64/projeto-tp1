@@ -58,7 +58,7 @@ public class StatusDaCandidaturaController {
     }
 
     @FXML
-    private void excluirCandidato() {
+    private void excluirCandidatura() {
         Candidatura candidaturaSelecionada = tableCandidaturas.getSelectionModel().getSelectedItem();
 
         if (candidaturaSelecionada == null) {

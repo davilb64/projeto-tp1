@@ -1,8 +1,10 @@
 package app.humanize.controller;
 
+import app.humanize.exceptions.CpfInvalidoException;
 import app.humanize.model.Candidato;
 import app.humanize.model.Vaga;
 import app.humanize.repository.CandidatoRepository;
+import app.humanize.service.validacoes.ValidaCpf;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import app.humanize.repository.VagaRepository;
@@ -24,6 +26,7 @@ public class CadastroDeCandidatoController {
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
     @FXML private Button btnVisualizar;
+    private final ValidaCpf validaCpf = new ValidaCpf();
 
     @FXML private javafx.scene.control.Label lblArquivo;
 
@@ -79,10 +82,12 @@ public class CadastroDeCandidatoController {
             double pretencao = txtPretencao.getText().isEmpty() ? 0.0 : Double.parseDouble(txtPretencao.getText());
 
             if (candidatoEmEdicao == null) {
+                String cpf = txtCpf.getText();
+                validaCpf.validaCpf(cpf);
                 // ➕ novo candidato
                 Candidato novo = new Candidato.CandidatoBuilder()
                         .nome(txtNome.getText())
-                        .cpf(txtCpf.getText())
+                        .cpf(cpf)
                         .email(txtEmail.getText())
                         .telefone(txtTelefone.getText())
                         .formacao(txtFormacao.getText())
@@ -100,9 +105,11 @@ public class CadastroDeCandidatoController {
                     controllerPai.showCandidatura();
                 }
             } else {
+                String cpf = txtCpf.getText();
+                validaCpf.validaCpf(cpf);
                 // ✏️ edição de candidato existente
                 candidatoEmEdicao.setNome(txtNome.getText());
-                candidatoEmEdicao.setCpf(txtCpf.getText());
+                candidatoEmEdicao.setCpf(cpf);
                 candidatoEmEdicao.setEmail(txtEmail.getText());
                 candidatoEmEdicao.setTelefone(txtTelefone.getText());
                 candidatoEmEdicao.setFormacao(txtFormacao.getText());
@@ -121,7 +128,11 @@ public class CadastroDeCandidatoController {
 
 
 
-        } catch (IOException e) {
+        }
+        catch (CpfInvalidoException e) {
+            mostrarErro("CPF Inválido" + e.getMessage());
+        }
+        catch (IOException e) {
             mostrarErro("Erro ao salvar candidato: " + e.getMessage());
         } catch (Exception e) {
             mostrarErro("Erro inesperado: " + e.getMessage());
