@@ -39,12 +39,13 @@ public class FolhaPagRepository {
                     String nome = campos[0];
                     String cargo = campos[1];
                     String nivel = campos[2];
-                    double salarioBase = Double.parseDouble(campos[3]);
-                    double adicionalNivel = Double.parseDouble(campos[4]);
-                    double beneficios = Double.parseDouble(campos[5]);
-                    double adicionais = Double.parseDouble(campos[6]);
-                    double descontos = Double.parseDouble(campos[7]);
-                    double salarioLiquido = Double.parseDouble(campos[8]);
+
+                    double salarioBase = parseDoubleComVirgula(campos[3]);
+                    double adicionalNivel = parseDoubleComVirgula(campos[4]);
+                    double beneficios = parseDoubleComVirgula(campos[5]);
+                    double adicionais = parseDoubleComVirgula(campos[6]);
+                    double descontos = parseDoubleComVirgula(campos[7]);
+                    double salarioLiquido = parseDoubleComVirgula(campos[8]);
 
                     FolhaPag folha = new FolhaPag(nome, cargo, nivel,
                             salarioBase, adicionalNivel, beneficios, adicionais, descontos, salarioLiquido);
@@ -56,6 +57,18 @@ public class FolhaPagRepository {
         }
 
         return folhas;
+    }
+    private double parseDoubleComVirgula(String valor) {
+        if (valor == null || valor.trim().isEmpty()) {
+            return 0.0;
+        }
+        try {
+
+            return Double.parseDouble(valor.trim().replace(",", "."));
+        } catch (NumberFormatException e) {
+            System.err.println("Erro ao converter valor: '" + valor + "' - usando 0.0 como padrão");
+            return 0.0;
+        }
     }
 
     private void salvarTodasFolhas(List<FolhaPag> folhas) throws IOException {
