@@ -89,7 +89,7 @@
     </HBox>
 
     <HBox alignment="CENTER_RIGHT">
-        <Button defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="Emitir Folha">
+        <Button fx:id="btnEmitir" defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="Emitir Folha">
         </Button>
     </HBox>
 
