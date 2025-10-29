@@ -1,11 +1,14 @@
 package app.humanize.controller;
 
+import app.humanize.exceptions.CpfInvalidoException;
 import app.humanize.model.Candidato;
 import app.humanize.model.Vaga;
 import app.humanize.repository.CandidatoRepository;
+import app.humanize.service.validacoes.ValidaCpf;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import app.humanize.repository.VagaRepository;
+import javafx.stage.Stage;
 
 
 import java.io.IOException;
@@ -21,53 +24,20 @@ public class CadastroDeCandidatoController {
     @FXML private TextField txtDisponibilidade;
     @FXML private TextField txtPretencao;
     @FXML private TextArea txtExperiencia;
-    @FXML private ComboBox<Vaga> comboVaga;
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
+    @FXML private Button btnCancel;
+
     @FXML private Button btnVisualizar;
+    private final ValidaCpf validaCpf = new ValidaCpf();
 
     @FXML private javafx.scene.control.Label lblArquivo;
-
-    private CandidatosAdmController controllerPai;
-
-    public void setControllerPai(CandidatosAdmController controllerPai) {
-        this.controllerPai = controllerPai;
-    }
 
 
     private String caminhoDocumentoAtual = null;
 
 
     private Candidato candidatoEmEdicao = null; // 🔹 usado quando estiver editando
-
-    @FXML
-    private void initialize() {
-        try {
-            // Busca todas as vagas do CSV via repositório
-            VagaRepository vagaRepo = VagaRepository.getInstance();
-            comboVaga.getItems().addAll(vagaRepo.getTodasVagas());
-
-            // Define como cada vaga será mostrada (ex: apenas o cargo)
-            comboVaga.setCellFactory(param -> new ListCell<>() {
-                @Override
-                protected void updateItem(Vaga vaga, boolean empty) {
-                    super.updateItem(vaga, empty);
-                    setText((empty || vaga == null) ? null : vaga.getCargo());
-                }
-            });
-            comboVaga.setButtonCell(new ListCell<>() {
-                @Override
-                protected void updateItem(Vaga vaga, boolean empty) {
-                    super.updateItem(vaga, empty);
-                    setText((empty || vaga == null) ? null : vaga.getCargo());
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarErro("Erro ao carregar vagas do arquivo CSV: " + e.getMessage());
-        }
-    }
 
 
     private Vaga criarVaga(String nome) {
@@ -87,7 +57,29 @@ public class CadastroDeCandidatoController {
         txtDisponibilidade.setText(candidato.getDisponibilidade());
         txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
         txtExperiencia.setText(candidato.getExperiencia());
-        comboVaga.setValue(candidato.getVaga());
+
+        txtCpf.setDisable(true);
+    }
+
+    public void prepararParaVisualizacao(Candidato candidato) {
+        this.candidatoEmEdicao = candidato;
+        txtNome.setText(candidato.getNome());
+        txtCpf.setText(candidato.getCpf());
+        txtEmail.setText(candidato.getEmail());
+        txtTelefone.setText(candidato.getTelefone());
+        txtFormacao.setText(candidato.getFormacao());
+        txtDisponibilidade.setText(candidato.getDisponibilidade());
+        txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
+        txtExperiencia.setText(candidato.getExperiencia());
+
+        txtCpf.setEditable(false);
+        txtNome.setEditable(false);
+        txtEmail.setEditable(false);
+        txtTelefone.setEditable(false);
+        txtFormacao.setEditable(false);
+        txtDisponibilidade.setEditable(false);
+        txtPretencao.setEditable(false);
+        txtExperiencia.setEditable(false);
     }
 
     @FXML
@@ -101,8 +93,7 @@ public class CadastroDeCandidatoController {
                     txtFormacao.getText().trim().isEmpty() ||
                     txtDisponibilidade.getText().trim().isEmpty() ||
                     txtPretencao.getText().trim().isEmpty() ||
-                    txtExperiencia.getText().trim().isEmpty() ||
-                    comboVaga.getValue() == null) {
+                    txtExperiencia.getText().trim().isEmpty()) {
 
                 mostrarErro("Por favor, preencha todos os campos antes de salvar.");
                 return;
@@ -111,17 +102,18 @@ public class CadastroDeCandidatoController {
             double pretencao = txtPretencao.getText().isEmpty() ? 0.0 : Double.parseDouble(txtPretencao.getText());
 
             if (candidatoEmEdicao == null) {
+                String cpf = txtCpf.getText();
+                validaCpf.validaCpf(cpf);
                 // ➕ novo candidato
                 Candidato novo = new Candidato.CandidatoBuilder()
                         .nome(txtNome.getText())
-                        .cpf(txtCpf.getText())
+                        .cpf(cpf)
                         .email(txtEmail.getText())
                         .telefone(txtTelefone.getText())
                         .formacao(txtFormacao.getText())
                         .disponibilidade(txtDisponibilidade.getText())
                         .pretencaoSalarial(pretencao)
                         .experiencia(txtExperiencia.getText())
-                        .vaga(comboVaga.getValue())
                         .dataCadastro(LocalDate.now())
                         .build();
 
@@ -129,38 +121,47 @@ public class CadastroDeCandidatoController {
                 CandidatoRepository.getInstance().adicionar(novo);
 
                 mostrarAlerta("Cadastro realizado com sucesso!");
-                if (controllerPai != null) {
-                    controllerPai.showStatus();
-                }
+                fecharJanela();
+
             } else {
+                String cpf = txtCpf.getText();
+                validaCpf.validaCpf(cpf);
                 // ✏️ edição de candidato existente
                 candidatoEmEdicao.setNome(txtNome.getText());
-                candidatoEmEdicao.setCpf(txtCpf.getText());
+                candidatoEmEdicao.setCpf(cpf);
                 candidatoEmEdicao.setEmail(txtEmail.getText());
                 candidatoEmEdicao.setTelefone(txtTelefone.getText());
                 candidatoEmEdicao.setFormacao(txtFormacao.getText());
                 candidatoEmEdicao.setDisponibilidade(txtDisponibilidade.getText());
                 candidatoEmEdicao.setPretencaoSalarial(pretencao);
                 candidatoEmEdicao.setExperiencia(txtExperiencia.getText());
-                candidatoEmEdicao.setVaga(comboVaga.getValue());
 
                 CandidatoRepository.getInstance().atualizar();
 
                 mostrarAlerta("Alterações salvas com sucesso!");
-                if (controllerPai != null) {
-                    controllerPai.showStatus();
-                }
+                fecharJanela();
 
             }
 
 
 
-        } catch (IOException e) {
+        }
+        catch (CpfInvalidoException e) {
+            mostrarErro("CPF Inválido" + e.getMessage());
+        }
+        catch (IOException e) {
             mostrarErro("Erro ao salvar candidato: " + e.getMessage());
         } catch (Exception e) {
             mostrarErro("Erro inesperado: " + e.getMessage());
         }
     }
+
+    public void esconderBotaoEditar() {
+        btnSalvar.setVisible(false);
+        btnCancel.setVisible(false);
+
+    }
+
 
     @FXML
     private void uploadDocumentos() {
@@ -270,6 +271,11 @@ public class CadastroDeCandidatoController {
     }
 
 
+    @FXML
+    private void fecharJanela() {
+        Stage stage = (Stage) txtNome.getScene().getWindow();
+        stage.close();
+    }
 
 
     private void mostrarAlerta(String msg) {

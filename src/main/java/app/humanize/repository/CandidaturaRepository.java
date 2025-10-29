@@ -51,6 +51,14 @@ public class CandidaturaRepository {
         persistirAlteracoesNoCSV();
     }
 
+    public void remover(Candidatura candidatura) throws IOException {
+        candidaturasEmMemoria.removeIf(c ->
+                c.getCandidato().getCpf().equals(candidatura.getCandidato().getCpf()) &&
+                        c.getVaga().getId() == candidatura.getVaga().getId());
+        persistirAlteracoesNoCSV();
+    }
+
+
     /** Persiste todas as candidaturas no CSV */
     private void persistirAlteracoesNoCSV() throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoCsv, false))) {
@@ -123,10 +131,19 @@ public class CandidaturaRepository {
     public String getStatusPorCandidato(Candidato candidato) {
         return candidaturasEmMemoria.stream()
                 .filter(c -> c.getCandidato().equals(candidato))
-                .map(c -> c.getStatus().toString())
                 .findFirst()
+                .map(c -> {
+                    if (c.getStatus() == null) return "Em análise";
+                    switch (c.getStatus()) {
+                        case APROVADO: return "Aprovado";
+                        case REPROVADO: return "Reprovado";
+                        case PENDENTE: return "Em análise";
+                        default: return "Em análise";
+                    }
+                })
                 .orElse("Sem candidatura");
     }
+
 
 
     /** Mostra alerta de erro visual no JavaFX */

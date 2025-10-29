@@ -8,8 +8,10 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
@@ -23,26 +25,35 @@
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
             <Label styleClass="label-underline" text="Dados do Funcionário (Resumo)" />
-            <GridPane hgap="10.0" vgap="8.0">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                </rowConstraints>
-                <Label text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                <Label fx:id="lblNome" text="Fulano da Silva" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                <Label text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                <Label fx:id="lblCargo" text="Analista de RH" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                <Label text="Matrícula:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                <Label fx:id="lblMatricula" text="10234" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <Label text="Regime:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                <Label fx:id="lblRegime" text="CLT" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            </GridPane>
+         <HBox prefHeight="100.0" prefWidth="200.0">
+            <children>
+                  <GridPane hgap="10.0" vgap="8.0" HBox.hgrow="ALWAYS">
+                      <columnConstraints>
+                          <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                      </columnConstraints>
+                      <rowConstraints>
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                      </rowConstraints>
+                      <Label text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                      <Label fx:id="lblNome" text="Fulano da Silva" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                      <Label text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                      <Label fx:id="lblCargo" text="Analista de RH" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                      <Label text="Matrícula:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                      <Label fx:id="lblMatricula" text="10234" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                      <Label text="Regime:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                      <Label fx:id="lblRegime" text="CLT" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  </GridPane>
+               <ImageView fx:id="fotoPerfil" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <HBox.margin>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  </HBox.margin>
+               </ImageView>
+            </children>
+         </HBox>
          <VBox.margin>
             <Insets left="10.0" right="10.0" />
          </VBox.margin>

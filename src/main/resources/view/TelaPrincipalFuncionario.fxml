@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalFuncionarioController">
+
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalFuncionarioController">
 
     <left>
         <VBox alignment="TOP_CENTER" minWidth="-Infinity" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
@@ -15,12 +20,20 @@
                 <Image url="@../humanize-logo.png" />
             </ImageView>
 
-            <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="Financeiro">
+            <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="Meu Perfil">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
             <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="Configurações">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
+         <ImageView fx:id="fotoPerfil" fitHeight="120.0" fitWidth="120.0" onMouseClicked="#showFinanceiro" pickOnBounds="true" preserveRatio="true">
+            <VBox.margin>
+               <Insets bottom="10.0" top="10.0" />
+            </VBox.margin>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+         </ImageView>
 
             <Region VBox.vgrow="ALWAYS" />
 
@@ -33,6 +46,9 @@
     <center>
         <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu" />
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
         </StackPane>
     </center>
 

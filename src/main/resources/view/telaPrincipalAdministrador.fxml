@@ -12,15 +12,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalAdministradorController">
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalAdministradorController">
 
     <left>
         <VBox alignment="TOP_CENTER" minWidth="-Infinity" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
-            <ImageView fitHeight="120.0" fitWidth="106.0" pickOnBounds="true" preserveRatio="true">
-                <Image url="@../humanize-logo.png" />
-            </ImageView>
+         <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+               <Image url="@../humanize-logo.png" />
+            </image>
+         </ImageView>
 
-            <!-- 1. Botões com styleClass em vez de id -->
             <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" onAction="#showDashboard" styleClass="buttonLateral" text="Dashboard">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
@@ -51,9 +52,20 @@
             <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="Funcionarios">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
+            <Button fx:id="btnPerfil" maxWidth="1.7976931348623157E308" onAction="#showPerfil" styleClass="buttonLateral" text="Meu Perfil">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
             <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="Configurações">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
+            <ImageView fx:id="fotoPerfil" fitHeight="120.0" fitWidth="120.0" onMouseClicked="#showPerfil" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../fotos_perfil/default_avatar.png" />
+            <VBox.margin>
+               <Insets bottom="10.0" top="10.0" />
+            </VBox.margin>
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor> </ImageView>
 
             <Region VBox.vgrow="ALWAYS" />
 
@@ -64,7 +76,6 @@
     </left>
 
     <center>
-        <!-- 2. StackPane sem padding inline, placeholder sem <font> -->
         <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu" />
         </StackPane>

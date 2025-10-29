@@ -52,7 +52,7 @@ public class CandidatosRecrutadorController {
 
     @FXML
     private void showCadastro() {
-        loadUI("CadastroDeCandidato");
+        loadUI("ListaDeCandidatos");
         setActiveButton(btnCadastro);
     }
 

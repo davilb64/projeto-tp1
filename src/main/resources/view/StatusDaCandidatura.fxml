@@ -48,12 +48,7 @@
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>
-        <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#editarCandidato" text="Editar">
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
-        </Button>
-        <Button fx:id="btnExcluir" mnemonicParsing="false" onAction="#excluirCandidato" styleClass="danger-action-button" text="Excluir">
+        <Button fx:id="btnExcluir" mnemonicParsing="false" onAction="#excluirCandidatura" styleClass="danger-action-button" text="Excluir">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

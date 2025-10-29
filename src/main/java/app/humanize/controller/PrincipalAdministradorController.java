@@ -1,24 +1,33 @@
 package app.humanize.controller;
 
+import app.humanize.model.Funcionario;
+import app.humanize.model.Usuario;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import app.humanize.util.ScreenController;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 
 public class PrincipalAdministradorController {
 
     public BorderPane root;
+    @FXML private ImageView fotoPerfil;
 
     @FXML
     private StackPane contentArea;
 
     @FXML private Button btnDashboard;
+
     @FXML private Button btnUsuarios;
     @FXML private Button btnRelatorios;
     @FXML private Button btnConfig;
@@ -29,17 +38,46 @@ public class PrincipalAdministradorController {
     @FXML private Button btnEntrevistas;
     @FXML private Button btnFuncionarios;
     @FXML private Button btnContratacoes;
+    @FXML private Button btnPerfil;
 
     private Button activeButton;
+    private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
     @FXML
-    public void initialize() throws IOException {
+    public void initialize() {
+        carregarFotoPerfil();
+
         if (btnDashboard != null) {
             btnDashboard.getStyleClass().add("buttonLateral-active");
             activeButton = btnDashboard;
         }
         showDashboard();
     }
+
+    private void carregarFotoPerfil() {
+        Usuario usuario = UserSession.getInstance().getUsuarioLogado();
+        String caminhoFoto = null;
+
+        if (usuario instanceof Funcionario) {
+            caminhoFoto = ((Funcionario) usuario).getCaminhoFoto();
+        }
+
+        try {
+            if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
+                fotoPerfil.setImage(new Image(new FileInputStream(caminhoFoto)));
+            } else {
+                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("Arquivo de foto não encontrado: " + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+            try {
+                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
+            } catch (FileNotFoundException ex) {
+                System.err.println("Foto padrão também não encontrada em: " + FOTO_PADRAO);
+            }
+        }
+    }
+
 
     private boolean isDarkThemeActive() {
         if (root != null && root.getStyleClass().contains("dark")) {
@@ -104,6 +142,12 @@ public class PrincipalAdministradorController {
     public void showUsuarios() {
         loadUI("UsuariosAdm");
         setActiveButton(btnUsuarios);
+    }
+
+    @FXML
+    public void showPerfil() {
+        loadUI("FinanceiroUsuario");
+        setActiveButton(btnPerfil);
     }
 
     @FXML
