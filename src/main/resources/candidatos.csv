@@ -1,4 +1,5 @@
-Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Experiencia;DataCadastro;Documento
-davilandia;34125223092;lindinho123@gmail.com;234;ss;ss;120000.0;trabaio;
-Davizera;98790174046;davi@gmail.com;61999;economia;integral;10000.0;garoto de programa
-;
+Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Vaga;DataCadastro;Documento
+Teste;Teste;Teste;teste;teste;teste;1000.0;Limpador de calha;
+Junior;54252842093;Junior@outlook.com;61991234567;Guaduação em Analise de desenvolvimento de sistemas na Estácio;Integral;45000.0;Jogador de LoL;
+davilandia;34125223092;lindinho123@gmail.com;234;ss;ss;120000.0;
+Davizera;98790174046;davi@gmail.com;61999;economia;integral;10000.0;/home/kiki/humanize_uploads/Experimento 5- LabSD- Valquíria.pdf
