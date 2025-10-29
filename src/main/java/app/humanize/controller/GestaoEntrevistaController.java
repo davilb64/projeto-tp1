@@ -41,6 +41,8 @@ public class GestaoEntrevistaController {
     private TableColumn<Entrevista, String> colRecrutador;
     @FXML
     private TableColumn<Entrevista, String> colVaga;
+    @FXML
+    private TableColumn<Entrevista, StatusEntrevista> colStatus;
 
     @FXML
     private Button btnFiltrar;
@@ -69,6 +71,7 @@ public class GestaoEntrevistaController {
         colCandidato.setCellValueFactory(new PropertyValueFactory<>("candidato"));
         colRecrutador.setCellValueFactory(new PropertyValueFactory<>("recrutador"));
         colVaga.setCellValueFactory(new PropertyValueFactory<>("vaga"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
     private void carregarTabela(){
@@ -92,6 +95,7 @@ public class GestaoEntrevistaController {
         cbRecrutador.getItems().clear();
         cbRecrutador.getItems().addAll(usuarioRepository.buscaPorPerfil(Perfil.RECRUTADOR));
     }
+
 
     @FXML
     public void cadastrarEntrevista() throws IOException{
