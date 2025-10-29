@@ -1,3 +1,4 @@
-Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Vaga;DataCadastro;Documento
-davilandia;34125223092;lindinho123@gmail.com;234;ss;ss;120000.0;
-Davizera;98790174046;davi@gmail.com;61999;economia;integral;10000.0;/home/kiki/humanize_uploads/Experimento 5- LabSD- Valquíria.pdf
+Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Experiencia;DataCadastro;Documento
+davilandia;34125223092;lindinho123@gmail.com;234;ss;ss;120000.0;trabaio;
+Davizera;98790174046;davi@gmail.com;61999;economia;integral;10000.0;garoto de programa
+;
