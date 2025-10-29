@@ -26,6 +26,8 @@ public class CadastroDeCandidatoController {
     @FXML private TextArea txtExperiencia;
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
+    @FXML private Button btnCancel;
+
     @FXML private Button btnVisualizar;
     private final ValidaCpf validaCpf = new ValidaCpf();
 
@@ -55,6 +57,29 @@ public class CadastroDeCandidatoController {
         txtDisponibilidade.setText(candidato.getDisponibilidade());
         txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
         txtExperiencia.setText(candidato.getExperiencia());
+
+        txtCpf.setDisable(true);
+    }
+
+    public void prepararParaVisualizacao(Candidato candidato) {
+        this.candidatoEmEdicao = candidato;
+        txtNome.setText(candidato.getNome());
+        txtCpf.setText(candidato.getCpf());
+        txtEmail.setText(candidato.getEmail());
+        txtTelefone.setText(candidato.getTelefone());
+        txtFormacao.setText(candidato.getFormacao());
+        txtDisponibilidade.setText(candidato.getDisponibilidade());
+        txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
+        txtExperiencia.setText(candidato.getExperiencia());
+
+        txtCpf.setEditable(false);
+        txtNome.setEditable(false);
+        txtEmail.setEditable(false);
+        txtTelefone.setEditable(false);
+        txtFormacao.setEditable(false);
+        txtDisponibilidade.setEditable(false);
+        txtPretencao.setEditable(false);
+        txtExperiencia.setEditable(false);
     }
 
     @FXML
@@ -130,6 +155,13 @@ public class CadastroDeCandidatoController {
             mostrarErro("Erro inesperado: " + e.getMessage());
         }
     }
+
+    public void esconderBotaoEditar() {
+        btnSalvar.setVisible(false);
+        btnCancel.setVisible(false);
+
+    }
+
 
     @FXML
     private void uploadDocumentos() {

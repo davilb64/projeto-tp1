@@ -114,7 +114,7 @@ public class EntrevistaRepository {
             Entrevista entrevista = new Entrevista();
             entrevista.setId(idContratacao);
             entrevista.setDataEntrevista(campos[1] != null && !campos[1].isEmpty() ? LocalDate.parse(campos[1]) : null);
-            entrevista.setStatus(campos[2]);
+            entrevista.setStatus(campos[2]!= null && !campos[2].isEmpty() ?  StatusEntrevista.valueOf(campos[2]) : null);
 
             //dados do candidato
             Candidato candidato = new Candidato();
@@ -154,6 +154,8 @@ public class EntrevistaRepository {
             recrutador.setNome(campos[18]);
             recrutador.setCpf(campos[19]);
             recrutador.setPerfil(Perfil.valueOf(campos[20]));
+            entrevista.setRecrutador(recrutador);
+
             return entrevista;
 
         } catch (Exception e) {

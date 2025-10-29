@@ -32,8 +32,6 @@ public class ListaDeCandidatosController {
     @FXML private TableColumn<Candidato, String> colFormacao;
     @FXML private TableColumn<Candidato, String> colDisponibilidade;
     @FXML private TableColumn<Candidato, Double> colPretencao;
-    @FXML private Button btnEditarC;
-    @FXML private Button btnExcluiC;
 
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final ObservableList<Candidato> listaCandidatos = FXCollections.observableArrayList();
@@ -84,7 +82,7 @@ public class ListaDeCandidatosController {
 
         List<Candidato> filtrados = candidatoRepository.getTodos().stream()
                 .filter(c ->
-                        safeString(c.getNome()).toLowerCase().contains(nomeFiltro) &&
+                        (safeString(c.getNome()).toLowerCase().contains(nomeFiltro) || safeString(c.getEmail()).toLowerCase().contains(nomeFiltro)) &&
                                 safeString(c.getFormacao()).toLowerCase().contains(formacaoFiltro) &&
                                 safeString(c.getExperiencia()).toLowerCase().contains(experienciaFiltro) &&
                                 dentroDaFaixaSalarial(c.getPretencaoSalarial(), faixaSalario)
@@ -117,8 +115,34 @@ public class ListaDeCandidatosController {
             mostrarAlerta("Selecione um candidato para editar.");
             return;
         }
-        mostrarInfo("Função de edição ainda não implementada.", "Candidato: " + selecionado.getNome());
+
+        try {
+            // Carrega o FXML de cadastro
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
+            Parent root = loader.load();
+
+            // Obtém o controller da tela de cadastro
+            CadastroDeCandidatoController controller = loader.getController();
+
+            // Passa o candidato selecionado para edição
+            controller.prepararParaEdicao(selecionado);
+
+            // Abre em uma nova janela modal
+            Stage stage = new Stage();
+            stage.setTitle("Editar Candidato");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            // Atualiza a tabela após fechar a janela
+            carregarCandidatos();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarErro("Erro ao abrir a tela de edição: " + e.getMessage());
+        }
     }
+
 
     /** Ação do botão Excluir — remove da tabela e do CSV */
     @FXML
@@ -145,6 +169,42 @@ public class ListaDeCandidatosController {
                 }
             }
         });
+    }
+
+    @FXML
+    private void visualizarCandidato(){
+        Candidato selecionado = tblUsuarios.getSelectionModel().getSelectedItem();
+        if (selecionado == null) {
+            mostrarAlerta("Selecione um candidato para vizualizar.");
+            return;
+        }
+
+        try {
+            // Carrega o FXML de cadastro
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
+            Parent root = loader.load();
+
+            // Obtém o controller da tela de cadastro
+            CadastroDeCandidatoController controller = loader.getController();
+
+            // Passa o candidato selecionado para edição
+            controller.esconderBotaoEditar();
+            controller.prepararParaVisualizacao(selecionado);
+
+            // Abre em uma nova janela modal
+            Stage stage = new Stage();
+            stage.setTitle("Vizualizar Candidato");
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            // Atualiza a tabela após fechar a janela
+            carregarCandidatos();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarErro("Erro ao abrir a tela de vizualização: " + e.getMessage());
+        }
     }
 
     @FXML
