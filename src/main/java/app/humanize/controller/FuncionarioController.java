@@ -2,11 +2,7 @@ package app.humanize.controller;
 
 import app.humanize.model.Funcionario;
 import app.humanize.model.Perfil;
-import app.humanize.model.Vaga;
 import app.humanize.repository.UsuarioRepository;
-import app.humanize.repository.VagaRepository;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,9 +13,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FuncionarioController {
 
@@ -60,11 +53,21 @@ public class FuncionarioController {
     }
 
     private void carregarTabela(){
-
+        //ObservableList<Funcionario> dados = FXCollections.observableArrayList(usuarioRepository.getFuncionarios());
+        //tblFuncionarios.setItems(dados);
+        //tblFuncionarios.refresh();
     }
 
     @FXML
     private void contratarFuncionario() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ContratacaoDeFuncionario.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle("Contratar Funcionário");
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        carregarTabela();
     }
 
     @FXML

@@ -69,4 +69,10 @@ public class Entrevista {
     public void setDataEntrevista(LocalDate dataEntrevista) {
         this.dataEntrevista = dataEntrevista;
     }
+
+    @Override
+    public String toString() {
+        return id + " - " + candidato.getNome();
+    }
+
 }

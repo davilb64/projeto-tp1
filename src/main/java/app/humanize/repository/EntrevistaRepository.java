@@ -26,6 +26,23 @@ public class EntrevistaRepository {
         return new ArrayList<>(this.entrevistaEmMemoria);
     }
 
+    public List<Entrevista> buscarCandidatosAprovados() {
+         return this.entrevistaEmMemoria.stream()
+                .filter(e -> e.getStatus().equals(StatusEntrevista.Aprovado))
+                .toList();
+    }
+
+    public String buscarNomeCargoEntrevista(int idEntrevista) {
+        return this.entrevistaEmMemoria.stream()
+                .filter(e -> e.getId() == idEntrevista)
+                .map(e -> e.getVaga().getCargo())
+                .findFirst().orElse(null);
+    }
+    public Entrevista buscarEntrevistaPorNomeCandidato(String nome) {
+        return this.entrevistaEmMemoria.stream()
+                .filter(e -> e.getCandidato().getNome().equalsIgnoreCase(nome))
+                .findFirst().orElse(null);
+    }
     //metodos de salvar no csv
     public void escreveEntrevistaNova(Entrevista entrevista) throws IOException {
         int proximoId = getProximoId();
