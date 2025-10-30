@@ -8,12 +8,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalGestorController">
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalGestorController">
 
     <left>
         <VBox alignment="TOP_CENTER" prefWidth="180.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
@@ -39,6 +38,16 @@
                     <Button fx:id="btnContratacoes" maxWidth="1.7976931348623157E308" onAction="#showContratacoes" styleClass="buttonLateral" text="Contratações">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
+               <Button fx:id="btnCandidatos" maxWidth="1.7976931348623157E308" onAction="#showCandidatos" styleClass="buttonLateral" text="Candidatos">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </Button>
+               <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="Funcionarios">
+                  <cursor>
+                     <Cursor fx:constant="HAND" />
+                  </cursor>
+               </Button>
                     <Button fx:id="btnRelatorios" maxWidth="1.7976931348623157E308" onAction="#showRelatorios" styleClass="buttonLateral" text="Relatórios">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>

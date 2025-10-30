@@ -7,6 +7,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EntrevistaRepository {
     private static final EntrevistaRepository instance = new EntrevistaRepository();
@@ -24,6 +25,17 @@ public class EntrevistaRepository {
 
     public List<Entrevista> getTodasEntrevistas() {
         return new ArrayList<>(this.entrevistaEmMemoria);
+    }
+
+    public List<Entrevista> getEntrevistasHoje(){
+        LocalDate  hoje = LocalDate.now();
+        List<Entrevista> entrevistas = new ArrayList<>();
+        for (Entrevista entrevista : entrevistaEmMemoria) {
+            if (entrevista.getDataEntrevista() == hoje) {
+                entrevistas.add(entrevista);
+            }
+        }
+        return entrevistas;
     }
 
     public List<Entrevista> buscarCandidatosAprovados() {

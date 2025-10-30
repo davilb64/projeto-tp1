@@ -27,6 +27,15 @@ public class VagaRepository {
         return new ArrayList<>(this.vagaEmMemoria);
     }
 
+    public List<Vaga> getVagasAbertas() {
+        List<Vaga> vagasAbertas = new ArrayList<>();
+        for (Vaga vaga : this.vagaEmMemoria) {
+            if (vaga.getStatus() == StatusVaga.ABERTA) {
+                vagasAbertas.add(vaga);
+            }
+        }
+        return vagasAbertas;
+    }
 
     public List<String> getTodosCargos() {
         List<String> cargos = new ArrayList<>();
