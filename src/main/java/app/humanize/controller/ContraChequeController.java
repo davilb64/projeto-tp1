@@ -2,7 +2,6 @@ package app.humanize.controller;
 
 import app.humanize.model.ContraCheque;
 import app.humanize.model.Funcionario;
-import app.humanize.model.Usuario;
 import app.humanize.repository.ContrachequeRepository;
 import app.humanize.repository.UsuarioRepository;
 import javafx.collections.FXCollections;

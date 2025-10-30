@@ -45,6 +45,12 @@ public class UsuarioRepository {
                 .collect(Collectors.toList());
     }
 
+    public List<Funcionario> getUsuariosInstanceofFuncionario() {
+         return usuariosEmMemoria.stream()
+                .filter(u -> u instanceof Funcionario)
+                .map(u -> (Funcionario) u) // faz o cast
+                .toList();
+    }
     public Optional<Usuario> buscaUsuarioPorLogin(String login) {
         return this.usuariosEmMemoria.stream()
                 .filter(u -> u.getLogin().equalsIgnoreCase(login))

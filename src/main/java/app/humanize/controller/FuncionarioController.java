@@ -2,7 +2,10 @@ package app.humanize.controller;
 
 import app.humanize.model.Funcionario;
 import app.humanize.model.Perfil;
+import app.humanize.model.Usuario;
 import app.humanize.repository.UsuarioRepository;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -53,9 +56,9 @@ public class FuncionarioController {
     }
 
     private void carregarTabela(){
-        //ObservableList<Funcionario> dados = FXCollections.observableArrayList(usuarioRepository.getFuncionarios());
-        //tblFuncionarios.setItems(dados);
-        //tblFuncionarios.refresh();
+        ObservableList<Funcionario> dados = FXCollections.observableArrayList(usuarioRepository.getUsuariosInstanceofFuncionario());
+        tblFuncionarios.setItems(dados);
+        tblFuncionarios.refresh();
     }
 
     @FXML
