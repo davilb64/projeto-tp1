@@ -51,7 +51,7 @@ public class ScreenController {
             if (stage.getIcons().isEmpty()) {
                 stage.getIcons().add(image);
             }
-            stage.setScene(new Scene(root, 1080, 700));
+            stage.setScene(new Scene(root, 1080, 600));
             stage.show();
 
         } catch (IOException e) {
