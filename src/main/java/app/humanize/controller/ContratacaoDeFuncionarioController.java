@@ -91,6 +91,7 @@ public class ContratacaoDeFuncionarioController {
 
             usuarioRepository.atualizarUsuario(func);
         }
+        fecharJanela();
     }
 
     private boolean validarCampos() {

@@ -47,7 +47,7 @@ public class UsuarioRepository {
 
     public List<Funcionario> getUsuariosInstanceofFuncionario() {
          return usuariosEmMemoria.stream()
-                .filter(u -> u instanceof Funcionario)
+                .filter(u -> u.getPerfil() == Perfil.FUNCIONARIO && u instanceof Funcionario)
                 .map(u -> (Funcionario) u) // faz o cast
                 .toList();
     }

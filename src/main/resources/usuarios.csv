@@ -8,3 +8,4 @@ ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;Matricula;Periodo;Receita;Despesas
 8;Recrutador Silva;33667770014;rec@gmail.com;Rua Mote Glosa,2,Lagoa Azul,Natal,RN,59138-760;rec;$2a$10$zHvbvRG2pImu1ahSdAfYCe36wv0eG/qxlAK4fk1v56fQi1lX7gcc6;RECRUTADOR;2002;8;0.0;0.0;6500.0;Recrutador Sênior;CLT;RH;src/main/resources/fotos_perfil/default_avatar.png;
 9;Bruno Silva;59125537016;bruno.silva@humanize.com;Quadra ARSO 53 Alameda 26,12,Plano Diretor Sul,Palmas,TO,77016-139;funcionario;$2a$10$MMA4yrS8lFIvTvBa7eQr3.G/FLBJuzK1v8ngAPiheexg3ugEcCTqC;FUNCIONARIO;1001;8;500.0;250.0;4500.0;Analista de RH;CLT;RH;src/main/resources/fotos_perfil/default_avatar.png;
 10;Junior;null;;;null;null;FUNCIONARIO;0;0;0.0;0.0;0.0;Jogador de LoL;;Jogos;;
+11;Teste;null;;;null;null;FUNCIONARIO;0;0;0.0;0.0;0.0;Limpador de calha;;Dep. de Limpeza;;
