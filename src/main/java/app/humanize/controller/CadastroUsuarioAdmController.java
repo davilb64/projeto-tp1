@@ -8,6 +8,8 @@ import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.validacoes.ValidaCpf;
 import app.humanize.service.validacoes.ValidaEmail;
 import app.humanize.service.validacoes.ValidaSenha;
+
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,6 +31,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
+import java.util.Random;
 
 public class CadastroUsuarioAdmController {
 
@@ -53,6 +56,7 @@ public class CadastroUsuarioAdmController {
     @FXML private TextField txtReceita;
     @FXML private TextField txtDespesas;
 
+
     private Endereco enderecoDoOutroController;
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final ValidaCpf validaCpf = new ValidaCpf();
@@ -68,6 +72,7 @@ public class CadastroUsuarioAdmController {
     public void initialize() {
         if (usuarioParaEditar == null) {
             lblId.setText(String.valueOf(usuarioRepository.getProximoId()));
+            carregarFotoPokemonAleatorio();
         }
         perfilCombo.getItems().setAll(Perfil.values());
         regimeCombo.getItems().setAll(Regime.values());
@@ -80,6 +85,50 @@ public class CadastroUsuarioAdmController {
             Files.createDirectories(Paths.get(DIRETORIO_FOTOS));
         } catch (IOException e) {
             System.err.println("Falha ao criar diretório de fotos: " + e.getMessage());
+        }
+    }
+
+    private void carregarFotoPokemonAleatorio() {
+        btnEscolherFoto.setDisable(true);
+
+        Task<Image> loadPokemonTask = new Task<>() {
+            @Override
+            protected Image call() throws Exception {
+                try {
+                    Random random = new Random();
+                    int id = random.nextInt(1000) + 1;
+
+                    String spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
+
+                    return new Image(spriteUrl);
+
+                } catch (Exception e) {
+                    System.err.println("Falha ao buscar Pokémon da API: " + e.getMessage());
+                    return carregarAvatarLocal();
+                }
+            }
+        };
+
+        loadPokemonTask.setOnSucceeded(event -> {
+            imgFotoPerfil.setImage(loadPokemonTask.getValue());
+            btnEscolherFoto.setDisable(false);
+        });
+
+        loadPokemonTask.setOnFailed(event -> {
+            System.err.println("Falha na Task de carregar Pokémon.");
+            imgFotoPerfil.setImage(carregarAvatarLocal());
+            btnEscolherFoto.setDisable(false);
+        });
+
+        new Thread(loadPokemonTask).start();
+    }
+
+    private Image carregarAvatarLocal() {
+        try {
+            return new Image(new FileInputStream(DIRETORIO_FOTOS + "default_avatar.png"));
+        } catch (FileNotFoundException e) {
+            System.err.println("Foto padrão não encontrada!");
+            return null;
         }
     }
 
@@ -115,23 +164,14 @@ public class CadastroUsuarioAdmController {
                 imgFotoPerfil.setImage(foto);
             } catch (FileNotFoundException e) {
                 System.err.println("Foto de perfil não encontrada: " + this.caminhoFotoSelecionada);
-                carregarFotoPadrao();
+                imgFotoPerfil.setImage(carregarAvatarLocal()); // Usa o fallback
             }
         } else {
-            carregarFotoPadrao();
+            imgFotoPerfil.setImage(carregarAvatarLocal()); // Usa o fallback
         }
 
         txtSenhaOculta.setPromptText("Digite apenas se desejar alterar a senha");
         txtSenhaVisivel.setPromptText("Digite apenas se desejar alterar a senha");
-    }
-
-    private void carregarFotoPadrao() {
-        try {
-            Image fotoPadrao = new Image(new FileInputStream(DIRETORIO_FOTOS + "default_avatar.png"));
-            imgFotoPerfil.setImage(fotoPadrao);
-        } catch (FileNotFoundException e) {
-            System.err.println("Foto padrão não encontrada!");
-        }
     }
 
     @FXML
@@ -273,43 +313,52 @@ public class CadastroUsuarioAdmController {
             String departamento = txtDepartamento.getText();
             Regime regime = regimeCombo.getValue();
 
+            if(this.caminhoFotoSelecionada == null && usuarioParaEditar == null) {
+                this.caminhoFotoSelecionada = DIRETORIO_FOTOS + "default_avatar.png";
+            }
+
             if (usuarioParaEditar == null) {
                 Usuario usuario;
                 switch (perfil) {
                     case ADMINISTRADOR -> usuario = new Administrador.AdministradorBuilder()
+                            .caminhoFoto(caminhoFotoSelecionada)
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
                             .matricula(matricula).periodo(periodo).departamento(departamento)
                             .receita(receita).despesas(despesas).salario(salario)
-                            .cargo(cargo).regime(regime).caminhoFoto(caminhoFotoSelecionada)
+                            .cargo(cargo).regime(regime)
                             .build();
                     case GESTOR -> usuario = new Gestor.GestorBuilder()
+                            .caminhoFoto(caminhoFotoSelecionada)
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
                             .matricula(matricula).periodo(periodo).departamento(departamento)
                             .receita(receita).despesas(despesas).salario(salario)
-                            .cargo(cargo).regime(regime).caminhoFoto(caminhoFotoSelecionada)
+                            .cargo(cargo).regime(regime)
                             .build();
                     case RECRUTADOR -> usuario = new Recrutador.RecrutadorBuilder()
+                            .caminhoFoto(caminhoFotoSelecionada)
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
                             .matricula(matricula).periodo(periodo).departamento(departamento)
                             .receita(receita).despesas(despesas).salario(salario)
-                            .cargo(cargo).regime(regime).caminhoFoto(caminhoFotoSelecionada)
+                            .cargo(cargo).regime(regime)
                             .build();
                     default ->
                             usuario = new Funcionario.FuncionarioBuilder()
+                                    .caminhoFoto(caminhoFotoSelecionada)
                                     .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                                     .login(txtLogin.getText()).senha(hash).perfil(perfil)
                                     .matricula(matricula).periodo(periodo).departamento(departamento)
                                     .receita(receita).despesas(despesas).salario(salario)
-                                    .cargo(cargo).regime(regime).caminhoFoto(caminhoFotoSelecionada)
+                                    .cargo(cargo).regime(regime)
                                     .build();
                 }
                 usuarioRepository.escreveUsuarioNovo(usuario);
 
             } else {
                 Funcionario func = (Funcionario) usuarioParaEditar;
+                func.setCaminhoFoto(caminhoFotoSelecionada);
                 func.setNome(txtNome.getText());
                 func.setCpf(cpf);
                 func.setEmail(email);
@@ -325,7 +374,6 @@ public class CadastroUsuarioAdmController {
                 func.setReceita(receita);
                 func.setDespesas(despesas);
                 func.setRegime(regime);
-                func.setCaminhoFoto(caminhoFotoSelecionada);
 
                 usuarioRepository.atualizarUsuario(func);
             }
