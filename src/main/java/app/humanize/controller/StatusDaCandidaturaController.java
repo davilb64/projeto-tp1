@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static app.humanize.model.StatusCandidatura.PENDENTE;
+
 public class StatusDaCandidaturaController {
 
     @FXML private TableView<Candidatura> tableCandidaturas;
@@ -63,34 +65,39 @@ public class StatusDaCandidaturaController {
             mostrarAlerta("Selecione uma candidatura para excluir!");
             return;
         }
+        if(candidaturaSelecionada.getStatus() == PENDENTE){
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Deseja realmente excluir a candidatura de " +
+                            candidaturaSelecionada.getCandidato().getNome() +
+                            " para a vaga " + candidaturaSelecionada.getVaga().getCargo() + "?",
+                    ButtonType.YES, ButtonType.NO);
 
-        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
-                "Deseja realmente excluir a candidatura de " +
-                        candidaturaSelecionada.getCandidato().getNome() +
-                        " para a vaga " + candidaturaSelecionada.getVaga().getCargo() + "?",
-                ButtonType.YES, ButtonType.NO);
+            confirmacao.showAndWait().ifPresent(resposta -> {
+                if (resposta == ButtonType.YES) {
+                    try {
+                        candidaturaRepository.remover(candidaturaSelecionada);
+                        listaCandidaturas.remove(candidaturaSelecionada);
+                        tableCandidaturas.refresh();
 
-        confirmacao.showAndWait().ifPresent(resposta -> {
-            if (resposta == ButtonType.YES) {
-                try {
-                    candidaturaRepository.remover(candidaturaSelecionada);
-                    listaCandidaturas.remove(candidaturaSelecionada);
-                    tableCandidaturas.refresh();
-
-                    Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
-                    sucesso.setTitle("Sucesso");
-                    sucesso.setHeaderText(null);
-                    sucesso.setContentText("Candidatura excluída com sucesso!");
-                    sucesso.showAndWait();
-                } catch (IOException e) {
-                    Alert erro = new Alert(Alert.AlertType.ERROR);
-                    erro.setTitle("Erro");
-                    erro.setHeaderText(null);
-                    erro.setContentText("Erro ao excluir candidatura: " + e.getMessage());
-                    erro.showAndWait();
+                        Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                        sucesso.setTitle("Sucesso");
+                        sucesso.setHeaderText(null);
+                        sucesso.setContentText("Candidatura excluída com sucesso!");
+                        sucesso.showAndWait();
+                    } catch (IOException e) {
+                        Alert erro = new Alert(Alert.AlertType.ERROR);
+                        erro.setTitle("Erro");
+                        erro.setHeaderText(null);
+                        erro.setContentText("Erro ao excluir candidatura: " + e.getMessage());
+                        erro.showAndWait();
+                    }
                 }
-            }
-        });
+            });
+        }
+        else{
+            mostrarAlerta("Só é permitido excluir candidaturas pendentes!");
+            return;
+        }
     }
 
     @FXML
