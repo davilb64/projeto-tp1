@@ -7,6 +7,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EntrevistaRepository {
     private static final EntrevistaRepository instance = new EntrevistaRepository();
@@ -26,6 +27,34 @@ public class EntrevistaRepository {
         return new ArrayList<>(this.entrevistaEmMemoria);
     }
 
+    public List<Entrevista> getEntrevistasHoje(){
+        LocalDate  hoje = LocalDate.now();
+        List<Entrevista> entrevistas = new ArrayList<>();
+        for (Entrevista entrevista : entrevistaEmMemoria) {
+            if (entrevista.getDataEntrevista() == hoje) {
+                entrevistas.add(entrevista);
+            }
+        }
+        return entrevistas;
+    }
+
+    public List<Entrevista> buscarCandidatosAprovados() {
+         return this.entrevistaEmMemoria.stream()
+                .filter(e -> e.getStatus().equals(StatusEntrevista.Aprovado))
+                .toList();
+    }
+
+    public String buscarNomeCargoEntrevista(int idEntrevista) {
+        return this.entrevistaEmMemoria.stream()
+                .filter(e -> e.getId() == idEntrevista)
+                .map(e -> e.getVaga().getCargo())
+                .findFirst().orElse(null);
+    }
+    public Entrevista buscarEntrevistaPorNomeCandidato(String nome) {
+        return this.entrevistaEmMemoria.stream()
+                .filter(e -> e.getCandidato().getNome().equalsIgnoreCase(nome))
+                .findFirst().orElse(null);
+    }
     //metodos de salvar no csv
     public void escreveEntrevistaNova(Entrevista entrevista) throws IOException {
         int proximoId = getProximoId();

@@ -74,6 +74,13 @@
             <version>2.15.3</version>
         </dependency>
 
+    <!-- POKEAPI -->
+        <dependency>
+            <groupId>com.github.oscar0812</groupId>
+            <artifactId>pokeapi</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
 
     </dependencies>
 

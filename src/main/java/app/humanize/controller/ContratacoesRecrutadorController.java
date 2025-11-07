@@ -76,7 +76,7 @@ public class ContratacoesRecrutadorController {
 
     @FXML
     private void showCadastrarAprovados() {
-        loadUI("/view/CadastroDeFuncionario.fxml");
+        loadUI("/view/ContratacaoDeFuncionario.fxml");
         setActiveButton(btnCadastrarAprovados);
     }
 

@@ -26,6 +26,16 @@ public class CandidaturaRepository {
         return new ArrayList<>(candidaturasEmMemoria);
     }
 
+    public List<Candidatura> getCandidaturasEmAnalise() {
+        List<Candidatura> candidaturas = new ArrayList<>();
+        for(Candidatura candidatura : candidaturasEmMemoria) {
+            if (candidatura.getStatus() == StatusCandidatura.EM_ANALISE){
+                candidaturas.add(candidatura);
+            }
+        }
+        return candidaturas;
+    }
+
     /** Verifica se já existe uma candidatura do mesmo candidato para a mesma vaga */
     public boolean existeCandidatura(Candidato candidato, Vaga vaga) {
         return candidaturasEmMemoria.stream()

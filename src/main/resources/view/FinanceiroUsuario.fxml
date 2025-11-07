@@ -20,16 +20,16 @@
 
         <Label fx:id="lblTitulo" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Financeiro - [Nome Funcionário]" />
 
-        <VBox spacing="10.0" styleClass="card-configuracao">
+        <VBox spacing="5.0" styleClass="card-configuracao">
             <padding>
-                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
             </padding>
             <Label styleClass="label-underline" text="Dados do Funcionário (Resumo)" />
-         <HBox prefHeight="100.0" prefWidth="200.0">
+         <HBox>
             <children>
-                  <GridPane hgap="10.0" vgap="8.0" HBox.hgrow="ALWAYS">
+                  <GridPane hgap="5.0" vgap="5.0" HBox.hgrow="ALWAYS">
                       <columnConstraints>
-                          <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                          <ColumnConstraints minWidth="-Infinity" />
                           <ColumnConstraints hgrow="ALWAYS" />
                           <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
                           <ColumnConstraints hgrow="ALWAYS" />
@@ -38,14 +38,17 @@
                           <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                           <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                       </rowConstraints>
-                      <Label text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                      <Label fx:id="lblNome" text="Fulano da Silva" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                      <Label text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                      <Label fx:id="lblCargo" text="Analista de RH" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                      <Label text="Matrícula:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                      <Label fx:id="lblMatricula" text="10234" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                      <Label text="Regime:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                      <Label fx:id="lblRegime" text="CLT" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                      <Label fx:id="lblNome" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Fulano da Silva" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.vgrow="NEVER" />
+                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                      <Label fx:id="lblCargo" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Analista de RH" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Matrícula:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                      <Label fx:id="lblMatricula" style="-fx-font-size: 16; -fx-font-weight: bold;" text="10234" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
+                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Regime:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                      <Label fx:id="lblRegime" style="-fx-font-size: 16; -fx-font-weight: bold;" text="CLT" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <HBox.margin>
+                     <Insets left="10.0" />
+                  </HBox.margin>
                   </GridPane>
                <ImageView fx:id="fotoPerfil" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                   <HBox.margin>
@@ -55,7 +58,7 @@
             </children>
          </HBox>
          <VBox.margin>
-            <Insets left="10.0" right="10.0" />
+            <Insets left="5.0" right="5.0" />
          </VBox.margin>
         </VBox>
 

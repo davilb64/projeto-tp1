@@ -7,12 +7,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +34,8 @@ public class UsuariosController {
     private TextField txtEmail;
     @FXML
     private TableView<Usuario> tblUsuarios;
+    @FXML
+    private TableColumn<Usuario, String> colFoto;
     @FXML
     private TableColumn<Usuario,Integer> colId;
     @FXML
@@ -48,6 +56,42 @@ public class UsuariosController {
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colPerfil.setCellValueFactory(new PropertyValueFactory<>("perfil"));
+
+        // foto na tabela
+        colFoto.setCellValueFactory(new PropertyValueFactory<>("caminhoFoto"));
+
+        //  ImageView na tabela
+        colFoto.setCellFactory(col -> new TableCell<Usuario, String>() {
+
+            private final ImageView imageView = new ImageView();
+            {
+                imageView.setFitHeight(50);
+                imageView.setFitWidth(50);
+                imageView.setPreserveRatio(true);
+                setAlignment(Pos.CENTER); // centralizar
+            }
+
+            @Override
+            protected void updateItem(String caminho, boolean empty) {
+                super.updateItem(caminho, empty);
+
+                if (empty || caminho == null || caminho.isEmpty()) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    try {
+                        Image img = new Image(new FileInputStream(caminho));
+                        imageView.setImage(img);
+                        setGraphic(imageView);
+                    } catch (FileNotFoundException e) {
+                        System.err.println("Foto não encontrada: " + caminho);
+                        setGraphic(null);
+                    }
+                }
+            }
+        });
+
+
         comboPerfil.getItems().setAll(Perfil.values());
         carregarTabela();
     }
@@ -135,7 +179,6 @@ public class UsuariosController {
         stage.initOwner(tblUsuarios.getScene().getWindow());
         stage.showAndWait();
 
-        // --- CORREÇÃO AQUI ---
         carregarFiltro();
     }
 

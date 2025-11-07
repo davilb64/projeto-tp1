@@ -79,21 +79,6 @@ public class PrincipalAdministradorController {
     }
 
 
-    private boolean isDarkThemeActive() {
-        if (root != null && root.getStyleClass().contains("dark")) {
-            return true;
-        }
-        return contentArea != null && contentArea.getScene() != null && contentArea.getScene().getRoot().getStyleClass().contains("dark");
-    }
-
-    private void applyCurrentTheme(Node node) {
-        if (isDarkThemeActive()) {
-            node.getStyleClass().add("dark");
-        } else {
-            node.getStyleClass().remove("dark");
-        }
-    }
-
     private void loadUI(String fxml) {
         try {
             URL resource = getClass().getResource("/view/" + fxml + ".fxml");
@@ -103,11 +88,18 @@ public class PrincipalAdministradorController {
                 throw new IllegalStateException("FXML não encontrado: " + fxml);
             }
 
-            Node view = FXMLLoader.load(resource);
+            FXMLLoader loader = new FXMLLoader(resource);
 
-            applyCurrentTheme(view);
+            Node view = loader.load();
+
+            Object controller = loader.getController();
+
+            if (controller instanceof DashboardAdministradorController) {
+                ((DashboardAdministradorController) controller).setMainController(this);
+            }
 
             contentArea.getChildren().setAll(view);
+
         } catch (IOException e) {
             System.err.println("Erro de IO ao carregar FXML: " + fxml);
             e.printStackTrace();

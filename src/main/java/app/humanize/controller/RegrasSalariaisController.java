@@ -13,22 +13,18 @@ import java.util.List;
 
 public class RegrasSalariaisController {
 
-    @FXML private TextField txtCargo;
-    @FXML private TextField txtNivel;
+    @FXML private ChoiceBox<String> CBcargo;
+    @FXML private ChoiceBox<String> CBnivel;
     @FXML private TextField txtSalarioBase;
-    @FXML private TextField txtBeneficios;
-
+    @FXML private ChoiceBox<String> CBbeneficios;
     @FXML private Button btnSalvar;
-
-    @FXML private TableView<RegraSalarial> tabelaRegras;
-    @FXML private TableColumn<RegraSalarial, String> colunaCargo;
-    @FXML private TableColumn<RegraSalarial, String> colunaNivel;
-    @FXML private TableColumn<RegraSalarial, Double> colunaSalarioTotal;
+    @FXML private Button btnCancelar;
 
     private final SalarioRepository salarioRepository = SalarioRepository.getInstance();
     private final UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
-    private final ObservableList<RegraSalarial> regrasSalariais = FXCollections.observableArrayList();
     private final ObservableList<String> cargosValidos = FXCollections.observableArrayList();
+    private final ObservableList<String> niveisValidos = FXCollections.observableArrayList();
+    private final ObservableList<String> beneficiosValidos = FXCollections.observableArrayList();
 
     public enum NivelExperiencia {
         JUNIOR("Júnior", 0.0),
@@ -60,91 +56,97 @@ public class RegrasSalariaisController {
 
     private static final double VALOR_VALE_REFEICAO = 350.0;
     private static final double VALOR_PLANO_SAUDE = 200.0;
+    private static final double VALOR_VALE_TRANSPORTE = 150.0;
 
     @FXML
     private void initialize() {
         carregarCargosDoRepository();
-        configurarTabela();
+        carregarNiveis();
+        carregarBeneficios();
         configurarBotoes();
         configurarValidacoes();
-        carregarRegrasExistentes();
-    }
-
-    private void configurarTabela() {
-        if (tabelaRegras != null) {
-            colunaCargo.setCellValueFactory(cellData -> cellData.getValue().cargoProperty());
-            colunaNivel.setCellValueFactory(cellData -> cellData.getValue().nivelProperty());
-            colunaSalarioTotal.setCellValueFactory(cellData -> cellData.getValue().salarioTotalProperty().asObject());
-
-            tabelaRegras.setItems(regrasSalariais);
-        }
     }
 
     private void carregarCargosDoRepository() {
         cargosValidos.clear();
         cargosValidos.addAll(
                 usuarioRepo.getFuncionarios().stream()
-                        .filter(usuario -> usuario instanceof Funcionario) // ← FILTRA só funcionários
-                        .map(usuario -> (Funcionario) usuario) // ← FAZ o CAST para Funcionario
-                        .map(funcionario -> funcionario.getCargo()) // ← AGORA pode acessar getCargo()
+                        .filter(usuario -> usuario instanceof Funcionario)
+                        .map(usuario -> (Funcionario) usuario)
+                        .map(Funcionario::getCargo)
                         .filter(cargo -> cargo != null && !cargo.trim().isEmpty())
                         .distinct()
                         .toList()
         );
+
+        if (CBcargo != null) {
+            CBcargo.setItems(cargosValidos);
+            if (!cargosValidos.isEmpty()) {
+                CBcargo.setValue(cargosValidos.get(0));
+            }
+        }
+
         System.out.println("Cargos carregados: " + cargosValidos.size());
-        System.out.println("Cargos: " + cargosValidos); // Para debug
+        System.out.println("Cargos: " + cargosValidos);
     }
 
-    private void carregarRegrasExistentes() {
-        try {
-            List<RegraSalarial> regras = salarioRepository.carregarTodasRegras();
-            regrasSalariais.clear();
-            regrasSalariais.addAll(regras);
-        } catch (Exception e) {
-            System.err.println("Erro ao carregar regras: " + e.getMessage());
+    private void carregarNiveis() {
+        niveisValidos.clear();
+
+        for (NivelExperiencia nivel : NivelExperiencia.values()) {
+            niveisValidos.add(nivel.getDescricao());
+        }
+
+        if (CBnivel != null) {
+            CBnivel.setItems(niveisValidos);
+            if (!niveisValidos.isEmpty()) {
+                CBnivel.setValue(niveisValidos.get(0));
+            }
+        }
+    }
+
+    private void carregarBeneficios() {
+        beneficiosValidos.clear();
+        beneficiosValidos.addAll("Nenhum", "VR", "VT", "Plano Saúde", "VR + VT", "VR + Plano Saúde", "VT + Plano Saúde", "VR + VT + Plano Saúde");
+
+        if (CBbeneficios != null) {
+            CBbeneficios.setItems(beneficiosValidos);
+            if (!beneficiosValidos.isEmpty()) {
+                CBbeneficios.setValue(beneficiosValidos.get(0));
+            }
         }
     }
 
     private void configurarBotoes() {
         btnSalvar.setOnAction(event -> salvarRegra());
+        if (btnCancelar != null) {
+            btnCancelar.setOnAction(event -> limparCampos());
+        }
     }
 
     private void configurarValidacoes() {
-        txtCargo.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.isEmpty()) {
-                validarCargo(newValue);
-            } else {
-                if (txtCargo != null) txtCargo.setStyle("");
+        // Validação do salário base (apenas números)
+        txtSalarioBase.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*(\\.\\d*)?")) {
+                txtSalarioBase.setText(newValue.replaceAll("[^\\d.]", ""));
             }
         });
     }
 
-    private void validarCargo(String cargo) {
-        if (txtCargo == null) return;
-
-        boolean encontrado = cargosValidos.stream()
-                .anyMatch(cargoLista -> cargoLista.equalsIgnoreCase(cargo.trim()));
-
-        if (encontrado) {
-            txtCargo.setStyle("-fx-border-color: green; -fx-border-width: 2px;");
-        } else {
-            txtCargo.setStyle("-fx-border-color: red; -fx-border-width: 2px;");
-        }
-    }
-
-    private double calcularValorBeneficios(String textoBeneficios) {
-        if (textoBeneficios == null || textoBeneficios.trim().isEmpty()) {
+    private double calcularValorBeneficios(String beneficioSelecionado) {
+        if (beneficioSelecionado == null || beneficioSelecionado.equals("Nenhum")) {
             return 0.0;
         }
 
         double totalBeneficios = 0.0;
-        String texto = textoBeneficios.toLowerCase().trim();
 
-        if (texto.contains("vale refeicao") || texto.contains("vr") || texto.contains("vale refeição")) {
+        if (beneficioSelecionado.contains("VR")) {
             totalBeneficios += VALOR_VALE_REFEICAO;
         }
-
-        if (texto.contains("plano de saude") || texto.contains("saude") || texto.contains("plano saúde") || texto.contains("saúde")) {
+        if (beneficioSelecionado.contains("VT")) {
+            totalBeneficios += VALOR_VALE_TRANSPORTE;
+        }
+        if (beneficioSelecionado.contains("Plano Saúde")) {
             totalBeneficios += VALOR_PLANO_SAUDE;
         }
 
@@ -158,21 +160,13 @@ public class RegrasSalariaisController {
                 return;
             }
 
-            String cargo = txtCargo.getText().trim();
+            String cargo = CBcargo.getValue();
+            String nivelDescricao = CBnivel.getValue();
+            String beneficio = CBbeneficios.getValue();
 
-            boolean cargoEncontrado = cargosValidos.stream()
-                    .anyMatch(cargoLista -> cargoLista.equalsIgnoreCase(cargo));
-
-            if (!cargoEncontrado) {
-                mostrarCargosDisponiveis(cargo);
-                return;
-            }
-
-            String nivelTexto = txtNivel.getText().trim();
-            NivelExperiencia nivel = NivelExperiencia.fromString(nivelTexto);
-
+            NivelExperiencia nivel = NivelExperiencia.fromString(nivelDescricao);
             if (nivel == null) {
-                mostrarNiveisDisponiveis(nivelTexto);
+                mostrarNiveisDisponiveis(nivelDescricao);
                 return;
             }
 
@@ -182,15 +176,14 @@ public class RegrasSalariaisController {
                 return;
             }
 
-            String textoBeneficios = txtBeneficios.getText().trim();
-            double valorBeneficios = calcularValorBeneficios(textoBeneficios);
-            double salarioTotal = salarioBase + nivel.getAdicional() + valorBeneficios;
+            double adicionalNivel = nivel.getAdicional();
+            double valorBeneficios = calcularValorBeneficios(beneficio);
+            double salarioTotal = salarioBase + adicionalNivel + valorBeneficios;
 
-            RegraSalarial novaRegra = new RegraSalarial(cargo, nivel.getDescricao(), salarioBase, nivel.getAdicional(), valorBeneficios, salarioTotal);
+            RegraSalarial novaRegra = new RegraSalarial(cargo, nivel.getDescricao(), salarioBase, adicionalNivel, valorBeneficios, salarioTotal);
+
             try {
                 salarioRepository.salvarRegra(novaRegra);
-                regrasSalariais.add(novaRegra);
-
                 mostrarMensagemSucesso(novaRegra);
                 limparCampos();
 
@@ -203,18 +196,6 @@ public class RegrasSalariaisController {
         } catch (Exception e) {
             mostrarAlerta("Erro", "Erro ao salvar regra: " + e.getMessage(), Alert.AlertType.ERROR);
         }
-    }
-
-    private void mostrarCargosDisponiveis(String cargoDigitado) {
-        StringBuilder cargosDisponiveis = new StringBuilder("Cargos válidos:\n");
-        for (String cargoValido : cargosValidos) {
-            cargosDisponiveis.append("• ").append(cargoValido).append("\n");
-        }
-
-        mostrarAlerta("Cargo Inválido",
-                "O cargo '" + cargoDigitado + "' não está cadastrado no sistema.\n\n" +
-                        cargosDisponiveis.toString(),
-                Alert.AlertType.ERROR);
     }
 
     private void mostrarNiveisDisponiveis(String nivelDigitado) {
@@ -242,13 +223,13 @@ public class RegrasSalariaisController {
                         "────────────────────────────\n" +
                         " **SALÁRIO TOTAL: R$ " + String.format("%.2f", regra.getSalarioTotal()) + "**";
 
-        mostrarAlerta(" Sucesso", mensagemSucesso, Alert.AlertType.INFORMATION);
+        mostrarAlerta("Sucesso", mensagemSucesso, Alert.AlertType.INFORMATION);
     }
 
     private boolean validarCampos() {
-        return txtCargo != null && !txtCargo.getText().trim().isEmpty() &&
-                txtNivel != null && !txtNivel.getText().trim().isEmpty() &&
-                txtSalarioBase != null && !txtSalarioBase.getText().trim().isEmpty();
+        return CBcargo.getValue() != null &&
+                CBnivel.getValue() != null &&
+                txtSalarioBase.getText() != null && !txtSalarioBase.getText().trim().isEmpty();
     }
 
     private double validarEConverterDouble(String valor, String campo) throws NumberFormatException {
@@ -260,13 +241,18 @@ public class RegrasSalariaisController {
     }
 
     private void limparCampos() {
-        if (txtCargo != null) {
-            txtCargo.clear();
-            txtCargo.setStyle("");
+        if (CBcargo != null && !cargosValidos.isEmpty()) {
+            CBcargo.setValue(cargosValidos.get(0));
         }
-        if (txtNivel != null) txtNivel.clear();
-        if (txtSalarioBase != null) txtSalarioBase.clear();
-        if (txtBeneficios != null) txtBeneficios.clear();
+        if (CBnivel != null && !niveisValidos.isEmpty()) {
+            CBnivel.setValue(niveisValidos.get(0));
+        }
+        if (CBbeneficios != null && !beneficiosValidos.isEmpty()) {
+            CBbeneficios.setValue(beneficiosValidos.get(0));
+        }
+        if (txtSalarioBase != null) {
+            txtSalarioBase.clear();
+        }
     }
 
     private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType tipo) {
