@@ -47,6 +47,13 @@
                     <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                 </padding>
 
+                <ImageView fx:id="imgFotoPerfil" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true"
+                           preserveRatio="true">
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                    <Image url="@../fotos_perfil/default_avatar.png"/>
+                </ImageView>
                 <GridPane alignment="CENTER" hgap="10.0" vgap="15.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
