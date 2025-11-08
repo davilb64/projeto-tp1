@@ -35,6 +35,8 @@ public class VagasController {
     @FXML
     private TableColumn<Vaga,Integer> colId;
     @FXML
+    private TableColumn<Vaga, String> colDepartamento;
+    @FXML
     private TableColumn<Vaga,String> colCargo;
     @FXML
     private TableColumn<Vaga,String> colSalario;
@@ -49,6 +51,7 @@ public class VagasController {
     public void initialize() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCargo.setCellValueFactory(new PropertyValueFactory<>("cargo"));
+        colDepartamento.setCellValueFactory(new PropertyValueFactory<>("departamento"));
         colSalario.setCellValueFactory(new PropertyValueFactory<>("salario"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         colRequisitos.setCellValueFactory(new PropertyValueFactory<>("requisitos"));
