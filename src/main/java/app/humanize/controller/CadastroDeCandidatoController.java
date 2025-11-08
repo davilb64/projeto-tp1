@@ -2,12 +2,11 @@ package app.humanize.controller;
 
 import app.humanize.exceptions.CpfInvalidoException;
 import app.humanize.model.Candidato;
-import app.humanize.model.Vaga;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.service.validacoes.ValidaCpf;
 import javafx.fxml.FXML;
+
 import javafx.scene.control.*;
-import app.humanize.repository.VagaRepository;
 import javafx.stage.Stage;
 
 
@@ -35,16 +34,7 @@ public class CadastroDeCandidatoController {
 
 
     private String caminhoDocumentoAtual = null;
-
-
     private Candidato candidatoEmEdicao = null; // 🔹 usado quando estiver editando
-
-
-    private Vaga criarVaga(String nome) {
-        Vaga v = new Vaga();
-        v.setCargo(nome);
-        return v;
-    }
 
     // 🔹 chamado quando clicamos em "Editar" na tabela
     public void prepararParaEdicao(Candidato candidato) {

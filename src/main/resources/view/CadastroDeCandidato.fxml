@@ -83,6 +83,13 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
+            <Button fx:id="btnExcluirDocumento" managed="false" mnemonicParsing="false"
+                    onAction="#excluirDocumento" text="Excluir Documento" visible="false">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+
             <Label fx:id="lblArquivo" text="(Nenhum arquivo selecionado)" HBox.hgrow="ALWAYS" />
         </HBox>
 
