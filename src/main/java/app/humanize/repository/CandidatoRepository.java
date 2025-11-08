@@ -26,6 +26,8 @@ public class CandidatoRepository {
         return new ArrayList<>(candidatosEmMemoria);
     }
 
+
+
     public int getQtdCandidatos() {
         return candidatosEmMemoria.size();
     }
@@ -79,7 +81,7 @@ public class CandidatoRepository {
 
     private void persistirNoCSV() throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoCsv))) {
-            writer.write("Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Vaga;DataCadastro;Documento\n");
+            writer.write("Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Experiencia;DataCadastro;Documento\n");
             for (Candidato c : candidatosEmMemoria) {
                 writer.write(formatarCandidato(c));
                 writer.newLine();
@@ -94,11 +96,13 @@ public class CandidatoRepository {
                 c.getEmail(),
                 c.getTelefone(),
                 c.getFormacao(),
-                c.getExperiencia(),
                 c.getDisponibilidade(),
                 String.valueOf(c.getPretencaoSalarial()),
+                c.getExperiencia(),
                 c.getCaminhoDocumento() != null ? c.getCaminhoDocumento() : ""
 
         );
     }
+
+
 }

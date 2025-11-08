@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import app.humanize.repository.CandidaturaRepository;
+import app.humanize.model.Candidatura;
 
 import java.io.IOException;
 import java.util.List;
@@ -116,25 +118,29 @@ public class ListaDeCandidatosController {
             return;
         }
 
+        // 🔒 Verifica se o candidato possui candidaturas
+        CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
+        boolean possuiCandidaturas = candidaturaRepository.getTodas().stream()
+                .anyMatch(c -> c.getCandidato().getCpf().equals(selecionado.getCpf()));
+
+        if (possuiCandidaturas) {
+            mostrarAlerta("Não é possível editar candidatos com candidaturas vinculadas à ele.");
+            return;
+        }
+
         try {
-            // Carrega o FXML de cadastro
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
             Parent root = loader.load();
 
-            // Obtém o controller da tela de cadastro
             CadastroDeCandidatoController controller = loader.getController();
-
-            // Passa o candidato selecionado para edição
             controller.prepararParaEdicao(selecionado);
 
-            // Abre em uma nova janela modal
             Stage stage = new Stage();
             stage.setTitle("Editar Candidato");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // Atualiza a tabela após fechar a janela
             carregarCandidatos();
 
         } catch (IOException e) {
@@ -144,12 +150,23 @@ public class ListaDeCandidatosController {
     }
 
 
+
     /** Ação do botão Excluir — remove da tabela e do CSV */
     @FXML
     private void excluirCandidato() {
         Candidato selecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             mostrarAlerta("Selecione um candidato para excluir.");
+            return;
+        }
+
+        // 🔒 Verifica se o candidato possui candidaturas
+        CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
+        boolean possuiCandidaturas = candidaturaRepository.getTodas().stream()
+                .anyMatch(c -> c.getCandidato().getCpf().equals(selecionado.getCpf()));
+
+        if (possuiCandidaturas) {
+            mostrarAlerta("O candidato tem candidaturas ligadas a ele. Elas precisam ser excluídas antes de excluí-lo.");
             return;
         }
 
@@ -170,6 +187,7 @@ public class ListaDeCandidatosController {
             }
         });
     }
+
 
     @FXML
     private void visualizarCandidato(){

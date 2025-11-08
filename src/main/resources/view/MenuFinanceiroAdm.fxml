@@ -16,11 +16,6 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="btnCadastroFuncionario" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showCadastroFuncionario" styleClass="sub-navigation-button" text="Cadastro de Funcionário" HBox.hgrow="ALWAYS">
-                <cursor>
-                    <Cursor fx:constant="HAND" />
-                </cursor>
-            </Button>
             <Button fx:id="btnFolhaPagamento" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showFolhaPagamento" styleClass="sub-navigation-button" text="Folha de Pagamento" HBox.hgrow="ALWAYS">
                 <cursor>
                     <Cursor fx:constant="HAND" />

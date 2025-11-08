@@ -26,6 +26,16 @@ public class CandidaturaRepository {
         return new ArrayList<>(candidaturasEmMemoria);
     }
 
+    public List<Candidatura> getCandidaturasEmAnalise() {
+        List<Candidatura> candidaturas = new ArrayList<>();
+        for(Candidatura candidatura : candidaturasEmMemoria) {
+            if (candidatura.getStatus() == StatusCandidatura.EM_ANALISE){
+                candidaturas.add(candidatura);
+            }
+        }
+        return candidaturas;
+    }
+
     /** Verifica se já existe uma candidatura do mesmo candidato para a mesma vaga */
     public boolean existeCandidatura(Candidato candidato, Vaga vaga) {
         return candidaturasEmMemoria.stream()
@@ -144,6 +154,20 @@ public class CandidaturaRepository {
                 .orElse("Sem candidatura");
     }
 
+    public void salvarOuAtualizar(Candidatura candidatura) throws IOException {
+        // Se já existir a mesma candidatura, atualiza o status
+        for (Candidatura c : candidaturasEmMemoria) {
+            if (c.getCandidato().equals(candidatura.getCandidato()) &&
+                    c.getVaga().equals(candidatura.getVaga())) {
+                c.setStatus(candidatura.getStatus());
+                persistirAlteracoesNoCSV();
+                return;
+            }
+        }
+        // Caso contrário, adiciona nova
+        candidaturasEmMemoria.add(candidatura);
+        persistirAlteracoesNoCSV();
+    }
 
 
     /** Mostra alerta de erro visual no JavaFX */
