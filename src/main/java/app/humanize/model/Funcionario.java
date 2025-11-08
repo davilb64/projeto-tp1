@@ -14,7 +14,7 @@ public class Funcionario extends Usuario {
     private String caminhoFoto;
 
     // construtor protected para ser usado por Builders das classes filhas
-    protected Funcionario(String nome, String cpf, Endereco endereco, String email, String login, String senha, Perfil perfil, int matricula, int periodo, double receita, double despesas, double salario, String cargo, Regime regime, String departamento, String caminhoFoto) { // NOVO PARÂMETRO
+    protected Funcionario(String nome, String cpf, Endereco endereco, String email, String login, String senha, Perfil perfil, int matricula, int periodo, double receita, double despesas, double salario, String cargo, Regime regime, String departamento, String caminhoFoto) {
 
         super(nome, cpf, endereco, email, login, senha, perfil);
         this.matricula = matricula;
