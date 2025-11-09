@@ -15,16 +15,18 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Status da Candidatura">
+    <!-- Chave reutilizada de 'candidatesMain' -->
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%candidatesMain.nav.status">
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>
     </Label>
 
     <HBox alignment="CENTER_LEFT" spacing="10.0">
-        <Label styleClass="filter-label" text="Filtrar:" />
-        <TextField fx:id="txtFiltro" promptText="Digite nome, cargo ou status..." HBox.hgrow="ALWAYS" />
-        <Button fx:id="btnFiltrar" mnemonicParsing="false" text="Filtrar" />
+        <Label styleClass="filter-label" text="%applicationStatus.filter.label" />
+        <TextField fx:id="txtFiltro" promptText="%applicationStatus.filter.prompt" HBox.hgrow="ALWAYS" />
+        <!-- Chave reutilizada de 'employeeManagement' -->
+        <Button fx:id="btnFiltrar" mnemonicParsing="false" text="%employeeManagement.filter.button.filter" />
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>
@@ -32,9 +34,12 @@
 
     <TableView fx:id="tableCandidaturas" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colCandidato" text="Candidato" />
-            <TableColumn fx:id="colCargo" text="Cargo" />
-            <TableColumn fx:id="colStatus" maxWidth="1500.0" minWidth="100.0" prefWidth="108.0" text="Status" />
+            <!-- Chave reutilizada de 'interviewManagement' -->
+            <TableColumn fx:id="colCandidato" text="%interviewManagement.table.col.candidate" />
+            <!-- Chave reutilizada de 'employeeManagement' -->
+            <TableColumn fx:id="colCargo" text="%employeeManagement.table.col.position" />
+            <!-- Chave reutilizada de 'assignRecruiter' -->
+            <TableColumn fx:id="colStatus" maxWidth="1500.0" minWidth="100.0" prefWidth="108.0" text="%assignRecruiter.table.col.status" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -48,12 +53,13 @@
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>
-      <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#editarCandidato" text="Editar Status">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Button>
-        <Button fx:id="btnExcluir" mnemonicParsing="false" onAction="#excluirCandidatura" styleClass="danger-action-button" text="Excluir">
+        <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#editarCandidato" text="%applicationStatus.actions.editStatus">
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
+        <!-- Chave reutilizada de 'interviewManagement' -->
+        <Button fx:id="btnExcluir" mnemonicParsing="false" onAction="#excluirCandidatura" styleClass="danger-action-button" text="%interviewManagement.actions.delete">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

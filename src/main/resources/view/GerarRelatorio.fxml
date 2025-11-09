@@ -14,7 +14,7 @@
 
 <VBox maxWidth="450.0" minWidth="400.0" spacing="15.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.GerarRelatorioController">
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 10;" styleClass="screen-title" text="Gerar Relatório">
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 10;" styleClass="screen-title" text="%generateReport.title">
         <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </padding>
@@ -32,17 +32,17 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label styleClass="filter-label" text="ID:" GridPane.halignment="RIGHT" />
-        <Label fx:id="lblId" text="Automático" GridPane.columnIndex="1" />
+        <Label styleClass="filter-label" text="%createVacancy.label.id" GridPane.halignment="RIGHT" />
+        <Label fx:id="lblId" text="%userRegistration.label.id.auto" GridPane.columnIndex="1" />
 
-        <Label styleClass="filter-label" text="Data:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <Label fx:id="lblData" text="Data de hoje" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%generateReport.label.date" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label fx:id="lblData" text="%generateReport.placeholder.today" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label styleClass="filter-label" text="Usuário:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-        <Label fx:id="lblUser" text="UserSession" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label styleClass="filter-label" text="%generateReport.label.user" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Label fx:id="lblUser" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-        <Label styleClass="filter-label" text="Tipo de Relatório:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-        <ComboBox fx:id="tipoCombo" maxWidth="1.7976931348623157E308" promptText="Selecione um Tipo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label styleClass="filter-label" text="%generateReport.label.reportType" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <ComboBox fx:id="tipoCombo" maxWidth="1.7976931348623157E308" promptText="%generateReport.prompt.selectType" GridPane.columnIndex="1" GridPane.rowIndex="3" />
     </GridPane>
 
     <StackPane fx:id="parametrosContainer" VBox.vgrow="ALWAYS" />
@@ -51,12 +51,12 @@
         <padding>
             <Insets top="10.0" />
         </padding>
-        <Button cancelButton="true" onAction="#cancelar" text="Cancelar">
+        <Button cancelButton="true" onAction="#cancelar" text="%candidateRegistration.button.cancel">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button defaultButton="true" onAction="#salvarRegistroRelatorio" styleClass="primary-action-button" text="Salvar">
+        <Button defaultButton="true" onAction="#salvarRegistroRelatorio" styleClass="primary-action-button" text="%candidateRegistration.button.save">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

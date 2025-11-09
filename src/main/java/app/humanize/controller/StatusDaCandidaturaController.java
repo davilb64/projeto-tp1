@@ -1,7 +1,9 @@
 package app.humanize.controller;
 
 import app.humanize.model.Candidato;
-import app.humanize.repository.CandidatoRepository;
+import app.humanize.model.Candidatura;
+import app.humanize.repository.CandidaturaRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,12 +14,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import app.humanize.repository.CandidaturaRepository;
-import app.humanize.model.Candidatura;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import static app.humanize.model.StatusCandidatura.PENDENTE;
 
@@ -31,8 +33,12 @@ public class StatusDaCandidaturaController {
     private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
     private final ObservableList<Candidatura> listaCandidaturas = FXCollections.observableArrayList();
 
+    private ResourceBundle bundle;
+
     @FXML
     private void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
         colCandidato.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(cellData.getValue().getCandidato().getNome()));
         colCargo.setCellValueFactory(cellData ->
@@ -44,33 +50,22 @@ public class StatusDaCandidaturaController {
         tableCandidaturas.setItems(listaCandidaturas);
     }
 
-
-  /*  private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
-    private final ObservableList<Candidato> listaCandidatos = FXCollections.observableArrayList();
-
-
-    public static void adicionarCandidato(Candidato candidato) {
-        try {
-            CandidatoRepository.getInstance().adicionar(candidato);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
-
     @FXML
     private void excluirCandidatura() {
         Candidatura candidaturaSelecionada = tableCandidaturas.getSelectionModel().getSelectedItem();
 
         if (candidaturaSelecionada == null) {
-            mostrarAlerta("Selecione uma candidatura para excluir!");
+            mostrarAlerta(bundle.getString("applicationStatus.alert.noSelectionDelete"));
             return;
         }
         if(candidaturaSelecionada.getStatus() == PENDENTE){
-            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Deseja realmente excluir a candidatura de " +
-                            candidaturaSelecionada.getCandidato().getNome() +
-                            " para a vaga " + candidaturaSelecionada.getVaga().getCargo() + "?",
-                    ButtonType.YES, ButtonType.NO);
+            String content = bundle.getString("applicationStatus.alert.confirmDeleteContent1") + " " +
+                    candidaturaSelecionada.getCandidato().getNome() + " " +
+                    bundle.getString("applicationStatus.alert.confirmDeleteContent2") + " " +
+                    candidaturaSelecionada.getVaga().getCargo() + "?";
+
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION, content, ButtonType.YES, ButtonType.NO);
+            confirmacao.setTitle(bundle.getString("applicationStatus.alert.confirmDeleteTitle"));
 
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.YES) {
@@ -80,22 +75,22 @@ public class StatusDaCandidaturaController {
                         tableCandidaturas.refresh();
 
                         Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
-                        sucesso.setTitle("Sucesso");
+                        sucesso.setTitle(bundle.getString("alert.success.title"));
                         sucesso.setHeaderText(null);
-                        sucesso.setContentText("Candidatura excluída com sucesso!");
+                        sucesso.setContentText(bundle.getString("applicationStatus.alert.deleteSuccess"));
                         sucesso.showAndWait();
                     } catch (IOException e) {
                         Alert erro = new Alert(Alert.AlertType.ERROR);
-                        erro.setTitle("Erro");
+                        erro.setTitle(bundle.getString("alert.error.reload.title"));
                         erro.setHeaderText(null);
-                        erro.setContentText("Erro ao excluir candidatura: " + e.getMessage());
+                        erro.setContentText(bundle.getString("applicationStatus.alert.deleteError") + " " + e.getMessage());
                         erro.showAndWait();
                     }
                 }
             });
         }
         else{
-            mostrarAlerta("Só é permitido excluir candidaturas pendentes!");
+            mostrarAlerta(bundle.getString("applicationStatus.alert.onlyPendingDelete"));
             return;
         }
     }
@@ -105,41 +100,40 @@ public class StatusDaCandidaturaController {
         Candidatura selecionada = tableCandidaturas.getSelectionModel().getSelectedItem();
 
         if (selecionada == null) {
-            mostrarAlerta("Selecione uma candidatura para editar o status!");
+            mostrarAlerta(bundle.getString("applicationStatus.alert.noSelectionEdit"));
             return;
         }
 
         try {
-            // Carrega o popup FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TrocarStatus.fxml"));
+            URL resource = getClass().getResource("/view/TrocarStatus.fxml");
+            if (resource == null) {
+                throw new IOException("FXML não encontrado: /view/TrocarStatus.fxml");
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
             Parent root = loader.load();
 
-            // Passa a candidatura selecionada para o controller do popup
             TrocarStatusController controller = loader.getController();
             controller.setCandidatura(selecionada);
             controller.setOnStatusAlterado(() -> {
-                // 🔄 Atualiza a tabela depois da alteração
                 tableCandidaturas.refresh();
             });
 
-            // Cria e mostra o popup
             Stage popupStage = new Stage();
-            popupStage.setTitle("Alterar Status da Candidatura");
+            popupStage.setTitle(bundle.getString("changeStatus.title"));
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.setScene(new Scene(root));
             popupStage.showAndWait();
 
         } catch (IOException e) {
             e.printStackTrace();
-            mostrarAlerta("Erro ao abrir tela de troca de status: " + e.getMessage());
+            mostrarAlerta(bundle.getString("applicationStatus.alert.errorLoadEdit") + " " + e.getMessage());
         }
     }
 
-
-
     private void mostrarAlerta(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
+        alert.setTitle(bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();

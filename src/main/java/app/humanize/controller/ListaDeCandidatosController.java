@@ -1,23 +1,27 @@
 package app.humanize.controller;
 
-import app.humanize.model.Candidato;
+import app.humanize.exceptions.CpfInvalidoException;
+import app.humanize.exceptions.EmailInvalidoException;
+import app.humanize.exceptions.SenhaInvalidaException;
+import app.humanize.model.*;
 import app.humanize.repository.CandidatoRepository;
+import app.humanize.repository.CandidaturaRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import app.humanize.repository.CandidaturaRepository;
-import app.humanize.model.Candidatura;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ListaDeCandidatosController {
@@ -38,14 +42,16 @@ public class ListaDeCandidatosController {
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final ObservableList<Candidato> listaCandidatos = FXCollections.observableArrayList();
 
+    private ResourceBundle bundle;
+
     @FXML
     private void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
         configurarTabela();
         carregarCandidatos();
         configurarComboSalario();
     }
 
-    /** Configura as colunas da tabela */
     private void configurarTabela() {
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colExperiencia.setCellValueFactory(new PropertyValueFactory<>("experiencia"));
@@ -56,13 +62,11 @@ public class ListaDeCandidatosController {
         tblUsuarios.setItems(listaCandidatos);
     }
 
-    /** Carrega os candidatos do repositório para a tabela */
     private void carregarCandidatos() {
         listaCandidatos.clear();
         listaCandidatos.addAll(candidatoRepository.getTodos());
     }
 
-    /** Preenche o ComboBox com intervalos salariais */
     private void configurarComboSalario() {
         comboSalario.setItems(FXCollections.observableArrayList(
                 "Todos",
@@ -74,7 +78,6 @@ public class ListaDeCandidatosController {
         comboSalario.getSelectionModel().select("Todos");
     }
 
-    /** Filtro por nome, formação, experiência e faixa salarial */
     @FXML
     private void filtra() {
         String nomeFiltro = txtNome.getText().toLowerCase();
@@ -105,38 +108,37 @@ public class ListaDeCandidatosController {
             case "2.000 - 4.000" -> salario > 2000 && salario <= 4000;
             case "4.000 - 6.000" -> salario > 4000 && salario <= 6000;
             case "Acima de 6.000" -> salario > 6000;
-            default -> true; // "Todos"
+            default -> true;
         };
     }
 
-    /** Ação do botão Editar (pode abrir uma tela de edição no futuro) */
     @FXML
     private void editarCandidato() {
         Candidato selecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
-            mostrarAlerta("Selecione um candidato para editar.");
+            mostrarAlerta(bundle.getString("candidateList.alert.noSelectionEdit"));
             return;
         }
 
-        // 🔒 Verifica se o candidato possui candidaturas
         CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
         boolean possuiCandidaturas = candidaturaRepository.getTodas().stream()
                 .anyMatch(c -> c.getCandidato().getCpf().equals(selecionado.getCpf()));
 
         if (possuiCandidaturas) {
-            mostrarAlerta("Não é possível editar candidatos com candidaturas vinculadas à ele.");
+            mostrarAlerta(bundle.getString("candidateList.alert.hasApplicationsEdit"));
             return;
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
+            URL resource = getClass().getResource("/view/CadastroDeCandidato.fxml");
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
             Parent root = loader.load();
 
             CadastroDeCandidatoController controller = loader.getController();
             controller.prepararParaEdicao(selecionado);
 
             Stage stage = new Stage();
-            stage.setTitle("Editar Candidato");
+            stage.setTitle(bundle.getString("candidateList.alert.editTitle"));
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
@@ -145,44 +147,40 @@ public class ListaDeCandidatosController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            mostrarErro("Erro ao abrir a tela de edição: " + e.getMessage());
+            mostrarErro(bundle.getString("candidateList.alert.errorLoadEdit") + " " + e.getMessage());
         }
     }
 
-
-
-    /** Ação do botão Excluir — remove da tabela e do CSV */
     @FXML
     private void excluirCandidato() {
         Candidato selecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
-            mostrarAlerta("Selecione um candidato para excluir.");
+            mostrarAlerta(bundle.getString("candidateList.alert.noSelectionDelete"));
             return;
         }
 
-        // 🔒 Verifica se o candidato possui candidaturas
         CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
         boolean possuiCandidaturas = candidaturaRepository.getTodas().stream()
                 .anyMatch(c -> c.getCandidato().getCpf().equals(selecionado.getCpf()));
 
         if (possuiCandidaturas) {
-            mostrarAlerta("O candidato tem candidaturas ligadas a ele. Elas precisam ser excluídas antes de excluí-lo.");
+            mostrarAlerta(bundle.getString("candidateList.alert.hasApplicationsDelete"));
             return;
         }
 
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacao.setTitle("Confirmação");
-        confirmacao.setHeaderText("Excluir candidato?");
-        confirmacao.setContentText("Tem certeza que deseja excluir " + selecionado.getNome() + "?");
+        confirmacao.setTitle(bundle.getString("candidateList.alert.confirmDeleteTitle"));
+        confirmacao.setHeaderText(bundle.getString("candidateList.alert.confirmDeleteHeader"));
+        confirmacao.setContentText(bundle.getString("candidateList.alert.confirmDeleteContent") + " " + selecionado.getNome() + "?");
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
                 try {
                     candidatoRepository.remover(selecionado);
                     listaCandidatos.remove(selecionado);
-                    mostrarInfo("Candidato excluído com sucesso!", selecionado.getNome());
+                    mostrarInfo(bundle.getString("candidateList.alert.deleteSuccessTitle"), selecionado.getNome());
                 } catch (IOException e) {
-                    mostrarErro("Erro ao excluir candidato: " + e.getMessage());
+                    mostrarErro(bundle.getString("candidateList.alert.errorDelete") + " " + e.getMessage());
                 }
             }
         });
@@ -193,57 +191,50 @@ public class ListaDeCandidatosController {
     private void visualizarCandidato(){
         Candidato selecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
-            mostrarAlerta("Selecione um candidato para vizualizar.");
+            mostrarAlerta(bundle.getString("candidateList.alert.noSelectionView"));
             return;
         }
 
         try {
-            // Carrega o FXML de cadastro
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
+            URL resource = getClass().getResource("/view/CadastroDeCandidato.fxml");
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
             Parent root = loader.load();
 
-            // Obtém o controller da tela de cadastro
             CadastroDeCandidatoController controller = loader.getController();
 
-            // Passa o candidato selecionado para edição
             controller.esconderBotaoEditar();
             controller.prepararParaVisualizacao(selecionado);
 
-            // Abre em uma nova janela modal
             Stage stage = new Stage();
-            stage.setTitle("Vizualizar Candidato");
+            stage.setTitle(bundle.getString("candidateList.alert.viewTitle"));
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
 
-            // Atualiza a tabela após fechar a janela
             carregarCandidatos();
 
         } catch (IOException e) {
             e.printStackTrace();
-            mostrarErro("Erro ao abrir a tela de vizualização: " + e.getMessage());
+            mostrarErro(bundle.getString("candidateList.alert.errorLoadView") + " " + e.getMessage());
         }
     }
 
     @FXML
     private void cadastrarUsuario() throws IOException {
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
+        URL resource = getClass().getResource("/view/CadastroDeCandidato.fxml");
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("Cadastrar Candidato");
+        stage.setTitle(bundle.getString("candidateList.alert.registerTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
         carregarCandidatos();
-
     }
 
-
-    /** Utilitários de alerta */
     private void mostrarAlerta(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
+        alert.setTitle(bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
@@ -259,7 +250,7 @@ public class ListaDeCandidatosController {
 
     private void mostrarErro(String msg) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro");
+        alert.setTitle(bundle.getString("alert.error.reload.title"));
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();

@@ -67,6 +67,7 @@ public class LoginController {
                     if (usuario instanceof Funcionario) {
                         // cast
                         caminho = ((Funcionario) usuario).getCaminhoFoto();
+
                     }
                     return carregarImagem(caminho);
                 }).orElse(avatarPadrao);

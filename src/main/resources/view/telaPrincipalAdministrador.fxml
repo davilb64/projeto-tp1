@@ -28,21 +28,21 @@
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background-insets: 0;" VBox.vgrow="ALWAYS">
                 <VBox alignment="TOP_CENTER" spacing="1.0">
 
-                    <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" onAction="#showDashboard" styleClass="buttonLateral" text="Dashboard">
+                    <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" onAction="#showDashboard" styleClass="buttonLateral" text="%sidebar.dashboard">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
-                    <Button fx:id="btnUsuarios" maxWidth="1.7976931348623157E308" onAction="#showUsuarios" styleClass="buttonLateral" text="Usuários"/>
-                    <Button fx:id="btnContratacoes" maxWidth="1.7976931348623157E308" onAction="#showContratacoes" styleClass="buttonLateral" text="Contratações"/>
-                    <Button fx:id="btnCandidatos" maxWidth="1.7976931348623157E308" onAction="#showCandidatos" styleClass="buttonLateral" text="Candidatos"/>
-                    <Button fx:id="btnEntrevistas" maxWidth="1.7976931348623157E308" onAction="#showEntrevistas" styleClass="buttonLateral" text="Entrevistas"/>
-                    <Button fx:id="btnRelatorios" maxWidth="1.7976931348623157E308" onAction="#showRelatorios" styleClass="buttonLateral" text="Relatórios"/>
-                    <Button fx:id="btnRecrutadores" maxWidth="1.7976931348623157E308" onAction="#showRecrutadores" styleClass="buttonLateral" text="Recrutadores"/>
-                    <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="Vagas"/>
-                    <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="Financeiro"/>
-                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="Funcionarios"/>
-                    <Button fx:id="btnPerfil" maxWidth="1.7976931348623157E308" onAction="#showPerfil" styleClass="buttonLateral" text="Meu Perfil"/>
+                    <Button fx:id="btnUsuarios" maxWidth="1.7976931348623157E308" onAction="#showUsuarios" styleClass="buttonLateral" text="%sidebar.users"/>
+                    <Button fx:id="btnContratacoes" maxWidth="1.7976931348623157E308" onAction="#showContratacoes" styleClass="buttonLateral" text="%sidebar.hires"/>
+                    <Button fx:id="btnCandidatos" maxWidth="1.7976931348623157E308" onAction="#showCandidatos" styleClass="buttonLateral" text="%sidebar.candidates"/>
+                    <Button fx:id="btnEntrevistas" maxWidth="1.7976931348623157E308" onAction="#showEntrevistas" styleClass="buttonLateral" text="%sidebar.interviews"/>
+                    <Button fx:id="btnRelatorios" maxWidth="1.7976931348623157E308" onAction="#showRelatorios" styleClass="buttonLateral" text="%sidebar.reports"/>
+                    <Button fx:id="btnRecrutadores" maxWidth="1.7976931348623157E308" onAction="#showRecrutadores" styleClass="buttonLateral" text="%sidebar.recruiters"/>
+                    <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="%sidebar.vacancies"/>
+                    <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="%sidebar.finance"/>
+                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="%sidebar.employees"/>
+                    <Button fx:id="btnPerfil" maxWidth="1.7976931348623157E308" onAction="#showPerfil" styleClass="buttonLateral" text="%sidebar.profile"/>
 
-                    <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="Configurações">
+                    <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="%sidebar.settings">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
 
@@ -59,7 +59,7 @@
                 </VBox>
             </ScrollPane>
 
-            <Button maxWidth="1.7976931348623157E308" onAction="#sair" text="Sair">
+            <Button maxWidth="1.7976931348623157E308" onAction="#sair" text="%sidebar.button.logout">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
                 <VBox.margin>
                     <Insets top="1.0" />
@@ -70,7 +70,7 @@
 
     <center>
         <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%mainView.placeholder.selectMenu" />
         </StackPane>
     </center>
 
@@ -79,7 +79,8 @@
             <padding>
                 <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
             </padding>
-            <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." />
+            <!-- Chave reutilizada de 'login' -->
+            <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text="%login.footer.copyright" />
         </HBox>
     </bottom>
 </BorderPane>

@@ -26,7 +26,7 @@
             <padding>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            <Label styleClass="section-title" text="Filtros de Contratação" />
+            <Label styleClass="section-title" text="%hiresConsult.filter.title" />
 
             <GridPane hgap="5.0" vgap="10.0">
                 <columnConstraints>
@@ -42,32 +42,32 @@
                     <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                 </rowConstraints>
 
-                <Label styleClass="filter-label" text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                <TextField fx:id="txtNomeFiltro" promptText="Filtrar por nome" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Label styleClass="filter-label" text="%hiresConsult.filter.label.name" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                <TextField fx:id="txtNomeFiltro" promptText="%hiresConsult.filter.prompt.name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                <Label styleClass="filter-label" text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                <ComboBox fx:id="comboCargoFiltro" maxWidth="1.7976931348623157E308" promptText="Todos" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                <Label styleClass="filter-label" text="%hiresConsult.filter.label.position" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                <ComboBox fx:id="comboCargoFiltro" maxWidth="1.7976931348623157E308" promptText="%hiresConsult.filter.prompt.all" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
-                <Label styleClass="filter-label" text="Status:" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                <ComboBox fx:id="comboStatusFiltro" maxWidth="1.7976931348623157E308" promptText="Todos" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+                <Label styleClass="filter-label" text="%hiresConsult.filter.label.status" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                <ComboBox fx:id="comboStatusFiltro" maxWidth="1.7976931348623157E308" promptText="%hiresConsult.filter.prompt.all" GridPane.columnIndex="5" GridPane.rowIndex="0" />
 
-                <Label styleClass="filter-label" text="Período:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                <Label styleClass="filter-label" text="%hiresConsult.filter.label.period" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                 <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
-                    <Label text="De:" HBox.hgrow="ALWAYS" />
-                    <DatePicker fx:id="dpInicioFiltro" maxWidth="1.7976931348623157E308" promptText="Data Início" HBox.hgrow="ALWAYS" />
-                    <Label text="Até:" HBox.hgrow="ALWAYS" />
-                    <DatePicker fx:id="dpFimFiltro" maxWidth="1.7976931348623157E308" promptText="Data Fim" HBox.hgrow="ALWAYS" />
+                    <Label text="%hiresConsult.filter.label.from" HBox.hgrow="ALWAYS" />
+                    <DatePicker fx:id="dpInicioFiltro" maxWidth="1.7976931348623157E308" promptText="%hiresConsult.filter.prompt.startDate" HBox.hgrow="ALWAYS" />
+                    <Label text="%hiresConsult.filter.label.to" HBox.hgrow="ALWAYS" />
+                    <DatePicker fx:id="dpFimFiltro" maxWidth="1.7976931348623157E308" promptText="%hiresConsult.filter.prompt.endDate" HBox.hgrow="ALWAYS" />
                 </HBox>
 
-                <Button fx:id="btnFiltrar" mnemonicParsing="false" text="Filtrar" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                <Button fx:id="btnFiltrar" mnemonicParsing="false" text="%hiresConsult.filter.button.filter" GridPane.columnIndex="5" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             </GridPane>
         </VBox>
 
         <TableView fx:id="tblContratacoes" minHeight="250.0"> <columns>
-            <TableColumn fx:id="colNome" text="Nome" />
-            <TableColumn fx:id="colCargo" text="Cargo" />
-            <TableColumn fx:id="colData" maxWidth="2000.0" minWidth="120.0" prefWidth="145.0" text="Data de Contrato" />
-            <TableColumn fx:id="colStatus" maxWidth="1500.0" minWidth="100.0" prefWidth="118.0" text="Status" />
+            <TableColumn fx:id="colNome" text="%hiresConsult.table.col.name" />
+            <TableColumn fx:id="colCargo" text="%hiresConsult.table.col.position" />
+            <TableColumn fx:id="colData" maxWidth="2000.0" minWidth="120.0" prefWidth="145.0" text="%hiresConsult.table.col.hireDate" />
+            <TableColumn fx:id="colStatus" maxWidth="1500.0" minWidth="100.0" prefWidth="118.0" text="%hiresConsult.table.col.status" />
         </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -84,12 +84,12 @@
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
-            <Button fx:id="btnAtualizar" mnemonicParsing="false" text="Atualizar Lista">
+            <Button fx:id="btnAtualizar" mnemonicParsing="false" text="%hiresConsult.actions.button.refresh">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="btnVoltar" cancelButton="true" mnemonicParsing="false" text="Voltar">
+            <Button fx:id="btnVoltar" cancelButton="true" mnemonicParsing="false" text="%hiresConsult.actions.button.back">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>

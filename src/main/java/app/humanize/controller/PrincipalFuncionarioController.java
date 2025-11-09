@@ -17,7 +17,8 @@ import app.humanize.util.ScreenController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Objects;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class PrincipalFuncionarioController {
     public BorderPane root;
@@ -33,13 +34,19 @@ public class PrincipalFuncionarioController {
 
     private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
+    private ResourceBundle bundle;
+
     @FXML private void initialize(){
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
+
         carregarFotoPerfil();
-        if (btnFinanceiro != null) {
-            btnFinanceiro.getStyleClass().add("buttonLateral-active");
-            activeButton = btnFinanceiro;
-        }
         showFinanceiro();
+    }
+
+    private void atualizarTextosSidebar() {
+        btnFinanceiro.setText(bundle.getString("sidebar.profile"));
+        btnConfig.setText(bundle.getString("sidebar.settings"));
     }
 
     private void carregarFotoPerfil() {
@@ -68,29 +75,47 @@ public class PrincipalFuncionarioController {
 
     private void loadUI(String fxmlPath) {
         try {
-            System.out.println(">> Tentando carregar: " + getClass().getResource(fxmlPath));
+            URL resource = getClass().getResource(fxmlPath);
+            System.out.println(">> Tentando carregar: " + resource);
 
-            Node view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-
-            if (view != null) {
-                contentArea.getChildren().setAll(view);
-            } else {
-                System.err.println("Erro: FXML não carregado ou nulo: " + fxmlPath);
-                mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela: " + fxmlPath, "Verifique o console para detalhes.");
+            if (resource == null) {
+                throw new IllegalStateException("FXML não encontrado: " + fxmlPath);
             }
+
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
+            Node view = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof ConfiguracoesAdmController) {
+                ((ConfiguracoesAdmController) controller).setMainController(this);
+            }
+
+            contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
             System.err.println("Erro de IO ao carregar FXML: " + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro ao Carregar Tela", "Não foi possível carregar a interface.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.reload.header"),
+                    e.getMessage()
+            );
         } catch (NullPointerException e) {
             System.err.println("Erro: Recurso FXML não encontrado: " + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro Crítico", "Arquivo da interface não encontrado.", "Caminho: " + fxmlPath);
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.fxmlNotFound.header"),
+                    "Caminho: " + fxmlPath
+            );
         } catch (Exception e) {
             System.err.println("Erro inesperado ao carregar FXML: " + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro Inesperado", "Ocorreu um erro ao tentar carregar a tela.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("alert.error.unexpected.header"),
+                    e.getMessage()
+            );
         }
     }
 
@@ -118,9 +143,12 @@ public class PrincipalFuncionarioController {
 
 
     @FXML
-    private void showConfiguracoes() {
+    void showConfiguracoes() {
         loadUI("/view/ConfiguracoesAdm.fxml");
         setActiveButton(btnConfig);
+
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
     }
 
     @FXML

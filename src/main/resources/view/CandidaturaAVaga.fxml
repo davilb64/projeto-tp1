@@ -13,7 +13,7 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Candidatura à Vaga">
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%vacancyApplication.title">
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>
@@ -22,12 +22,12 @@
     <HBox spacing="20.0" VBox.vgrow="ALWAYS">
 
         <VBox spacing="10.0" HBox.hgrow="ALWAYS">
-            <Label styleClass="section-title" text="Vagas Disponíveis" />
+            <Label styleClass="section-title" text="%vacancyApplication.list.availableVacancies" />
             <ListView fx:id="listVagas" VBox.vgrow="ALWAYS" />
         </VBox>
 
         <VBox spacing="10.0" HBox.hgrow="ALWAYS">
-            <Label styleClass="section-title" text="Candidatos" />
+            <Label styleClass="section-title" text="%vacancyApplication.list.candidates" />
             <ListView fx:id="listCandidatos" VBox.vgrow="ALWAYS" />
         </VBox>
 
@@ -40,12 +40,12 @@
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>
-        <Button fx:id="btnCancelar" cancelButton="true" mnemonicParsing="false" text="Cancelar">
+        <Button fx:id="btnCancelar" cancelButton="true" mnemonicParsing="false" text="%vacancyApplication.button.cancel">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="Associar Candidatura">
+        <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="%vacancyApplication.button.associate">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

@@ -26,10 +26,12 @@
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent; -fx-background-insets: 0;" VBox.vgrow="ALWAYS">
                 <VBox alignment="TOP_CENTER" spacing="1.0">
 
-                    <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="Meu Perfil">
+                    <!-- Chave reutilizada de 'sidebar' -->
+                    <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="%sidebar.profile">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
-                    <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="Configurações">
+                    <!-- Chave reutilizada de 'sidebar' -->
+                    <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="%sidebar.settings">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
 
@@ -45,7 +47,8 @@
             </ScrollPane>
 
             <!-- Botão Sair (Fixo na base) -->
-            <Button maxWidth="1.7976931348623157E308" onAction="#sair" text="Sair">
+            <!-- Chave reutilizada de 'sidebar' -->
+            <Button maxWidth="1.7976931348623157E308" onAction="#sair" text="%sidebar.button.logout">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
                 <VBox.margin>
                     <Insets top="1.0" />
@@ -56,7 +59,8 @@
 
     <center>
         <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Selecione um menu" />
+            <!-- Chave reutilizada de 'mainView' -->
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="%mainView.placeholder.selectMenu" />
         </StackPane>
     </center>
 
@@ -65,7 +69,8 @@
             <padding>
                 <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
             </padding>
-            <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text=" © 2025 Humanize. Todos os direitos reservados." />
+            <!-- Chave reutilizada de 'login' -->
+            <Text fill="#6b6b6b" strokeType="OUTSIDE" strokeWidth="0.0" text="%login.footer.copyright" />
         </HBox>
     </bottom>
 </BorderPane>

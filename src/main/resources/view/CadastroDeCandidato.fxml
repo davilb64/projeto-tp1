@@ -19,7 +19,7 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
         </padding>
 
-        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Candidato">
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%candidateRegistration.title">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
@@ -31,40 +31,40 @@
                 <ColumnConstraints hgrow="ALWAYS" />
             </columnConstraints>
 
-            <Label styleClass="filter-label" text="Nome Completo:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-            <TextField fx:id="txtNome" promptText="Nome completo do candidato" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label styleClass="filter-label" text="%candidateRegistration.label.fullName" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+            <TextField fx:id="txtNome" promptText="%candidateRegistration.prompt.fullName" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <Label styleClass="filter-label" text="CPF:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <TextField fx:id="txtCpf" promptText="Somente números" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label styleClass="filter-label" text="%candidateRegistration.label.cpf" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <TextField fx:id="txtCpf" promptText="%candidateRegistration.prompt.cpf" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-            <Label styleClass="filter-label" text="E-mail:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <TextField fx:id="txtEmail" promptText="email@exemplo.com" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label styleClass="filter-label" text="%candidateRegistration.label.email" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <TextField fx:id="txtEmail" promptText="%candidateRegistration.prompt.email" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <Label styleClass="filter-label" text="Telefone:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <TextField fx:id="txtTelefone" promptText="(XX) XXXXX-XXXX" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label styleClass="filter-label" text="%candidateRegistration.label.phone" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <TextField fx:id="txtTelefone" promptText="%candidateRegistration.prompt.phone" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-            <Label styleClass="filter-label" text="Formação:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
-            <TextField fx:id="txtFormacao" promptText="Ex: Graduação em..., Curso Técnico..." GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label styleClass="filter-label" text="%candidateRegistration.label.education" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+            <TextField fx:id="txtFormacao" promptText="%candidateRegistration.prompt.education" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
-            <Label styleClass="filter-label" text="Disponibilidade:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-            <TextField fx:id="txtDisponibilidade" promptText="Ex: Integral, Meio Período, Remoto" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label styleClass="filter-label" text="%candidateRegistration.label.availability" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+            <TextField fx:id="txtDisponibilidade" promptText="%candidateRegistration.prompt.availability" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
-            <Label styleClass="filter-label" text="Pretensão Salarial:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
-            <TextField fx:id="txtPretencao" promptText="R$" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label styleClass="filter-label" text="%candidateRegistration.label.salaryExpectation" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+            <TextField fx:id="txtPretencao" promptText="%candidateRegistration.prompt.salaryExpectation" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
-            <Label styleClass="filter-label" text="Experiência:" GridPane.halignment="RIGHT" GridPane.rowIndex="8" GridPane.valignment="TOP" />
-            <TextArea fx:id="txtExperiencia" minHeight="80.0" prefRowCount="4" promptText="Descreva brevemente sua experiência relevante" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
+            <Label styleClass="filter-label" text="%candidateRegistration.label.experience" GridPane.halignment="RIGHT" GridPane.rowIndex="8" GridPane.valignment="TOP" />
+            <TextArea fx:id="txtExperiencia" minHeight="80.0" prefRowCount="4" promptText="%candidateRegistration.prompt.experience" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
 
         </GridPane>
 
@@ -72,20 +72,19 @@
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
-            <Label styleClass="filter-label" text="Currículo/Docs:" />
-            <Button fx:id="btnUpload" mnemonicParsing="false" onAction="#uploadDocumentos" text="Selecionar Arquivos...">
+            <Label styleClass="filter-label" text="%candidateRegistration.label.resume" />
+            <Button fx:id="btnUpload" mnemonicParsing="false" onAction="#uploadDocumentos" text="%candidateRegistration.button.upload">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="btnVisualizar" managed="false" mnemonicParsing="false" onAction="#visualizarDocumento" text="Visualizar Documento" visible="false">
+            <Button fx:id="btnVisualizar" managed="false" mnemonicParsing="false" onAction="#visualizarDocumento" text="%candidateRegistration.button.viewDocument" visible="false">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
 
-
-            <Label fx:id="lblArquivo" text="(Nenhum arquivo selecionado)" HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblArquivo" text="%candidateRegistration.label.noFileSelected" HBox.hgrow="ALWAYS" />
         </HBox>
 
         <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="actions-panel">
@@ -95,12 +94,12 @@
             <VBox.margin>
                 <Insets top="15.0" />
             </VBox.margin>
-            <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" text="Cancelar">
+            <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" text="%candidateRegistration.button.cancel">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" onAction="#salvarCandidato" styleClass="primary-action-button" text="Salvar">
+            <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" onAction="#salvarCandidato" styleClass="primary-action-button" text="%candidateRegistration.button.save">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>

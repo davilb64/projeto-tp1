@@ -8,6 +8,7 @@ import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.validacoes.ValidaCpf;
 import app.humanize.service.validacoes.ValidaEmail;
 import app.humanize.service.validacoes.ValidaSenha;
+import app.humanize.util.UserSession;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,8 +32,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
+import java.util.ResourceBundle;
+import java.io.ByteArrayInputStream;
 
 public class CadastroUsuarioAdmController {
 
@@ -50,6 +54,7 @@ public class CadastroUsuarioAdmController {
     @FXML private ComboBox<Perfil> perfilCombo;
     @FXML private Label lblEndereco;
     @FXML private TextField txtMatricula;
+    @FXML private DatePicker dpDataAdmissao;
     @FXML private TextField txtPeriodo;
     @FXML private TextField txtCargo;
     @FXML private TextField txtDepartamento;
@@ -66,15 +71,21 @@ public class CadastroUsuarioAdmController {
     private final ValidaEmail validaEmail = new ValidaEmail();
     private Usuario usuarioParaEditar;
 
-    private String caminhoFotoSelecionada;
-    private static final String DIRETORIO_FOTOS = "src/main/resources/fotos_perfil/";
+    private String caminhoFotoAtualSalva;
+    private File arquivoFotoSelecionado = null;
+    private byte[] bytesFotoPokemon = null;
 
+    private static final String DIRETORIO_FOTOS = "src/main/resources/fotos_perfil/";
+    private ResourceBundle bundle;
 
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
         if (usuarioParaEditar == null) {
             lblId.setText(String.valueOf(usuarioRepository.getProximoId()));
             imgFotoPerfil.setImage(carregarAvatarLocal());
+            dpDataAdmissao.setValue(LocalDate.now()); // DEFINE A DATA ATUAL COMO PADRÃO
         }
         perfilCombo.getItems().setAll(Perfil.values());
         regimeCombo.getItems().setAll(Regime.values());
@@ -90,15 +101,12 @@ public class CadastroUsuarioAdmController {
         }
     }
 
-    /**
-     * Carrega a imagem de fallback "default_avatar.png" do disco.
-     * SEMPRE define o caminho da foto para o padrão.
-     */
     private Image carregarAvatarLocal() {
         try {
-            this.caminhoFotoSelecionada = DIRETORIO_FOTOS + "default_avatar.png";
-            return new Image(new FileInputStream(this.caminhoFotoSelecionada));
-        } catch (FileNotFoundException e) {
+            this.caminhoFotoAtualSalva = DIRETORIO_FOTOS + "default_avatar.png";
+            File file = new File(this.caminhoFotoAtualSalva);
+            return new Image(file.toURI().toString());
+        } catch (Exception e) {
             System.err.println("Foto padrão não encontrada!");
             return null;
         }
@@ -106,78 +114,45 @@ public class CadastroUsuarioAdmController {
 
     @FXML
     private void gerarFotoPokemon() {
-        // logica para pegar o nome do arquivo (ID ou CPF)
-        String nomeBaseArquivo;
-        if (usuarioParaEditar != null) {
-            nomeBaseArquivo = String.valueOf(usuarioParaEditar.getId());
-        } else {
-            String cpf = txtCpf.getText().replaceAll("[^0-9]", "");
-            if (cpf.isEmpty()) {
-                mostrarAlerta("CPF Necessário", "Por favor, preencha o CPF antes de gerar uma foto.", null);
-                return;
-            }
-            nomeBaseArquivo = cpf;
-        }
-
-        String extensao = "png"; // sprites da PokeAPI são PNG
-        String novoNomeArquivo = nomeBaseArquivo + "." + extensao;
-        Path caminhoDestino = Paths.get(DIRETORIO_FOTOS, novoNomeArquivo);
-
-        // desabilita botões durante o download
         btnEscolherFoto.setDisable(true);
         btnGerarPokemon.setDisable(true);
 
-        // task para baixar e salvar a imagem. Retorna o CAMINHO (String).
-        Task<String> loadPokemonTask = new Task<>() {
+        Task<byte[]> loadPokemonTask = new Task<>() {
             @Override
-            protected String call() throws Exception {
-                // retorna o caminho em caso de sucesso, ou lança exceção em caso de falha.
+            protected byte[] call() throws Exception {
                 try {
                     Random random = new Random();
                     int id = random.nextInt(1000) + 1;
                     String spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
 
                     InputStream in = new URL(spriteUrl).openStream();
-                    Files.copy(in, caminhoDestino, StandardCopyOption.REPLACE_EXISTING);
+                    byte[] imageBytes = in.readAllBytes();
                     in.close();
-
-                    return caminhoDestino.toString();
-
+                    return imageBytes;
                 } catch (Exception e) {
-                    System.err.println("Falha ao buscar/salvar Pokémon da API: " + e.getMessage());
+                    System.err.println("Falha ao buscar Pokémon da API: " + e.getMessage());
                     throw e;
                 }
             }
         };
 
         loadPokemonTask.setOnSucceeded(event -> {
-            String novoCaminho = loadPokemonTask.getValue();
-
-            this.caminhoFotoSelecionada = novoCaminho;
-
-            try {
-                imgFotoPerfil.setImage(new Image(new FileInputStream(novoCaminho)));
-            } catch (FileNotFoundException e) {
-                System.err.println("Arquivo da foto não encontrado após salvar: " + novoCaminho);
-                imgFotoPerfil.setImage(carregarAvatarLocal()); // Fallback
-            }
-
+            this.bytesFotoPokemon = loadPokemonTask.getValue();
+            this.arquivoFotoSelecionado = null;
+            imgFotoPerfil.setImage(new Image(new ByteArrayInputStream(this.bytesFotoPokemon)));
             btnEscolherFoto.setDisable(false);
             btnGerarPokemon.setDisable(false);
         });
 
         loadPokemonTask.setOnFailed(event -> {
             System.err.println("Falha na Task de carregar Pokémon.");
-
             imgFotoPerfil.setImage(carregarAvatarLocal());
-
             btnEscolherFoto.setDisable(false);
             btnGerarPokemon.setDisable(false);
         });
 
         new Thread(loadPokemonTask).start();
     }
-
 
     public void prepararParaEdicao(Usuario usuario) {
         this.usuarioParaEditar = usuario;
@@ -196,6 +171,7 @@ public class CadastroUsuarioAdmController {
         }
 
         txtMatricula.setText(String.valueOf(func.getMatricula()));
+        dpDataAdmissao.setValue(func.getDataAdmissao());
         txtPeriodo.setText(String.valueOf(func.getPeriodo()));
         txtCargo.setText(func.getCargo());
         txtDepartamento.setText(func.getDepartamento());
@@ -204,63 +180,49 @@ public class CadastroUsuarioAdmController {
         txtReceita.setText(String.valueOf(func.getReceita()));
         txtDespesas.setText(String.valueOf(func.getDespesas()));
 
-        this.caminhoFotoSelecionada = func.getCaminhoFoto();
+        this.caminhoFotoAtualSalva = func.getCaminhoFoto();
 
-        if (this.caminhoFotoSelecionada != null && !this.caminhoFotoSelecionada.isEmpty()) {
+        if (this.caminhoFotoAtualSalva != null && !this.caminhoFotoAtualSalva.isEmpty()) {
             try {
-                Image foto = new Image(new FileInputStream(this.caminhoFotoSelecionada));
+                File file = new File(this.caminhoFotoAtualSalva);
+                Image foto = new Image(file.toURI().toString());
                 imgFotoPerfil.setImage(foto);
-            } catch (FileNotFoundException e) {
-                System.err.println("Foto de perfil não encontrada: " + this.caminhoFotoSelecionada);
+            } catch (Exception e) {
+                System.err.println("Foto de perfil não encontrada: " + this.caminhoFotoAtualSalva);
                 imgFotoPerfil.setImage(carregarAvatarLocal());
             }
         } else {
             imgFotoPerfil.setImage(carregarAvatarLocal());
         }
 
-        txtSenhaOculta.setPromptText("Digite apenas se desejar alterar a senha");
-        txtSenhaVisivel.setPromptText("Digite apenas se desejar alterar a senha");
+        String promptSenhaEdicao = bundle.getString("userRegistration.prompt.passwordEdit");
+        txtSenhaOculta.setPromptText(promptSenhaEdicao);
+        txtSenhaVisivel.setPromptText(promptSenhaEdicao);
     }
 
     @FXML
     private void escolherFoto() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Selecionar Foto de Perfil");
+        fileChooser.setTitle(bundle.getString("userRegistration.fileChooser.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Imagens", "*.jpg", "*.png", "*.jpeg")
+                new FileChooser.ExtensionFilter(bundle.getString("userRegistration.fileChooser.filterImages"), "*.jpg", "*.png", "*.jpeg")
         );
-
-        File arquivoSelecionado = fileChooser.showOpenDialog(imgFotoPerfil.getScene().getWindow());
-
-        if (arquivoSelecionado != null) {
+        File arquivo = fileChooser.showOpenDialog(imgFotoPerfil.getScene().getWindow());
+        if (arquivo != null) {
+            this.arquivoFotoSelecionado = arquivo;
+            this.bytesFotoPokemon = null;
             try {
-                String cpf = txtCpf.getText().replaceAll("[^0-9]", "");
-                if (cpf.isEmpty() && usuarioParaEditar == null) {
-                    mostrarAlerta("CPF Necessário", "Por favor, preencha o CPF antes de selecionar a foto.", null);
-                    return;
-                }
-
-                String nomeBaseArquivo = (usuarioParaEditar != null) ? String.valueOf(usuarioParaEditar.getId()) : cpf;
-
-                String extensao = getExtensaoArquivo(arquivoSelecionado.getName());
-                String novoNomeArquivo = nomeBaseArquivo + "." + extensao;
-
-                Path caminhoDestino = Paths.get(DIRETORIO_FOTOS, novoNomeArquivo);
-
-                Files.copy(arquivoSelecionado.toPath(), caminhoDestino, StandardCopyOption.REPLACE_EXISTING);
-
-                this.caminhoFotoSelecionada = caminhoDestino.toString();
-
-                Image foto = new Image(new FileInputStream(this.caminhoFotoSelecionada));
+                Image foto = new Image(arquivo.toURI().toString());
                 imgFotoPerfil.setImage(foto);
-
-            } catch (IOException e) {
-                mostrarAlerta("Erro ao Salvar Foto", "Não foi possível copiar a imagem.", e.getMessage());
-                e.printStackTrace();
+            } catch (Exception e) {
+                mostrarAlerta(
+                        bundle.getString("userRegistration.alert.photoSaveError.title"),
+                        bundle.getString("userRegistration.alert.photoSaveError.header"),
+                        e.getMessage()
+                );
             }
         }
     }
-
     private String getExtensaoArquivo(String nomeArquivo) {
         int lastIndex = nomeArquivo.lastIndexOf('.');
         if (lastIndex == -1) {
@@ -268,60 +230,81 @@ public class CadastroUsuarioAdmController {
         }
         return nomeArquivo.substring(lastIndex + 1).toLowerCase();
     }
-
-
     @FXML
     private void cadastrarEndereco() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroEndereco.fxml"));
+            URL resource = getClass().getResource("/view/CadastroEndereco.fxml");
+            if (resource == null) {
+                throw new IOException("FXML não encontrado: /view/CadastroEndereco.fxml");
+            }
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
             Parent root = loader.load();
             CadastroEnderecoController enderecoController = loader.getController();
-
             Stage stage = new Stage();
-            stage.setTitle("Cadastro de Endereço");
+            stage.setTitle(bundle.getString("addressRegistration.title"));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initOwner(txtNome.getScene().getWindow());
             stage.setScene(new Scene(root));
             stage.showAndWait();
-
             this.enderecoDoOutroController = enderecoController.getEnderecoSalvo();
             if (this.enderecoDoOutroController != null) {
                 lblEndereco.setText(enderecoDoOutroController.enderecoReduzido());
             }
         } catch (IOException e) {
-            mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela de endereço.", "Verifique se o arquivo FXML está no local correto: /view/CadastroEndereco.fxml");
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("userRegistration.alert.loadAddressError.header"),
+                    e.getMessage()
+            );
         }
     }
-
     private boolean validarCampos() {
         if (txtNome.getText().isBlank() || txtCpf.getText().isBlank() || txtLogin.getText().isBlank() || txtEmail.getText().isBlank()) {
-            mostrarAlerta("Campos Obrigatórios", "Nome, CPF, E-mail e Login devem ser preenchidos.", null);
+            mostrarAlerta(
+                    bundle.getString("userRegistration.alert.validation.requiredFields.title"),
+                    bundle.getString("userRegistration.alert.validation.requiredFields.header1"),
+                    null
+            );
             return false;
         }
-
         if (usuarioParaEditar == null && txtSenhaOculta.getText().isBlank()) {
-            mostrarAlerta("Campos Obrigatórios", "O campo Senha deve ser preenchido para novos usuários.", null);
+            mostrarAlerta(
+                    bundle.getString("userRegistration.alert.validation.requiredFields.title"),
+                    bundle.getString("userRegistration.alert.validation.passwordRequired.header"),
+                    null
+            );
             return false;
         }
-
         if (perfilCombo.getSelectionModel().isEmpty()) {
-            mostrarAlerta("Seleção Obrigatória", "Por favor, selecione um perfil para o usuário.", null);
+            mostrarAlerta(
+                    bundle.getString("userRegistration.alert.validation.profileRequired.title"),
+                    bundle.getString("userRegistration.alert.validation.profileRequired.header"),
+                    null
+            );
             return false;
         }
         if (enderecoDoOutroController == null) {
-            mostrarAlerta("Endereço Obrigatório", "Por favor, cadastre um endereço para o usuário.", null);
+            mostrarAlerta(
+                    bundle.getString("userRegistration.alert.validation.addressRequired.title"),
+                    bundle.getString("userRegistration.alert.validation.addressRequired.header"),
+                    null
+            );
             return false;
         }
-
         Optional<Usuario> usuarioComEsteLogin = usuarioRepository.buscaUsuarioPorLogin(txtLogin.getText());
         if (usuarioComEsteLogin.isPresent()) {
             if (usuarioParaEditar == null || usuarioParaEditar.getId() != usuarioComEsteLogin.get().getId()) {
-                mostrarAlerta("Login Inválido", "Este login já está em uso por outro usuário.", null);
+                mostrarAlerta(
+                        bundle.getString("userRegistration.alert.validation.loginInUse.title"),
+                        bundle.getString("userRegistration.alert.validation.loginInUse.header"),
+                        null
+                );
                 return false;
             }
         }
         return true;
     }
+
 
     @FXML
     private void salvarUsuario() {
@@ -335,13 +318,15 @@ public class CadastroUsuarioAdmController {
         String hash;
         Perfil perfil = perfilCombo.getValue();
 
+        String caminhoFotoFinalParaSalvar = this.caminhoFotoAtualSalva;
+
         try {
+            // validação de CPF, Senha, Email
             boolean cpfFoiAlterado = (usuarioParaEditar != null && !usuarioParaEditar.getCpf().equals(cpf));
             if (usuarioParaEditar == null || cpfFoiAlterado) {
                 validaCpf.validaCpf(cpf);
             }
             validaEmail.validaEmail(email);
-
             if (usuarioParaEditar == null) {
                 validaSenha.validaSenha(senha);
                 hash = BCrypt.hashpw(senha, BCrypt.gensalt());
@@ -353,6 +338,15 @@ public class CadastroUsuarioAdmController {
             }
 
             int matricula = Integer.parseInt(txtMatricula.getText().isBlank() ? "0" : txtMatricula.getText());
+
+            // LÊ A DATA DO DATEPICKER
+            LocalDate dataAdmissao = dpDataAdmissao.getValue();
+            if (dataAdmissao == null) {
+                dataAdmissao = (usuarioParaEditar instanceof Funcionario && ((Funcionario) usuarioParaEditar).getDataAdmissao() != null)
+                        ? ((Funcionario) usuarioParaEditar).getDataAdmissao()
+                        : LocalDate.now();
+            }
+
             int periodo = Integer.parseInt(txtPeriodo.getText().isBlank() ? "0" : txtPeriodo.getText());
             double salario = Double.parseDouble(txtSalario.getText().isBlank() ? "0.0" : txtSalario.getText());
             double receita = Double.parseDouble(txtReceita.getText().isBlank() ? "0.0" : txtReceita.getText());
@@ -361,43 +355,65 @@ public class CadastroUsuarioAdmController {
             String departamento = txtDepartamento.getText();
             Regime regime = regimeCombo.getValue();
 
-            if(this.caminhoFotoSelecionada == null || this.caminhoFotoSelecionada.isEmpty()) {
-                this.caminhoFotoSelecionada = DIRETORIO_FOTOS + "default_avatar.png";
+
+            String nomeBaseArquivo;
+            if (usuarioParaEditar != null) {
+                nomeBaseArquivo = String.valueOf(usuarioParaEditar.getId());
+            } else {
+                nomeBaseArquivo = cpf.replaceAll("[^0-9]", "");
+            }
+            if (this.arquivoFotoSelecionado != null) {
+                String extensao = getExtensaoArquivo(this.arquivoFotoSelecionado.getName());
+                String novoNomeArquivo = nomeBaseArquivo + "." + extensao;
+                Path caminhoDestino = Paths.get(DIRETORIO_FOTOS, novoNomeArquivo);
+                Files.copy(this.arquivoFotoSelecionado.toPath(), caminhoDestino, StandardCopyOption.REPLACE_EXISTING);
+                caminhoFotoFinalParaSalvar = caminhoDestino.toString();
+            } else if (this.bytesFotoPokemon != null) {
+                String novoNomeArquivo = nomeBaseArquivo + ".png";
+                Path caminhoDestino = Paths.get(DIRETORIO_FOTOS, novoNomeArquivo);
+                Files.write(caminhoDestino, this.bytesFotoPokemon);
+                caminhoFotoFinalParaSalvar = caminhoDestino.toString();
+            } else if (caminhoFotoFinalParaSalvar == null || caminhoFotoFinalParaSalvar.isEmpty()) {
+                caminhoFotoFinalParaSalvar = DIRETORIO_FOTOS + "default_avatar.png";
             }
 
             if (usuarioParaEditar == null) {
                 Usuario usuario;
                 switch (perfil) {
                     case ADMINISTRADOR -> usuario = new Administrador.AdministradorBuilder()
-                            .caminhoFoto(caminhoFotoSelecionada) // Usa o caminho
+                            .caminhoFoto(caminhoFotoFinalParaSalvar)
+                            .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
-                            .matricula(matricula).periodo(periodo).departamento(departamento)
+                            .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
                             .receita(receita).despesas(despesas).salario(salario)
                             .cargo(cargo).regime(regime)
                             .build();
                     case GESTOR -> usuario = new Gestor.GestorBuilder()
-                            .caminhoFoto(caminhoFotoSelecionada) // Usa o caminho
+                            .caminhoFoto(caminhoFotoFinalParaSalvar)
+                            .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
-                            .matricula(matricula).periodo(periodo).departamento(departamento)
+                            .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
                             .receita(receita).despesas(despesas).salario(salario)
                             .cargo(cargo).regime(regime)
                             .build();
                     case RECRUTADOR -> usuario = new Recrutador.RecrutadorBuilder()
-                            .caminhoFoto(caminhoFotoSelecionada) // Usa o caminho
+                            .caminhoFoto(caminhoFotoFinalParaSalvar)
+                            .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
-                            .matricula(matricula).periodo(periodo).departamento(departamento)
+                            .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
                             .receita(receita).despesas(despesas).salario(salario)
                             .cargo(cargo).regime(regime)
                             .build();
                     default ->
                             usuario = new Funcionario.FuncionarioBuilder()
-                                    .caminhoFoto(caminhoFotoSelecionada) // Usa o caminho
+                                    .caminhoFoto(caminhoFotoFinalParaSalvar)
+                                    .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                                     .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                                     .login(txtLogin.getText()).senha(hash).perfil(perfil)
-                                    .matricula(matricula).periodo(periodo).departamento(departamento)
+                                    .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
                                     .receita(receita).despesas(despesas).salario(salario)
                                     .cargo(cargo).regime(regime)
                                     .build();
@@ -406,7 +422,7 @@ public class CadastroUsuarioAdmController {
 
             } else {
                 Funcionario func = (Funcionario) usuarioParaEditar;
-                func.setCaminhoFoto(caminhoFotoSelecionada); // Usa o caminho
+                func.setCaminhoFoto(caminhoFotoFinalParaSalvar);
                 func.setNome(txtNome.getText());
                 func.setCpf(cpf);
                 func.setEmail(email);
@@ -415,6 +431,7 @@ public class CadastroUsuarioAdmController {
                 func.setEndereco(enderecoDoOutroController);
                 func.setSenha(hash);
                 func.setMatricula(matricula);
+                func.setDataAdmissao(dataAdmissao);
                 func.setPeriodo(periodo);
                 func.setCargo(cargo);
                 func.setDepartamento(departamento);
@@ -429,11 +446,23 @@ public class CadastroUsuarioAdmController {
             fecharJanela();
 
         } catch (CpfInvalidoException | SenhaInvalidaException | EmailInvalidoException | NumberFormatException e) {
-            mostrarAlerta("Erro de Validação", "Dados inválidos.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("userRegistration.alert.validation.error.title"),
+                    bundle.getString("userRegistration.alert.validation.error.header"),
+                    e.getMessage()
+            );
         } catch (IOException e) {
-            mostrarAlerta("Erro de Salvamento", "Falha ao salvar no arquivo CSV.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("userRegistration.alert.saveError.title"),
+                    bundle.getString("userRegistration.alert.saveError.header"),
+                    e.getMessage()
+            );
         } catch (Exception e) {
-            mostrarAlerta("Erro inesperado", "Tente novamente", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("alert.error.unexpected.header"),
+                    e.getMessage()
+            );
             e.printStackTrace();
         }
     }

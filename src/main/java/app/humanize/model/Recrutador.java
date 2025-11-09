@@ -6,12 +6,12 @@ public class Recrutador extends Funcionario {
 
     private Recrutador(RecrutadorBuilder builder) {
         super(
-                builder.nome, builder.cpf, builder.endereco, builder.email,
+                builder.idiomaPreferencial, builder.nome, builder.cpf, builder.endereco, builder.email,
                 builder.login, builder.senha, builder.perfil,
-                builder.matricula, builder.periodo,
+                builder.matricula, builder.dataAdmissao, builder.periodo,
                 builder.receita, builder.despesas, builder.salario,
                 builder.cargo, builder.regime, builder.departamento,
-                builder.caminhoFoto // NOVO PARÂMETRO
+                builder.caminhoFoto
         );
     }
 
@@ -19,6 +19,7 @@ public class Recrutador extends Funcionario {
 
     public static class RecrutadorBuilder {
         private int matricula;
+        private LocalDate dataAdmissao; // NOVO
         private int periodo;
         private double receita;
         private double despesas;
@@ -34,11 +35,13 @@ public class Recrutador extends Funcionario {
         private Endereco endereco;
         private String departamento;
         private String caminhoFoto;
+        private String idiomaPreferencial; // CORRIGIDO
 
         public RecrutadorBuilder caminhoFoto(String caminhoFoto) { this.caminhoFoto = caminhoFoto; return this; }
         public RecrutadorBuilder regime(Regime regime) { this.regime = regime; return this; }
         public RecrutadorBuilder cargo(String cargo) { this.cargo = cargo; return this; }
         public RecrutadorBuilder matricula(int matricula) { this.matricula = matricula; return this; }
+        public RecrutadorBuilder dataAdmissao(LocalDate data) { this.dataAdmissao = data; return this; } // NOVO
         public RecrutadorBuilder periodo(int periodo) { this.periodo = periodo; return this; }
         public RecrutadorBuilder receita(double receita) { this.receita = receita; return this; }
         public RecrutadorBuilder despesas(double despesas) { this.despesas = despesas; return this; }
@@ -51,6 +54,7 @@ public class Recrutador extends Funcionario {
         public RecrutadorBuilder senha(String senha) { this.senha = senha; return this; }
         public RecrutadorBuilder perfil(Perfil perfil) { this.perfil = perfil; return this; }
         public RecrutadorBuilder departamento(String departamento) { this.departamento = departamento; return this; }
+        public RecrutadorBuilder idiomaPreferencial(String idioma) { this.idiomaPreferencial = idioma; return this; } // CORRIGIDO
 
 
         public Recrutador build() {

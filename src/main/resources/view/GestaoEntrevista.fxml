@@ -16,7 +16,7 @@
 
 <VBox spacing="10.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.GestaoEntrevistaController">
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Gestão de Entrevistas">
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%interviewManagement.title">
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>
@@ -35,62 +35,62 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label styleClass="filter-label" text="ID:" GridPane.halignment="RIGHT" />
-        <Label styleClass="filter-label" text="Candidato:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <Label styleClass="filter-label" text="Recrutador:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-        <Label styleClass="filter-label" text="Vaga: " GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <Label styleClass="filter-label" text="%createVacancy.label.id" GridPane.halignment="RIGHT" />
+        <Label styleClass="filter-label" text="%interviewManagement.filter.label.candidate" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%interviewManagement.filter.label.recruiter" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Label styleClass="filter-label" text="%interviewManagement.filter.label.vacancy" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
 
-        <TextField fx:id="txtId" promptText="Filtrar por ID" GridPane.columnIndex="1">
+        <TextField fx:id="txtId" promptText="%employeeManagement.filter.prompt.id" GridPane.columnIndex="1">
             <GridPane.margin>
                 <Insets bottom="10.0" />
             </GridPane.margin>
         </TextField>
-        <ComboBox fx:id="cbCandidato" maxWidth="1.7976931348623157E308" promptText="Selecione o candidato" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <ComboBox fx:id="cbCandidato" maxWidth="1.7976931348623157E308" promptText="%interviewManagement.filter.prompt.candidate" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <GridPane.margin>
                 <Insets bottom="10.0" />
             </GridPane.margin>
         </ComboBox>
-        <ComboBox fx:id="cbRecrutador" maxWidth="1.7976931348623157E308" promptText="Selecione o recrutador" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <ComboBox fx:id="cbRecrutador" maxWidth="1.7976931348623157E308" promptText="%interviewManagement.filter.prompt.recruiter" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets bottom="10.0" />
             </GridPane.margin>
         </ComboBox>
-        <ComboBox fx:id="cbVaga" maxWidth="1.7976931348623157E308" promptText="Selecione a vaga" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <ComboBox fx:id="cbVaga" maxWidth="1.7976931348623157E308" promptText="%interviewManagement.filter.prompt.vacancy" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-        <Button fx:id="btnFiltrar" mnemonicParsing="false" onAction="#filtra" text="Filtrar" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-      <VBox.margin>
-         <Insets left="10.0" right="10.0" />
-      </VBox.margin>
-    </GridPane>
-
-    <HBox alignment="CENTER_RIGHT">
+        <Button fx:id="btnFiltrar" mnemonicParsing="false" onAction="#filtra" text="%employeeManagement.filter.button.filter" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
-        <Button fx:id="btnMarcarEntrevista" onAction="#cadastrarEntrevista" styleClass="primary-action-button" text="Marcar Nova entrevista">
+    </GridPane>
+
+    <HBox alignment="CENTER_RIGHT" spacing="5.0">
+        <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+        </VBox.margin>
+        <Button fx:id="btnMarcarEntrevista" onAction="#cadastrarEntrevista" styleClass="primary-action-button" text="%interviewManagement.actions.scheduleNew">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#editarEntrevista" text="Editar">
+        <Button fx:id="btnEditar" mnemonicParsing="false" onAction="#editarEntrevista" text="%employeeManagement.actions.edit">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="btnExcluir" mnemonicParsing="false" onAction="#excluirEntrevista" styleClass="danger-action-button" text="Excluir">
+        <Button fx:id="btnExcluir" mnemonicParsing="false" onAction="#excluirEntrevista" styleClass="danger-action-button" text="%interviewManagement.actions.delete">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
     </HBox>
 
-       <TableView fx:id="tblEntrevista" VBox.vgrow="SOMETIMES">
+    <TableView fx:id="tblEntrevista" VBox.vgrow="SOMETIMES">
         <columns>
-            <TableColumn fx:id="colId" maxWidth="100.0" minWidth="48.0" prefWidth="48.0" text="ID" />
-            <TableColumn fx:id="colCandidato" prefWidth="102.0" text="Candidato" />
-            <TableColumn fx:id="colRecrutador" prefWidth="95.0" text="Recrutador" />
-            <TableColumn fx:id="colVaga" maxWidth="200.0" minWidth="100.0" prefWidth="105.0" text="Vaga" />
-         <TableColumn fx:id="colStatus" prefWidth="75.0" text="Status" />
+            <TableColumn fx:id="colId" maxWidth="100.0" minWidth="48.0" prefWidth="48.0" text="%employeeManagement.table.col.id" />
+            <TableColumn fx:id="colCandidato" prefWidth="102.0" text="%interviewManagement.table.col.candidate" />
+            <TableColumn fx:id="colRecrutador" prefWidth="95.0" text="%interviewManagement.table.col.recruiter" />
+            <TableColumn fx:id="colVaga" maxWidth="200.0" minWidth="100.0" prefWidth="105.0" text="%interviewManagement.table.col.vacancy" />
+            <TableColumn fx:id="colStatus" prefWidth="75.0" text="%assignRecruiter.table.col.status" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -105,7 +105,7 @@
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
     </HBox>
-   <padding>
-      <Insets bottom="10.0" />
-   </padding>
+    <padding>
+        <Insets bottom="10.0" />
+    </padding>
 </VBox>

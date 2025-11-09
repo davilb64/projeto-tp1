@@ -11,74 +11,67 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<!-- 1. Raiz trocada para VBox -->
 
 <VBox spacing="20.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.DashboardAdministradorController">
 
-    <!-- 2. Título integrado ao VBox raiz -->
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Dashboard">
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%dashboardAdm.title">
         <VBox.margin>
-            <Insets bottom="10.0" /> <!-- Espaço abaixo do título -->
+            <Insets bottom="10.0" />
         </VBox.margin>
     </Label>
 
-    <!-- 3. Conteúdo (antes no <center>) agora é filho direto do VBox -->
-
-    <!-- Cards de Estatística (com styleClass) -->
     <HBox alignment="CENTER" spacing="20.0">
         <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-info" HBox.hgrow="ALWAYS">
-            <Label text="Usuários" /> <Label fx:id="lblTotalUsuarios" styleClass="stat-card-value" text="120" /> </VBox>
+            <Label text="%dashboardAdm.stat.users" />
+            <Label fx:id="lblTotalUsuarios" styleClass="stat-card-value" /> </VBox>
         <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-success" HBox.hgrow="ALWAYS">
-            <Label text="Candidatos" />
-            <Label fx:id="lblTotalCandidatos" styleClass="stat-card-value" text="87" />
+            <Label text="%dashboardAdm.stat.candidates" />
+            <Label fx:id="lblTotalCandidatos" styleClass="stat-card-value" />
         </VBox>
         <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-warning" HBox.hgrow="ALWAYS">
-            <Label text="Vagas Abertas" />
-            <Label fx:id="lblVagasAbertas" styleClass="stat-card-value" text="12" />
+            <Label text="%dashboardAdm.stat.openVacancies" />
+            <Label fx:id="lblVagasAbertas" styleClass="stat-card-value" />
         </VBox>
-      <padding>
-         <Insets left="10.0" right="10.0" />
-      </padding>
+        <padding>
+            <Insets left="10.0" right="10.0" />
+        </padding>
     </HBox>
 
-    <!-- Gráficos (já responsivos) -->
     <HBox spacing="20.0" VBox.vgrow="ALWAYS">
-        <PieChart fx:id="chartCandidaturas" title="Status das Candidaturas" HBox.hgrow="ALWAYS" />
-        <BarChart fx:id="chartUsuarios" title="Usuários por Perfil" HBox.hgrow="ALWAYS">
+        <PieChart fx:id="chartCandidaturas" title="%dashboardAdm.chart.pie.title" HBox.hgrow="ALWAYS" />
+        <BarChart fx:id="chartUsuarios" title="%dashboardAdm.chart.bar.title" HBox.hgrow="ALWAYS">
             <xAxis>
-                <CategoryAxis label="Perfil" />
+                <CategoryAxis label="%dashboardAdm.chart.bar.xaxis" />
             </xAxis>
             <yAxis>
-                <NumberAxis label="Quantidade" />
+                <NumberAxis label="%dashboardAdm.chart.bar.yaxis" />
             </yAxis>
         </BarChart>
-      <padding>
-         <Insets left="10.0" right="10.0" />
-      </padding>
+        <padding>
+            <Insets left="10.0" right="10.0" />
+        </padding>
     </HBox>
 
-    <!-- Painel de Ações Rápidas -->
     <VBox spacing="10.0" styleClass="actions-panel">
-        <!-- Título da seção com styleClass -->
-        <Label styleClass="section-title" text="Ações Rápidas " />
+        <Label styleClass="section-title" text="%dashboardAdm.actions.title" />
 
         <HBox spacing="15.0">
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#criarUsuarios" text="Criar Usuário" HBox.hgrow="ALWAYS">
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#criarUsuarios" text="%dashboardAdm.actions.createUser" HBox.hgrow="ALWAYS">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#relatorios" text="Relatórios" HBox.hgrow="ALWAYS">
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#relatorios" text="%dashboardAdm.actions.reports" HBox.hgrow="ALWAYS">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
         </HBox>
-      <padding>
-         <Insets left="10.0" right="10.0" />
-      </padding>
-      <VBox.margin>
-         <Insets left="10.0" right="10.0" />
-      </VBox.margin>
+        <padding>
+            <Insets left="10.0" right="10.0" />
+        </padding>
+        <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+        </VBox.margin>
     </VBox>
-   <padding>
-      <Insets bottom="10.0" />
-   </padding>
+    <padding>
+        <Insets bottom="10.0" />
+    </padding>
 
 </VBox>

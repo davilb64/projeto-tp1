@@ -6,9 +6,9 @@ public class Gestor extends Funcionario {
 
     private Gestor(GestorBuilder builder) {
         super(
-                builder.nome, builder.cpf, builder.endereco, builder.email,
+                builder.idiomaPreferencial, builder.nome, builder.cpf, builder.endereco, builder.email,
                 builder.login, builder.senha, builder.perfil,
-                builder.matricula, builder.periodo,
+                builder.matricula, builder.dataAdmissao, builder.periodo,
                 builder.receita, builder.despesas, builder.salario,
                 builder.cargo, builder.regime, builder.departamento,
                 builder.caminhoFoto
@@ -19,6 +19,7 @@ public class Gestor extends Funcionario {
 
     public static class GestorBuilder {
         private int matricula;
+        private LocalDate dataAdmissao; // NOVO
         private int periodo;
         private double receita;
         private double despesas;
@@ -34,11 +35,13 @@ public class Gestor extends Funcionario {
         private Endereco endereco;
         private String departamento;
         private String caminhoFoto;
+        private String idiomaPreferencial;
 
         public GestorBuilder caminhoFoto(String caminhoFoto) { this.caminhoFoto = caminhoFoto; return this; }
         public GestorBuilder regime(Regime regime) { this.regime = regime; return this; }
         public GestorBuilder cargo(String cargo) { this.cargo = cargo; return this; }
         public GestorBuilder matricula(int matricula) { this.matricula = matricula; return this; }
+        public GestorBuilder dataAdmissao(LocalDate data) { this.dataAdmissao = data; return this; } // NOVO
         public GestorBuilder periodo(int periodo) { this.periodo = periodo; return this; }
         public GestorBuilder receita(double receita) { this.receita = receita; return this; }
         public GestorBuilder despesas(double despesas) { this.despesas = despesas; return this; }
@@ -51,6 +54,7 @@ public class Gestor extends Funcionario {
         public GestorBuilder senha(String senha) { this.senha = senha; return this; }
         public GestorBuilder perfil(Perfil perfil) { this.perfil = perfil; return this; }
         public GestorBuilder departamento(String departamento) { this.departamento = departamento; return this; }
+        public GestorBuilder idiomaPreferencial(String idioma) { this.idiomaPreferencial = idioma; return this; }
 
         public Gestor build() {
             return new Gestor(this);

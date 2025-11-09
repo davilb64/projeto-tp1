@@ -19,7 +19,7 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Folha de Pagamento" />
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%payroll.title" />
 
     <GridPane hgap="20.0" vgap="10.0">
         <columnConstraints>
@@ -33,35 +33,35 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label styleClass="filter-label" text="Nome:" GridPane.halignment="RIGHT" />
-        <TextField fx:id="txtNome" promptText="Filtrar por nome" GridPane.columnIndex="1" />
+        <Label styleClass="filter-label" text="%payroll.filter.label.name" GridPane.halignment="RIGHT" />
+        <TextField fx:id="txtNome" promptText="%payroll.filter.prompt.name" GridPane.columnIndex="1" />
 
-        <Label styleClass="filter-label" text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-        <TextField fx:id="txtCargo" promptText="Filtrar por cargo" GridPane.columnIndex="3" />
+        <Label styleClass="filter-label" text="%payroll.filter.label.position" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+        <TextField fx:id="txtCargo" promptText="%payroll.filter.prompt.position" GridPane.columnIndex="3" />
 
-        <Label styleClass="filter-label" text="Nível:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <TextField fx:id="txtNivel" promptText="Filtrar por nível" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%payroll.filter.label.level" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="txtNivel" promptText="%payroll.filter.prompt.level" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label styleClass="filter-label" text="Mês/Ano:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <TextField fx:id="txtMesAno" promptText="MM/AAAA" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%payroll.filter.label.monthYear" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="txtMesAno" promptText="%payroll.filter.prompt.monthYear" GridPane.columnIndex="3" GridPane.rowIndex="1" />
     </GridPane>
 
     <HBox spacing="15.0">
         <VBox alignment="CENTER" styleClass="stat-card-base" HBox.hgrow="ALWAYS" />
 
         <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-            <MenuButton fx:id="menuAdic" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" styleClass="secondary-action-button" text="Adicionais">
+            <MenuButton fx:id="menuAdic" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" styleClass="secondary-action-button" text="%payroll.menu.additions">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="Horas extras" />
+                    <MenuItem mnemonicParsing="false" text="%payroll.menu.additions.overtime" />
                 </items>
             </MenuButton>
         </VBox>
 
         <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-            <MenuButton fx:id="menuDesc" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" styleClass="secondary-action-button" text="Descontos">
+            <MenuButton fx:id="menuDesc" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" styleClass="secondary-action-button" text="%payroll.menu.deductions">
                 <items>
-                    <MenuItem mnemonicParsing="false" text="Atraso" />
-                    <MenuItem mnemonicParsing="false" text="Multa" />
+                    <MenuItem mnemonicParsing="false" text="%payroll.menu.deductions.late" />
+                    <MenuItem mnemonicParsing="false" text="%payroll.menu.deductions.fine" />
                 </items>
             </MenuButton>
         </VBox>
@@ -70,18 +70,18 @@
     <HBox VBox.vgrow="ALWAYS">
         <TableView fx:id="tabelaFolhaPagamento" HBox.hgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colunaNome" prefWidth="120.0" text="Nome" />
-                <TableColumn fx:id="colunaCargo" prefWidth="116.0" text="Cargo" />
-                <TableColumn fx:id="colunaSalario" prefWidth="98.0" text="Salário Bruto" />
-                <TableColumn fx:id="colunaDescon" prefWidth="101.0" text="Descontos" />
-                <TableColumn fx:id="colunaLiquid" prefWidth="140.0" text="Total Líquido" />
+                <TableColumn fx:id="colunaNome" prefWidth="120.0" text="%payroll.table.col.name" />
+                <TableColumn fx:id="colunaCargo" prefWidth="116.0" text="%payroll.table.col.position" />
+                <TableColumn fx:id="colunaSalario" prefWidth="98.0" text="%payroll.table.col.grossSalary" />
+                <TableColumn fx:id="colunaDescon" prefWidth="101.0" text="%payroll.table.col.deductions" />
+                <TableColumn fx:id="colunaLiquid" prefWidth="140.0" text="%payroll.table.col.netTotal" />
             </columns>
             <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
         </TableView>
     </HBox>
 
     <HBox alignment="CENTER_RIGHT">
-        <Button fx:id="btnEmitir" defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="Emitir Folha">
+        <Button fx:id="btnEmitir" defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="%payroll.button.issue">
         </Button>
     </HBox>
 

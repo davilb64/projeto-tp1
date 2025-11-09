@@ -18,108 +18,108 @@
 <ScrollPane fitToWidth="true" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.FinanceiroUsuarioController">
     <VBox spacing="15.0">
 
-        <Label fx:id="lblTitulo" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Financeiro - [Nome Funcionário]" />
+        <Label fx:id="lblTitulo" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%financialProfile.title" />
 
         <VBox spacing="5.0" styleClass="card-configuracao">
             <padding>
                 <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
             </padding>
-            <Label styleClass="label-underline" text="Dados do Funcionário (Resumo)" />
-         <HBox>
-            <children>
-                  <GridPane hgap="5.0" vgap="5.0" HBox.hgrow="ALWAYS">
-                      <columnConstraints>
-                          <ColumnConstraints minWidth="-Infinity" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                      </columnConstraints>
-                      <rowConstraints>
-                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                      </rowConstraints>
-                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                      <Label fx:id="lblNome" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Fulano da Silva" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.vgrow="NEVER" />
-                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Cargo:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-                      <Label fx:id="lblCargo" style="-fx-font-size: 16; -fx-font-weight: bold;" text="Analista de RH" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Matrícula:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                      <Label fx:id="lblMatricula" style="-fx-font-size: 16; -fx-font-weight: bold;" text="10234" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
-                      <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="Regime:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                      <Label fx:id="lblRegime" style="-fx-font-size: 16; -fx-font-weight: bold;" text="CLT" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <HBox.margin>
-                     <Insets left="10.0" />
-                  </HBox.margin>
-                  </GridPane>
-               <ImageView fx:id="fotoPerfil" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                  <HBox.margin>
-                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                  </HBox.margin>
-               </ImageView>
-            </children>
-         </HBox>
-         <VBox.margin>
-            <Insets left="5.0" right="5.0" />
-         </VBox.margin>
+            <Label styleClass="label-underline" text="%financialProfile.section.summary" />
+            <HBox>
+                <children>
+                    <GridPane hgap="5.0" vgap="5.0" HBox.hgrow="ALWAYS">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="-Infinity" />
+                            <ColumnConstraints hgrow="ALWAYS" />
+                            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
+                            <ColumnConstraints hgrow="ALWAYS" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="%financialProfile.summary.name" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                        <Label fx:id="lblNome" style="-fx-font-size: 16; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.vgrow="NEVER" />
+                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="%financialProfile.summary.position" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                        <Label fx:id="lblCargo" style="-fx-font-size: 16; -fx-font-weight: bold;" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="%financialProfile.summary.registration" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label fx:id="lblMatricula" style="-fx-font-size: 16; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
+                        <Label style="-fx-font-size: 16; -fx-font-weight: bold;" text="%financialProfile.summary.regime" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label fx:id="lblRegime" style="-fx-font-size: 16; -fx-font-weight: bold;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <HBox.margin>
+                            <Insets left="10.0" />
+                        </HBox.margin>
+                    </GridPane>
+                    <ImageView fx:id="fotoPerfil" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                        <HBox.margin>
+                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        </HBox.margin>
+                    </ImageView>
+                </children>
+            </HBox>
+            <VBox.margin>
+                <Insets left="5.0" right="5.0" />
+            </VBox.margin>
         </VBox>
 
         <VBox spacing="10.0" styleClass="card-configuracao">
             <padding>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            <Label styleClass="label-underline" text="Últimos Contracheques" />
+            <Label styleClass="label-underline" text="%financialProfile.section.payslips" />
             <TableView fx:id="tblContracheques" minHeight="150.0"> <columns>
-                <TableColumn fx:id="colMesAno" prefWidth="100.0" text="Mês/Ano " />
-                <TableColumn fx:id="colSalarioBruto" text="Salário Bruto " />
-                <TableColumn fx:id="colDescontos" text="Descontos" />
-                <TableColumn fx:id="colSalarioLiquido" text=" Salário Líquido " />
-                <TableColumn fx:id="colAcoesContracheque" maxWidth="100.0" minWidth="80.0" text="Ações" />
+                <TableColumn fx:id="colMesAno" prefWidth="100.0" text="%financialProfile.payslips.col.monthYear" />
+                <TableColumn fx:id="colSalarioBruto" text="%financialProfile.payslips.col.grossSalary" />
+                <TableColumn fx:id="colDescontos" text="%financialProfile.payslips.col.deductions" />
+                <TableColumn fx:id="colSalarioLiquido" text="%financialProfile.payslips.col.netSalary" />
+                <TableColumn fx:id="colAcoesContracheque" maxWidth="100.0" minWidth="80.0" text="%financialProfile.payslips.col.actions" />
             </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                 </columnResizePolicy>
             </TableView>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" />
-         </VBox.margin>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </VBox.margin>
         </VBox>
 
         <VBox spacing="5.0" styleClass="card-configuracao">
             <padding>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            <Label styleClass="label-underline" text="Benefícios Ativos" />
+            <Label styleClass="label-underline" text="%financialProfile.section.benefits" />
             <VBox fx:id="beneficiosContainer" spacing="3.0">
                 <padding>
                     <Insets top="5.0" />
                 </padding>
-                <Label fx:id="lblVT" text="Vale Transporte: Sim " />
-                <Label fx:id="lblVA" text="Vale Alimentação: R$ 700,00  " />
-                <Label fx:id="lblPlanoSaude" text="Plano de Saúde: Empresarial - Básico" />
-                <Label fx:id="lblOutrosBeneficios" text="Outros: Auxílio Home Office (R$ 150,00) " />
+                <Label fx:id="lblVT" />
+                <Label fx:id="lblVA" />
+                <Label fx:id="lblPlanoSaude" />
+                <Label fx:id="lblOutrosBeneficios" />
             </VBox>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" />
-         </VBox.margin>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </VBox.margin>
         </VBox>
 
         <VBox spacing="10.0" styleClass="card-configuracao">
             <padding>
                 <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
             </padding>
-            <Label styleClass="label-underline" text="Histórico Financeiro (Gráfico)" />
+            <Label styleClass="label-underline" text="%financialProfile.section.history" />
             <LineChart fx:id="chartHistorico" minHeight="250.0"> <xAxis>
-                <CategoryAxis label="Mês/Ano" side="BOTTOM" />
+                <CategoryAxis label="%financialProfile.history.xaxis" side="BOTTOM" />
             </xAxis>
                 <yAxis>
-                    <NumberAxis label="Salário Líquido (R$)" side="LEFT" />
+                    <NumberAxis label="%financialProfile.history.yaxis" side="LEFT" />
                 </yAxis>
             </LineChart>
-         <VBox.margin>
-            <Insets left="10.0" right="10.0" />
-         </VBox.margin>
+            <VBox.margin>
+                <Insets left="10.0" right="10.0" />
+            </VBox.margin>
         </VBox>
-      <padding>
-         <Insets bottom="10.0" />
-      </padding>
+        <padding>
+            <Insets bottom="10.0" />
+        </padding>
     </VBox>
 </ScrollPane>
