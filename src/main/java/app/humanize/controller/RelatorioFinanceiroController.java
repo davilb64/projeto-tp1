@@ -127,7 +127,7 @@ public class RelatorioFinanceiroController {
                     descricao,
                     receita,
                     despesas,
-                    "", // saldo e calculado depois
+                    "", // saldo será calculado depois
                     tipo
             );
 
@@ -141,23 +141,26 @@ public class RelatorioFinanceiroController {
     }
 
     private void calcularEAdicionarSaldoFinal() {
-        double saldoFinal = 0.0;
+        double saldoAcumulado = 0.0;
 
         transacoes.removeIf(t -> "SALDO FINAL".equals(t.getDescricao()));
 
         for (RelatorioFinanceiro transacao : transacoes) {
             double receita = extrairValorNumerico(transacao.getReceita());
             double despesa = extrairValorNumerico(transacao.getDespesas());
-            saldoFinal += (receita - despesa);
+            saldoAcumulado += (receita - despesa);
+
+            transacao.setSaldo(String.format("R$ %.2f", saldoAcumulado));
         }
+
 
         RelatorioFinanceiro saldoFinalTransacao = new RelatorioFinanceiro(
                 "",
                 "SALDO FINAL",
                 "",
                 "",
-                String.format("R$ %.2f", saldoFinal),
-                saldoFinal >= 0 ? "Lucro" : "Prejuízo"
+                String.format("R$ %.2f", saldoAcumulado),
+                saldoAcumulado >= 0 ? "Lucro" : "Prejuízo"
         );
         transacoes.add(saldoFinalTransacao);
     }
