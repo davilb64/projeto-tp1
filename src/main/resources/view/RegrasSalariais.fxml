@@ -19,7 +19,7 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Configurar Regras Salariais">
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%salaryRules.title">
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>
@@ -37,18 +37,17 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
-
-        <Label styleClass="filter-label" text="Cargo:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+        <Label styleClass="filter-label" text="%employeeManagement.filter.label.position" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
         <ChoiceBox fx:id="CBcargo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label styleClass="filter-label" text="Nível:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+        <Label styleClass="filter-label" text="%payroll.filter.label.level" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
         <ChoiceBox fx:id="CBnivel" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
 
-        <Label styleClass="filter-label" text="Salário Base:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <TextField fx:id="txtSalarioBase" promptText="Valor Mínimo (R$)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%salaryRules.label.baseSalary" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="txtSalarioBase" promptText="%salaryRules.prompt.baseSalary" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label styleClass="filter-label" text="Benefícios:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%salaryRules.label.benefits" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
         <ChoiceBox fx:id="CBbeneficios" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
     </GridPane>
@@ -58,12 +57,12 @@
         <children>
             <TableView fx:id="tableViewRegras" prefHeight="200.0" prefWidth="694.0">
                 <columns>
-                    <TableColumn fx:id="colCargo" prefWidth="180.0" text="Cargo" />
-                    <TableColumn fx:id="colNivel" prefWidth="120.0" text="Nível" />
-                    <TableColumn fx:id="colSalarioBase" prefWidth="130.0" text="Salário Base" />
-                    <TableColumn fx:id="colAdicionalNivel" prefWidth="130.0" text="Adicional Nível" />
-                    <TableColumn fx:id="colBeneficios" prefWidth="130.0" text="Benefícios" />
-                    <TableColumn fx:id="colSalarioTotal" prefWidth="130.0" text="Salário Total" />
+                    <TableColumn fx:id="colCargo" prefWidth="180.0" text="%employeeManagement.table.col.position" />
+                    <TableColumn fx:id="colNivel" prefWidth="120.0" text="%salaryRules.table.col.level" />
+                    <TableColumn fx:id="colSalarioBase" prefWidth="130.0" text="%salaryRules.table.col.baseSalary" />
+                    <TableColumn fx:id="colAdicionalNivel" prefWidth="130.0" text="%salaryRules.table.col.levelBonus" />
+                    <TableColumn fx:id="colBeneficios" prefWidth="130.0" text="%salaryRules.table.col.benefits" />
+                    <TableColumn fx:id="colSalarioTotal" prefWidth="130.0" text="%salaryRules.table.col.totalSalary" />
                 </columns>
             </TableView>
         </children>
@@ -77,8 +76,8 @@
         <VBox.margin>
             <Insets top="15.0" />
         </VBox.margin>
-        <Button fx:id="btnCancelar" cancelButton="true" mnemonicParsing="false" text="Cancelar" />
-        <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="Salvar">
+        <Button fx:id="btnCancelar" cancelButton="true" mnemonicParsing="false" text="%candidateRegistration.button.cancel" />
+        <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" styleClass="primary-action-button" text="%candidateRegistration.button.save">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

@@ -18,7 +18,8 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Relatório Financeiro" />
+    <!-- Chave reutilizada de 'financialMenu' -->
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%financialMenu.nav.financialReport" />
 
     <GridPane hgap="20.0" vgap="10.0">
         <columnConstraints>
@@ -31,22 +32,26 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label styleClass="filter-label" text="Período:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-        <DatePicker fx:id="datePeriodo" maxWidth="1.7976931348623157E308" promptText="Selecione o Mês" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <!-- Chave reutilizada de 'hiresConsult' -->
+        <Label styleClass="filter-label" text="%hiresConsult.filter.label.period" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+        <DatePicker fx:id="datePeriodo" maxWidth="1.7976931348623157E308" promptText="%financialReport.filter.prompt.selectMonth" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label styleClass="filter-label" text="Data de Emissão:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <DatePicker fx:id="dateDataEmissao" maxWidth="1.7976931348623157E308" promptText="Selecione a Data" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%financialReport.filter.label.issueDate" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <DatePicker fx:id="dateDataEmissao" maxWidth="1.7976931348623157E308" promptText="%financialReport.filter.prompt.selectDate" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Button defaultButton="true" mnemonicParsing="false" styleClass="secondary-action-button" text="Filtrar" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowSpan="2" />
+        <!-- Chave reutilizada de 'employeeManagement' -->
+        <Button defaultButton="true" mnemonicParsing="false" styleClass="secondary-action-button" text="%employeeManagement.filter.button.filter" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowSpan="2" />
     </GridPane>
 
     <TableView fx:id="tabelaRelatorio" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colunaReceita" minWidth="80.0" prefWidth="100.0" text="Receita" />
-            <TableColumn fx:id="colunaDespesas" minWidth="80.0" prefWidth="100.0" text="Despesas" />
-            <TableColumn fx:id="colunaSaldo" minWidth="80.0" prefWidth="100.0" text="Saldo" />
-            <TableColumn fx:id="colunaDescontos" minWidth="80.0" prefWidth="100.0" text="Descontos" />
-            <TableColumn minWidth="150.0" text="Detalhes/Observações" />
+            <TableColumn fx:id="colunaReceita" minWidth="80.0" prefWidth="100.0" text="%financialReport.table.col.revenue" />
+            <TableColumn fx:id="colunaDespesas" minWidth="80.0" prefWidth="100.0" text="%financialReport.table.col.expenses" />
+            <!-- Chave reutilizada de 'payslip' -->
+            <TableColumn fx:id="colunaSaldo" minWidth="80.0" prefWidth="100.0" text="%payslip.table.col.balance" />
+            <!-- Chave reutilizada de 'payroll' -->
+            <TableColumn fx:id="colunaDescontos" minWidth="80.0" prefWidth="100.0" text="%payroll.table.col.deductions" />
+            <TableColumn minWidth="150.0" text="%financialReport.table.col.details" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -57,7 +62,8 @@
         <VBox.margin>
             <Insets top="15.0" />
         </VBox.margin>
-        <Button fx:id="btnExportar" mnemonicParsing="false" styleClass="primary-action-button" text="Exportar">
+        <!-- Chave reutilizada de 'payslip' -->
+        <Button fx:id="btnExportar" mnemonicParsing="false" styleClass="primary-action-button" text="%payslip.button.export">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

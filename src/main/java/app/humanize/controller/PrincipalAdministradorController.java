@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 public class PrincipalAdministradorController {
 
@@ -27,7 +28,6 @@ public class PrincipalAdministradorController {
     private StackPane contentArea;
 
     @FXML private Button btnDashboard;
-
     @FXML private Button btnUsuarios;
     @FXML private Button btnRelatorios;
     @FXML private Button btnConfig;
@@ -43,15 +43,29 @@ public class PrincipalAdministradorController {
     private Button activeButton;
     private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
         carregarFotoPerfil();
-
-        if (btnDashboard != null) {
-            btnDashboard.getStyleClass().add("buttonLateral-active");
-            activeButton = btnDashboard;
-        }
         showDashboard();
+    }
+
+    private void atualizarTextosSidebar() {
+        btnDashboard.setText(bundle.getString("sidebar.dashboard"));
+        btnUsuarios.setText(bundle.getString("sidebar.users"));
+        btnRelatorios.setText(bundle.getString("sidebar.reports"));
+        btnConfig.setText(bundle.getString("sidebar.settings"));
+        btnFinanceiro.setText(bundle.getString("sidebar.finance"));
+        btnRecrutadores.setText(bundle.getString("sidebar.recruiters"));
+        btnCandidatos.setText(bundle.getString("sidebar.candidates"));
+        btnVagas.setText(bundle.getString("sidebar.vacancies"));
+        btnEntrevistas.setText(bundle.getString("sidebar.interviews"));
+        btnFuncionarios.setText(bundle.getString("sidebar.employees"));
+        btnContratacoes.setText(bundle.getString("sidebar.hires"));
+        btnPerfil.setText(bundle.getString("sidebar.profile"));
     }
 
     private void carregarFotoPerfil() {
@@ -81,14 +95,17 @@ public class PrincipalAdministradorController {
 
     private void loadUI(String fxml) {
         try {
-            URL resource = getClass().getResource("/view/" + fxml + ".fxml");
+            ResourceBundle bundle = UserSession.getInstance().getBundle();
+
+            String fxmlPath = "/view/" + fxml + ".fxml";
+            URL resource = getClass().getResource(fxmlPath);
             System.out.println(">> Tentando carregar: " + resource);
 
             if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxml);
+                throw new IllegalStateException("FXML não encontrado: " + fxmlPath);
             }
 
-            FXMLLoader loader = new FXMLLoader(resource);
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
 
             Node view = loader.load();
 
@@ -96,6 +113,10 @@ public class PrincipalAdministradorController {
 
             if (controller instanceof DashboardAdministradorController) {
                 ((DashboardAdministradorController) controller).setMainController(this);
+            }
+
+            if (controller instanceof ConfiguracoesAdmController) {
+                ((ConfiguracoesAdmController) controller).setMainController(this);
             }
 
             contentArea.getChildren().setAll(view);
@@ -149,9 +170,13 @@ public class PrincipalAdministradorController {
     }
 
     @FXML
-    private void showConfiguracoes() {
+    void showConfiguracoes() {
         loadUI("ConfiguracoesAdm");
         setActiveButton(btnConfig);
+
+        // Atualiza a sidebar quando a tela de config é (re)carregada
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
     }
 
     @FXML

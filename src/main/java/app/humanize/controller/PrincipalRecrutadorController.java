@@ -6,6 +6,7 @@ import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node; // Importe Node
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 public class PrincipalRecrutadorController {
     public BorderPane root;
@@ -33,34 +35,69 @@ public class PrincipalRecrutadorController {
     private Button activeButton;
     private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
-    @FXML public void initialize() {
-        carregarFotoPerfil();
+    private ResourceBundle bundle;
 
-        if (btnCandidatos != null) {
-            btnCandidatos.getStyleClass().add("buttonLateral-active");
-            activeButton = btnCandidatos;
-        }
+    @FXML public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
+
+        carregarFotoPerfil();
         showCandidatos(); // Carrega a tela padrão
+    }
+
+    private void atualizarTextosSidebar() {
+        // Reutiliza as chaves que já definimos
+        btnCandidatos.setText(bundle.getString("sidebar.candidates"));
+        btnEntrevistas.setText(bundle.getString("sidebar.interviews"));
+        btnContratacoes.setText(bundle.getString("sidebar.hires"));
+        btnPerfil.setText(bundle.getString("sidebar.profile"));
+        btnConfig.setText(bundle.getString("sidebar.settings"));
     }
 
     private void loadUI(String fxml) {
         try {
-            URL resource = getClass().getResource("/view/" + fxml + ".fxml");
+            String fxmlPath = "/view/" + fxml + ".fxml";
+            URL resource = getClass().getResource(fxmlPath);
             System.out.println(">> Tentando carregar: " + resource);
 
             if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxml);
+                throw new IllegalStateException("FXML não encontrado: " + fxmlPath);
             }
 
-            Node view = FXMLLoader.load(resource); // Carrega como Node
-            contentArea.getChildren().setAll(view); // Limpa e adiciona
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
+            Node view = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof ConfiguracoesAdmController) {
+                ((ConfiguracoesAdmController) controller).setMainController(this);
+            }
+
+            contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
             e.printStackTrace();
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.reload.header"),
+                    e.getMessage()
+            );
         } catch (Exception e) {
             System.err.println("Erro inesperado ao carregar UI: " + e.getMessage());
             e.printStackTrace();
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("alert.error.unexpected.header"),
+                    e.getMessage()
+            );
         }
+    }
+
+    private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo != null ? conteudo : "");
+        alert.showAndWait();
     }
 
     private void carregarFotoPerfil() {
@@ -120,9 +157,12 @@ public class PrincipalRecrutadorController {
     }
 
     @FXML
-    private void showConfiguracoes() {
+    void showConfiguracoes() {
         loadUI("ConfiguracoesAdm");
         setActiveButton(btnConfig);
+
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
     }
 
     @FXML

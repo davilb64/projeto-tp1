@@ -18,7 +18,7 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Contracheque" />
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%payslip.title" />
 
     <GridPane hgap="10.0" vgap="10.0">
         <columnConstraints>
@@ -31,22 +31,22 @@
             <RowConstraints vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label styleClass="filter-label" text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+        <Label styleClass="filter-label" text="%payslip.label.name" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
         <TextField fx:id="txtNome" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label styleClass="filter-label" text="Cargo:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="%payslip.label.position" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
         <TextField fx:id="txtCargo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label styleClass="filter-label" text="Departamento:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <Label styleClass="filter-label" text="%payslip.label.department" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
         <TextField fx:id="txtDepartamento" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
     </GridPane>
 
     <TableView fx:id="tabelaContracheque" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="colunaEmissao" minWidth="100.0" prefWidth="136.0" text="Data de Emissão" />
-            <TableColumn fx:id="colunaProventos" minWidth="100.0" prefWidth="156.0" text="Total de Proventos" />
-            <TableColumn fx:id="colunaDescon" minWidth="100.0" prefWidth="168.0" text="Total de Descontos" />
-            <TableColumn fx:id="colunaSald" minWidth="80.0" prefWidth="111.0" text="Saldo" />
+            <TableColumn fx:id="colunaEmissao" minWidth="100.0" prefWidth="136.0" text="%payslip.table.col.issueDate" />
+            <TableColumn fx:id="colunaProventos" minWidth="100.0" prefWidth="156.0" text="%payslip.table.col.earnings" />
+            <TableColumn fx:id="colunaDescon" minWidth="100.0" prefWidth="168.0" text="%payslip.table.col.deductions" />
+            <TableColumn fx:id="colunaSald" minWidth="80.0" prefWidth="111.0" text="%payslip.table.col.balance" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -63,12 +63,12 @@
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>
-        <Button fx:id="btnImprimir" mnemonicParsing="false" onAction="#imprimirContraCheque" styleClass="secondary-action-button" text="Imprimir">
+        <Button fx:id="btnImprimir" mnemonicParsing="false" onAction="#imprimirContraCheque" styleClass="secondary-action-button" text="%payslip.button.print">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button fx:id="btnExportar" defaultButton="true" mnemonicParsing="false" onAction="#exportarContraCheque" styleClass="primary-action-button" text="Exportar">
+        <Button fx:id="btnExportar" defaultButton="true" mnemonicParsing="false" onAction="#exportarContraCheque" styleClass="primary-action-button" text="%payslip.button.export">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

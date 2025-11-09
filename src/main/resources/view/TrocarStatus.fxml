@@ -19,7 +19,7 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
         </padding>
 
-        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Candidatura">
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%changeStatus.title">
             <VBox.margin>
                 <Insets bottom="10.0" />
             </VBox.margin>
@@ -31,14 +31,14 @@
                 <ColumnConstraints hgrow="ALWAYS" />
             </columnConstraints>
 
-            <Label styleClass="filter-label" text="Candidato:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+            <Label styleClass="filter-label" text="%interviewManagement.filter.label.candidate" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
             <TextField fx:id="txtCandidato" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <Label styleClass="filter-label" text="Vaga:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <Label styleClass="filter-label" text="%interviewManagement.filter.label.vacancy" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             <TextField fx:id="txtVaga" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-            <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="138.0" styleClass="filter-label" text="Status" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-         <ChoiceBox fx:id="choiceStatus" prefHeight="23.0" prefWidth="194.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label alignment="CENTER_RIGHT" prefHeight="18.0" prefWidth="138.0" styleClass="filter-label" text="%assignRecruiter.table.col.status" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <ChoiceBox fx:id="choiceStatus" prefHeight="23.0" prefWidth="194.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <rowConstraints>
                 <RowConstraints />
                 <RowConstraints />
@@ -60,7 +60,7 @@
             <VBox.margin>
                 <Insets top="15.0" />
             </VBox.margin>
-            <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" onAction="#salvarCandidato" styleClass="primary-action-button" text="Salvar">
+            <Button fx:id="btnSalvar" defaultButton="true" mnemonicParsing="false" onAction="#salvarCandidato" styleClass="primary-action-button" text="%candidateRegistration.button.save">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>

@@ -11,24 +11,25 @@
 
     <VBox alignment="TOP_CENTER" spacing="5.0">
         <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0">
-            <Button fx:id="btnRegrasSalariais" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showRegrasSalariais" styleClass="sub-navigation-button" text="Regras Salariais" HBox.hgrow="ALWAYS">
+            <Button fx:id="btnRegrasSalariais" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showRegrasSalariais" styleClass="sub-navigation-button" text="%financialMenu.nav.salaryRules" HBox.hgrow="ALWAYS">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="btnFolhaPagamento" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showFolhaPagamento" styleClass="sub-navigation-button" text="Folha de Pagamento" HBox.hgrow="ALWAYS">
+            <!-- Chave reutilizada de 'payroll' -->
+            <Button fx:id="btnFolhaPagamento" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showFolhaPagamento" styleClass="sub-navigation-button" text="%payroll.title" HBox.hgrow="ALWAYS">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
         </HBox>
         <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0">
-            <Button fx:id="btnRelatorioFinanceiro" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showRelatorioFinanceiro" styleClass="sub-navigation-button" text="Relatório Financeiro" HBox.hgrow="ALWAYS">
+            <Button fx:id="btnRelatorioFinanceiro" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showRelatorioFinanceiro" styleClass="sub-navigation-button" text="%financialMenu.nav.financialReport" HBox.hgrow="ALWAYS">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
-            <Button fx:id="btnContracheques" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showContraCheques" styleClass="sub-navigation-button" text="Contracheques" HBox.hgrow="ALWAYS">
+            <Button fx:id="btnContracheques" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showContraCheques" styleClass="sub-navigation-button" text="%financialMenu.nav.payslips" HBox.hgrow="ALWAYS">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>

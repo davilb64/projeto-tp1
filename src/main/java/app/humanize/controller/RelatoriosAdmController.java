@@ -23,12 +23,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.awt.Desktop; // For opening file
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class RelatoriosAdmController {
 
@@ -44,8 +46,12 @@ public class RelatoriosAdmController {
     private final IReportFormatter formatadorCsv = new CsvFormatter();
     private final IReportFormatter formatadorPdf = new PdfFormatter();
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTipoRelatorio.setCellValueFactory(new PropertyValueFactory<>("tipoRelatorio"));
         colDataGeracao.setCellValueFactory(new PropertyValueFactory<>("dataGeracao"));
@@ -69,10 +75,16 @@ public class RelatoriosAdmController {
 
     @FXML
     private void gerarRelatorio() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/GerarRelatorio.fxml"));
+        URL resource = getClass().getResource("/view/GerarRelatorio.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.header"), null, null);
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("Gerar Novo Relatório");
+        stage.setTitle(bundle.getString("generateReport.title"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(tblRelatorios.getScene().getWindow());
@@ -92,14 +104,22 @@ public class RelatoriosAdmController {
 
     @FXML
     private void exportarXLS() {
-        mostrarAlerta("Funcionalidade Indisponível", "Exportação para XLS ainda não implementada.", null);
+        mostrarAlerta(
+                bundle.getString("reportsAdmin.alert.notImplemented.title"),
+                bundle.getString("reportsAdmin.alert.notImplemented.headerXLS"),
+                null
+        );
     }
 
 
     private void exportarRelatorioSelecionado(IReportFormatter formatador) {
         Relatorio registroSelecionado = tblRelatorios.getSelectionModel().getSelectedItem();
         if (registroSelecionado == null) {
-            mostrarAlerta("Seleção Inválida", "Selecione um relatório na tabela para exportar.", null);
+            mostrarAlerta(
+                    bundle.getString("reportsAdmin.alert.noSelection.title"),
+                    bundle.getString("reportsAdmin.alert.noSelection.headerExport"),
+                    null
+            );
             return;
         }
 
@@ -110,13 +130,16 @@ public class RelatoriosAdmController {
                 case LISTA_USUARIOS:
                     estrategiaRelatorio = new RelatorioListaUsuarios();
                     break;
-
                 default:
-                    throw new IllegalStateException("Tipo de relatório não implementado para exportação: " + registroSelecionado.getTipoRelatorio());
+                    throw new IllegalStateException(bundle.getString("reportsAdmin.alert.unsupportedType") + " " + registroSelecionado.getTipoRelatorio());
             }
 
             if (!estrategiaRelatorio.podeGerar(UserSession.getInstance().getUsuarioLogado())) {
-                mostrarAlerta("Acesso Negado", "Você não tem permissão para gerar este tipo de relatório.", null);
+                mostrarAlerta(
+                        bundle.getString("reportsAdmin.alert.accessDenied.title"),
+                        bundle.getString("reportsAdmin.alert.accessDenied.header"),
+                        null
+                );
                 return;
             }
 
@@ -128,9 +151,17 @@ public class RelatoriosAdmController {
                     formatador);
 
         } catch (IllegalArgumentException e) {
-            mostrarAlerta("Erro nos Parâmetros", "Não foi possível recriar o relatório.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("reportsAdmin.alert.paramError.title"),
+                    bundle.getString("reportsAdmin.alert.paramError.header"),
+                    e.getMessage()
+            );
         } catch (Exception e) {
-            mostrarAlerta("Erro ao Exportar", "Não foi possível gerar o arquivo.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("reportsAdmin.alert.exportError.title"),
+                    bundle.getString("reportsAdmin.alert.exportError.header"),
+                    e.getMessage()
+            );
             e.printStackTrace();
         }
     }
@@ -139,39 +170,58 @@ public class RelatoriosAdmController {
     private void visualizarRelatorio() {
         Relatorio relatorio = tblRelatorios.getSelectionModel().getSelectedItem();
         if (relatorio == null) {
-            mostrarAlerta("Seleção Inválida", "Selecione um relatório na tabela para visualizar.", null);
+            mostrarAlerta(
+                    bundle.getString("reportsAdmin.alert.noSelection.title"),
+                    bundle.getString("reportsAdmin.alert.noSelection.headerView"),
+                    null
+            );
             return;
         }
 
-        mostrarAlerta("Funcionalidade Indisponível", "Visualização direta ainda não implementada. Use Exportar.", null);
+        mostrarAlerta(
+                bundle.getString("reportsAdmin.alert.notImplemented.title"),
+                bundle.getString("reportsAdmin.alert.notImplemented.headerView"),
+                null
+        );
     }
 
     @FXML
     private void editarRelatorio() {
-        mostrarAlerta("Funcionalidade Indisponível", "Edição de registros de relatório não é suportada.", null);
-
+        mostrarAlerta(
+                bundle.getString("reportsAdmin.alert.notImplemented.title"),
+                bundle.getString("reportsAdmin.alert.notImplemented.headerEdit"),
+                null
+        );
     }
 
     @FXML
     private void excluirRelatorio() {
         Relatorio relatorioSelecionado = tblRelatorios.getSelectionModel().getSelectedItem();
         if (relatorioSelecionado == null) {
-            mostrarAlerta("Seleção Inválida", "Selecione um relatório na tabela para excluir.", null);
+            mostrarAlerta(
+                    bundle.getString("reportsAdmin.alert.noSelection.title"),
+                    bundle.getString("reportsAdmin.alert.noSelection.headerDelete"),
+                    null
+            );
             return;
         }
 
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacao.setTitle("Confirmar Exclusão");
-        confirmacao.setHeaderText("Excluir registro do relatório ID: " + relatorioSelecionado.getId());
-        confirmacao.setContentText("Você tem certeza que deseja excluir este registro? O arquivo físico (se existir) não será apagado.");
+        confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle")); // Chave reutilizada
+        confirmacao.setHeaderText(bundle.getString("reportsAdmin.alert.confirmDelete.header") + " " + relatorioSelecionado.getId());
+        confirmacao.setContentText(bundle.getString("reportsAdmin.alert.confirmDelete.content"));
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
                 try {
                     relatorioRepo.excluirRelatorio(relatorioSelecionado);
-                    carregarHistoricoTabela(); // Refresh after deletion
+                    carregarHistoricoTabela();
                 } catch (IOException e) {
-                    mostrarAlerta("Erro ao Excluir", "Não foi possível excluir o registro do relatório.", e.getMessage());
+                    mostrarAlerta(
+                            bundle.getString("reportsAdmin.alert.deleteError.title"),
+                            bundle.getString("reportsAdmin.alert.deleteError.header"),
+                            e.getMessage()
+                    );
                     e.printStackTrace();
                 }
             }
@@ -181,7 +231,7 @@ public class RelatoriosAdmController {
 
     private File salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Salvar Relatório");
+        fileChooser.setTitle(bundle.getString("reportsAdmin.saveDialog.title"));
         fileChooser.setInitialFileName(nomeBase + formatador.getExtensao());
 
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
@@ -193,10 +243,20 @@ public class RelatoriosAdmController {
         if (file != null) {
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 fos.write(bytes);
-                mostrarAlerta("Sucesso", "Relatório exportado com sucesso!", file.getAbsolutePath());
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle(bundle.getString("alert.success.title"));
+                alert.setHeaderText(bundle.getString("reportsAdmin.alert.exportSuccess.header"));
+                alert.setContentText(file.getAbsolutePath());
+                alert.showAndWait();
+
                 return file;
             } catch (IOException e) {
-                mostrarAlerta("Erro de Salvamento", "Não foi possível salvar o arquivo.", e.getMessage());
+                mostrarAlerta(
+                        bundle.getString("userRegistration.alert.saveError.title"),
+                        bundle.getString("reportsAdmin.alert.saveError.header"),
+                        e.getMessage()
+                );
                 e.printStackTrace();
                 return null;
             }
@@ -207,9 +267,6 @@ public class RelatoriosAdmController {
 
     private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        if ("Sucesso".equals(titulo)) {
-            alert.setAlertType(Alert.AlertType.INFORMATION);
-        }
         alert.setTitle(titulo);
         alert.setHeaderText(cabecalho);
         alert.setContentText(conteudo);

@@ -10,7 +10,7 @@
 <VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CandidatosGestorController">
 
     <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0">
-        <Button fx:id="btnStatus" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showStatus" styleClass="sub-navigation-button" text="Status da Candidatura" HBox.hgrow="ALWAYS">
+        <Button fx:id="btnStatus" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#showStatus" styleClass="sub-navigation-button" text="%candidatesManager.nav.status" HBox.hgrow="ALWAYS">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>

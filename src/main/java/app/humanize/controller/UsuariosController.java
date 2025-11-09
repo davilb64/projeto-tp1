@@ -3,6 +3,7 @@ package app.humanize.controller;
 import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
 import app.humanize.repository.UsuarioRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,10 +18,13 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,20 +51,21 @@ public class UsuariosController {
     @FXML
     private ComboBox<Perfil> comboPerfil;
 
-
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
+
+    private ResourceBundle bundle;
 
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colPerfil.setCellValueFactory(new PropertyValueFactory<>("perfil"));
 
-        // foto na tabela
         colFoto.setCellValueFactory(new PropertyValueFactory<>("caminhoFoto"));
 
-        //  ImageView na tabela
         colFoto.setCellFactory(col -> new TableCell<Usuario, String>() {
 
             private final ImageView imageView = new ImageView();
@@ -68,7 +73,7 @@ public class UsuariosController {
                 imageView.setFitHeight(50);
                 imageView.setFitWidth(50);
                 imageView.setPreserveRatio(true);
-                setAlignment(Pos.CENTER); // centralizar
+                setAlignment(Pos.CENTER);
             }
 
             @Override
@@ -80,17 +85,17 @@ public class UsuariosController {
                     setText(null);
                 } else {
                     try {
-                        Image img = new Image(new FileInputStream(caminho));
+                        File file = new File(caminho);
+                        Image img = new Image(file.toURI().toString());
                         imageView.setImage(img);
                         setGraphic(imageView);
-                    } catch (FileNotFoundException e) {
+                    } catch (Exception e) {
                         System.err.println("Foto não encontrada: " + caminho);
                         setGraphic(null);
                     }
                 }
             }
         });
-
 
         comboPerfil.getItems().setAll(Perfil.values());
         carregarTabela();
@@ -103,7 +108,6 @@ public class UsuariosController {
 
     private void carregarFiltro() {
         List<Usuario> usuarios = usuarioRepository.getTodosUsuarios();
-
         Stream<Usuario> stream = usuarios.stream();
 
         String nomeFiltro = txtNome.getText().trim();
@@ -147,10 +151,14 @@ public class UsuariosController {
 
     @FXML
     private void cadastrarUsuario() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroUsuarioAdm.fxml"));
+        URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("Cadastrar Usuário");
+
+        stage.setTitle(bundle.getString("userRegistration.title"));
+
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -162,18 +170,20 @@ public class UsuariosController {
     private void editarUsuario() throws IOException {
         Usuario usuarioSelecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (usuarioSelecionado == null) {
-            mostrarAlerta("Nenhum usuário selecionado para editar.");
+            mostrarAlerta(bundle.getString("userManagement.alert.noUserSelectedEdit"));
             return;
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroUsuarioAdm.fxml"));
+
+        URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+
         Parent root = loader.load();
 
         CadastroUsuarioAdmController controllerDoCadastro = loader.getController();
-
         controllerDoCadastro.prepararParaEdicao(usuarioSelecionado);
 
         Stage stage = new Stage();
-        stage.setTitle("Editar Usuário");
+        stage.setTitle(bundle.getString("userManagement.alert.editUserTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(tblUsuarios.getScene().getWindow());
@@ -188,31 +198,31 @@ public class UsuariosController {
 
         if (usuarioSelecionado != null) {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacao.setTitle("Confirmar Exclusão");
-            confirmacao.setHeaderText("Excluir usuário: " + usuarioSelecionado.getNome());
-            confirmacao.setContentText("Você tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.");
+
+            confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle"));
+            confirmacao.setHeaderText(bundle.getString("userManagement.alert.confirmDeleteHeader") + " " + usuarioSelecionado.getNome());
+            confirmacao.setContentText(bundle.getString("userManagement.alert.confirmDeleteContent"));
 
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.OK) {
                     try {
                         usuarioRepository.excluirUsuario(usuarioSelecionado);
                     } catch (IOException e) {
-                        mostrarAlerta("Erro ao excluir usuário do arquivo.");
+                        mostrarAlerta(bundle.getString("userManagement.alert.deleteError"));
                         e.printStackTrace();
                     }
-
                     carregarFiltro();
                 }
             });
 
         } else {
-            mostrarAlerta("Nenhum usuário foi selecionado para excluir.");
+            mostrarAlerta(bundle.getString("userManagement.alert.noUserSelectedDelete"));
         }
     }
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
+        alert.setTitle(bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();

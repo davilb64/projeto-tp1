@@ -17,13 +17,13 @@
 
 <VBox fx:id="rootVBox" spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ConfiguracoesAdmController">
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Configurações do Sistema" />
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="%config.title" />
 
     <VBox spacing="10.0" styleClass="card-configuracao">
         <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
         </padding>
-        <Label styleClass="label-underline" text="Perfil do Usuário" />
+        <Label styleClass="label-underline" text="%profile.title" />
         <GridPane hgap="10.0" vgap="10.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
@@ -34,16 +34,16 @@
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label text="Nome:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-            <TextField fx:id="txtNome" disable="true" editable="false" maxWidth="1.7976931348623157E308" text="Fulano" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label text="%profile.name" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+            <TextField fx:id="txtNome" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <Label text="E-mail:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <TextField fx:id="txtEmail" disable="true" editable="false" maxWidth="1.7976931348623157E308" text="fulano@humanize.com" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="%profile.email" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <TextField fx:id="txtEmail" disable="true" editable="false" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-            <Label text="Senha:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+            <Label text="%profile.password" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                <PasswordField fx:id="txtSenha" disable="true" editable="false" promptText="**********" HBox.hgrow="ALWAYS" />
-                <ToggleButton fx:id="btnAlterarSenha" mnemonicParsing="false" onAction="#liberaAlterarSenha" text="Alterar Senha">
+                <PasswordField fx:id="txtSenha" disable="true" editable="false" HBox.hgrow="ALWAYS" />
+                <ToggleButton fx:id="btnAlterarSenha" mnemonicParsing="false" onAction="#liberaAlterarSenha" text="%profile.changePassword">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor>
@@ -59,7 +59,7 @@
         <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
         </padding>
-        <Label styleClass="label-underline" text="Preferências" />
+        <Label styleClass="label-underline" text="%preferences.title" />
         <GridPane hgap="10.0" vgap="10.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
@@ -68,10 +68,10 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label text="Notificações:" GridPane.halignment="RIGHT" />
+            <Label text="%preferences.notifications" GridPane.halignment="RIGHT" />
             <HBox spacing="15.0" GridPane.columnIndex="1">
-                <CheckBox mnemonicParsing="false" text="Ativar E-mails" />
-                <CheckBox mnemonicParsing="false" text="Ativar SMS" />
+                <CheckBox mnemonicParsing="false" text="%preferences.enableEmail" />
+                <CheckBox mnemonicParsing="false" text="%preferences.enableSMS" />
             </HBox>
         </GridPane>
         <VBox.margin>
@@ -83,7 +83,7 @@
         <padding>
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
         </padding>
-        <Label styleClass="label-underline" text="Sistema" />
+        <Label styleClass="label-underline" text="%system.title" />
         <GridPane hgap="10.0" vgap="10.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
@@ -92,8 +92,8 @@
             <rowConstraints>
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label text="Idioma:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-            <ComboBox fx:id="idiomaCombo" maxWidth="1.7976931348623157E308" promptText="Selecione o Idioma" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label text="%system.language" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+            <ComboBox fx:id="idiomaCombo" maxWidth="1.7976931348623157E308" promptText="%system.language.prompt" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         </GridPane>
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
@@ -104,10 +104,10 @@
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
-        <Button mnemonicParsing="false" onAction="#restaurarPadroes" text="Restaurar Padrões">
+        <Button mnemonicParsing="false" onAction="#restaurarPadroes" text="%button.restore">
             <cursor><Cursor fx:constant="HAND" /></cursor>
         </Button>
-        <Button defaultButton="true" mnemonicParsing="false" onAction="#salvarAlteracoes" styleClass="primary-action-button" text="Salvar Alterações">
+        <Button defaultButton="true" mnemonicParsing="false" onAction="#salvarAlteracoes" styleClass="primary-action-button" text="%button.save">
             <cursor><Cursor fx:constant="HAND" /></cursor>
         </Button>
     </HBox>
