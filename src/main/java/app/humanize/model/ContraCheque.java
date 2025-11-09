@@ -19,7 +19,6 @@ public class ContraCheque {
             this.saldo = saldo;
         }
 
-        // Getters e Setters
         public String getNomeFuncionario() { return nomeFuncionario; }
         public void setNomeFuncionario(String nomeFuncionario) { this.nomeFuncionario = nomeFuncionario; }
 
