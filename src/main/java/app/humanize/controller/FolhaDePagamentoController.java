@@ -2,8 +2,6 @@ package app.humanize.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
 import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.FolhaPagRepository;
 import app.humanize.repository.UsuarioRepository;
@@ -12,7 +10,6 @@ import app.humanize.model.FolhaPag;
 import app.humanize.model.Funcionario;
 import app.humanize.model.Usuario;
 import java.util.List;
-import java.util.Optional;
 import javafx.beans.property.SimpleStringProperty;
 import java.io.IOException;
 
@@ -21,6 +18,7 @@ public class FolhaDePagamentoController {
     @FXML private TextField txtNome;
     @FXML private TextField txtCargo;
     @FXML private TextField txtNivel;
+    @FXML private TextField txtMesAno;
 
     @FXML private TableView<FolhaPag> tabelaFolhaPagamento;
     @FXML private TableColumn<FolhaPag, String> colunaNome;
@@ -161,6 +159,7 @@ public class FolhaDePagamentoController {
         String nome = txtNome.getText().trim();
         String cargoNome = txtCargo.getText().trim();
         String nivelNome = txtNivel.getText().trim();
+        String mesAno = txtMesAno.getText().trim();
 
         if (nome.isEmpty() || cargoNome.isEmpty() || nivelNome.isEmpty()) {
             mostrarAlerta("Campos Vazios", "Preencha todos os campos: Nome, Cargo e Nível!");
@@ -260,6 +259,7 @@ public class FolhaDePagamentoController {
         txtNome.clear();
         txtCargo.clear();
         txtNivel.clear();
+        txtMesAno.clear();
         txtCargo.setStyle("");
     }
 

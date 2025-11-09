@@ -2,6 +2,8 @@ package app.humanize.repository;
 
 import app.humanize.model.FolhaPag;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class FolhaPagRepository {
 
     public static final FolhaPagRepository instance = new FolhaPagRepository();
     private final String arquivoCsv = "./src/main/resources/folha_pagamento.csv";
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private FolhaPagRepository() {}
 
@@ -35,7 +38,7 @@ public class FolhaPagRepository {
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 String[] campos = linha.split(";", -1);
-                if (campos.length >= 9) {
+                if (campos.length >= 10) {
                     String nome = campos[0];
                     String cargo = campos[1];
                     String nivel = campos[2];
@@ -47,8 +50,10 @@ public class FolhaPagRepository {
                     double descontos = parseDoubleComVirgula(campos[7]);
                     double salarioLiquido = parseDoubleComVirgula(campos[8]);
 
+                    LocalDate data = parseData(campos[9]);
+
                     FolhaPag folha = new FolhaPag(nome, cargo, nivel,
-                            salarioBase, adicionalNivel, beneficios, adicionais, descontos, salarioLiquido);
+                            salarioBase, adicionalNivel, beneficios, adicionais, descontos, salarioLiquido, data);
                     folhas.add(folha);
                 }
             }
@@ -58,12 +63,12 @@ public class FolhaPagRepository {
 
         return folhas;
     }
+
     private double parseDoubleComVirgula(String valor) {
         if (valor == null || valor.trim().isEmpty()) {
             return 0.0;
         }
         try {
-
             return Double.parseDouble(valor.trim().replace(",", "."));
         } catch (NumberFormatException e) {
             System.err.println("Erro ao converter valor: '" + valor + "' - usando 0.0 como padrão");
@@ -71,12 +76,28 @@ public class FolhaPagRepository {
         }
     }
 
+    private LocalDate parseData(String dataStr) {
+        if (dataStr == null || dataStr.trim().isEmpty()) {
+            return LocalDate.now();
+        }
+        try {
+            return LocalDate.parse(dataStr.trim(), dateFormatter);
+        } catch (Exception e) {
+            System.err.println("Erro ao converter data: '" + dataStr + "' - usando data atual");
+            return LocalDate.now();
+        }
+    }
+
     private void salvarTodasFolhas(List<FolhaPag> folhas) throws IOException {
         try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
-            escritor.write("Nome;Cargo;Nivel;SalarioBase;AdicionalNivel;Beneficios;Adicionais;Descontos;SalarioLiquido\n");
+            escritor.write("Nome;Cargo;Nivel;SalarioBase;AdicionalNivel;Beneficios;Adicionais;Descontos;SalarioLiquido;Data\n");
 
             for (FolhaPag folha : folhas) {
-                escritor.write(String.format("%s;%s;%s;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f\n",
+                String dataStr = folha.getData() != null ?
+                        folha.getData().format(dateFormatter) :
+                        LocalDate.now().format(dateFormatter);
+
+                escritor.write(String.format("%s;%s;%s;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%s\n",
                         folha.getNome(),
                         folha.getCargo(),
                         folha.getNivel(),
@@ -85,7 +106,8 @@ public class FolhaPagRepository {
                         folha.getBeneficios(),
                         folha.getAdicionais(),
                         folha.getDescontos(),
-                        folha.getSalarioLiquido()));
+                        folha.getSalarioLiquido(),
+                        dataStr));
             }
         }
     }

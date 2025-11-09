@@ -1,66 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.RelatorioFinanceiroController">
+<VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
     </padding>
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Relatório Financeiro" />
 
-    <GridPane hgap="20.0" vgap="10.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" />
-            <ColumnConstraints hgrow="ALWAYS" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-        </rowConstraints>
+    <Label prefHeight="36.0" prefWidth="681.0" styleClass="screen-title" text="Relatorio Financeiro" />
 
-        <Label styleClass="filter-label" text="Período:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-        <DatePicker fx:id="datePeriodo" maxWidth="1.7976931348623157E308" promptText="Selecione o Mês" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-        <Label styleClass="filter-label" text="Data de Emissão:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <DatePicker fx:id="dateDataEmissao" maxWidth="1.7976931348623157E308" promptText="Selecione a Data" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <VBox spacing="10.0" style="-fx-padding: 15; -fx-background-color: #f8f9fa; -fx-border-radius: 5;">
+        <Label style="-fx-font-weight: bold;" text="Nova Transação" />
 
-        <Button defaultButton="true" mnemonicParsing="false" styleClass="secondary-action-button" text="Filtrar" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowSpan="2" />
-    </GridPane>
+        <GridPane hgap="10.0" vgap="10.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="80" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="NEVER" minWidth="80" />
+                <ColumnConstraints hgrow="ALWAYS" />
+                <ColumnConstraints hgrow="NEVER" />
+            </columnConstraints>
 
-    <TableView fx:id="tabelaRelatorio" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="colunaReceita" minWidth="80.0" prefWidth="100.0" text="Receita" />
-            <TableColumn fx:id="colunaDespesas" minWidth="80.0" prefWidth="100.0" text="Despesas" />
-            <TableColumn fx:id="colunaSaldo" minWidth="80.0" prefWidth="100.0" text="Saldo" />
-            <TableColumn fx:id="colunaDescontos" minWidth="80.0" prefWidth="100.0" text="Descontos" />
-            <TableColumn minWidth="150.0" text="Detalhes/Observações" />
-        </columns>
-        <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-        </columnResizePolicy>
-    </TableView>
 
-    <HBox alignment="CENTER_RIGHT">
-        <VBox.margin>
-            <Insets top="15.0" />
-        </VBox.margin>
-        <Button fx:id="btnExportar" mnemonicParsing="false" styleClass="primary-action-button" text="Exportar">
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
-        </Button>
-    </HBox>
+            <Label text="Data:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <DatePicker fx:id="dateTransacao" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+            <Label text="Valor R$:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <TextField fx:id="txtValor" promptText="0,00" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+
+            <Label text="Descrição:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <TextField fx:id="txtDescricao" promptText="Descrição..." GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+
+            <Button fx:id="btnSalvar" text="Salvar" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+
+        <HBox alignment="CENTER_LEFT" spacing="20.0">
+            <RadioButton fx:id="radioReceita" selected="true" text="Receita" />
+            <RadioButton fx:id="radioDespesa" text="Despesa" />
+        </HBox>
+    </VBox>
+
+
+    <VBox spacing="10.0">
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label prefHeight="18.0" prefWidth="514.0" style="-fx-font-weight: bold;" text="                                   Tabela Relatorio">
+            <font>
+               <Font size="23.0" />
+            </font></Label>
+            <Button fx:id="btnSalvarRelatorio" style="-fx-background-color: #2E8B57; -fx-text-fill: white;" text="Salvar Relatório" />
+        </HBox>
+
+
+        <TableView fx:id="tabelaRelatorio" prefHeight="408.0" prefWidth="678.0" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colData" prefWidth="80" text="data" />
+                <TableColumn fx:id="colDescricao" prefWidth="100.800048828125" text="descrição" />
+                <TableColumn fx:id="colValor" prefWidth="107.19999694824219" text="receita" />
+                <TableColumn fx:id="colTipo" minWidth="0.0" prefWidth="84.0" text="despesas" />
+                <TableColumn fx:id="colData1" prefWidth="80" text="valor" />
+                <TableColumn fx:id="colData2" prefWidth="80" text="saldo" />
+                <TableColumn fx:id="colData3" prefWidth="84.800048828125" text="categoria" />
+            </columns>
+        </TableView>
+    </VBox>
 </VBox>

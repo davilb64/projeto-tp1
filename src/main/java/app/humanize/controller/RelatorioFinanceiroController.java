@@ -1,6 +1,7 @@
 package app.humanize.controller;
 
 import app.humanize.model.factories.RelatorioFinanceiro;
+import app.humanize.model.FolhaPag;
 import app.humanize.repository.FolhaPagRepository;
 import app.humanize.repository.RelatorioFinanceiroRepository;
 import javafx.fxml.FXML;
@@ -45,7 +46,7 @@ public class RelatorioFinanceiroController {
         configurarColunas();
 
         btnSalvar.setOnAction(event -> salvarTransacao());
-        btnSalvarRelatorio.setOnAction(event -> salvarRelatorioCompleto());
+        btnSalvarRelatorio.setOnAction(event -> carregarRelatorioCompleto());
 
         carregarRelatorioSalvo();
         carregarDespesasFolhaPagamento();
@@ -68,15 +69,18 @@ public class RelatorioFinanceiroController {
 
     private void carregarDespesasFolhaPagamento() {
         var folhas = folhaRepository.carregarTodasFolhas();
-        double totalFolha = folhas.stream().mapToDouble(f -> f.getSalarioLiquido()).sum();
 
-        if (totalFolha > 0) {
+        for (FolhaPag folha : folhas) {
+            String dataFolha = folha.getData() != null ?
+                    folha.getData().format(dateFormatter) :
+                    LocalDate.now().format(dateFormatter);
+
             RelatorioFinanceiro folhaTransacao = new RelatorioFinanceiro(
-                    LocalDate.now().format(dateFormatter),
-                    "Folha de Pagamento",
+                    dataFolha,
+                    "Folha de Pagamento - " + folha.getNome(),
                     "",
-                    String.format("R$ %.2f", totalFolha),
-                    String.format("R$ %.2f", totalFolha),
+                    String.format("R$ %.2f", folha.getSalarioLiquido()),
+                    String.format("R$ %.2f", folha.getSalarioLiquido()),
                     "",
                     "Folha de Pagamento"
             );
@@ -135,17 +139,22 @@ public class RelatorioFinanceiroController {
         }
     }
 
-    private void salvarRelatorioCompleto() {
-        if (transacoes.isEmpty()) {
-            mostrarAlerta("Aviso", "Não há dados para salvar");
-            return;
-        }
-
+    private void carregarRelatorioCompleto() {
         try {
-            relatorioRepository.salvarTransacoes(transacoes);
-            mostrarAlerta("Sucesso", "Relatório salvo com sucesso!");
-        } catch (IOException e) {
-            mostrarAlerta("Erro", "Erro ao salvar relatório: " + e.getMessage());
+            transacoes.clear();
+
+            carregarRelatorioSalvo();
+
+            carregarDespesasFolhaPagamento();
+
+
+            salvarTransacoesNoRepository();
+
+            mostrarAlerta("Sucesso", "Relatório recarregado com sucesso!\n" +
+                    "Total de " + transacoes.size() + " transações carregadas.");
+
+        } catch (Exception e) {
+            mostrarAlerta("Erro", "Erro ao carregar relatório: " + e.getMessage());
         }
     }
 
