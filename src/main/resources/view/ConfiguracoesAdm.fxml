@@ -7,17 +7,15 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="rootVBox" spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ConfiguracoesAdmController">
+<VBox fx:id="rootVBox" spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.ConfiguracoesAdmController">
 
     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="screen-title" text="Configurações do Sistema" />
 
@@ -69,17 +67,9 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label text="Tema:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-            <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                <RadioButton fx:id="radioClaro" mnemonicParsing="false" selected="true" text="Claro">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="tema" /> </toggleGroup>
-                </RadioButton>
-                <RadioButton fx:id="radioEscuro" mnemonicParsing="false" text="Escuro" toggleGroup="$tema" /> </HBox>
-            <Label text="Notificações:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label text="Notificações:" GridPane.halignment="RIGHT" />
+            <HBox spacing="15.0" GridPane.columnIndex="1">
                 <CheckBox mnemonicParsing="false" text="Ativar E-mails" />
                 <CheckBox mnemonicParsing="false" text="Ativar SMS" />
             </HBox>
@@ -101,13 +91,9 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <Label text="Idioma:" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
             <ComboBox fx:id="idiomaCombo" maxWidth="1.7976931348623157E308" promptText="Selecione o Idioma" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
-            <Label text="Fuso Horário:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <ComboBox fx:id="fusoCombo" maxWidth="1.7976931348623157E308" promptText="Selecione o Fuso" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         </GridPane>
         <VBox.margin>
             <Insets left="10.0" right="10.0" />

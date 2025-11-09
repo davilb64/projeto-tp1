@@ -15,15 +15,11 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.IOException;
 
 public class ConfiguracoesAdmController {
-    public ToggleGroup tema;
     @FXML private ComboBox<String> idiomaCombo;
-    @FXML private ComboBox<String> fusoCombo;
     @FXML private TextField txtNome;
     @FXML private TextField txtEmail;
     @FXML private TextField txtSenha;
     @FXML private ToggleButton btnAlterarSenha;
-    @FXML private RadioButton radioClaro;
-    @FXML private RadioButton radioEscuro;
 
     @FXML private VBox rootVBox;
 
@@ -35,34 +31,9 @@ public class ConfiguracoesAdmController {
     public void initialize() {
         idiomaCombo.getItems().addAll("Português", "Inglês", "Espanhol");
         idiomaCombo.setValue("Português");
-        fusoCombo.getItems().addAll("GMT-3", "GMT-5", "UTC");
-        fusoCombo.setValue("GMT-3");
         txtSenha.setEditable(false);
         txtSenha.setDisable(true);
         carregaDadosUser();
-
-        tema.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
-            Parent cenaRoot = txtNome.getScene().getRoot();
-
-            if (newToggle == radioEscuro) {
-                aplicarTemaEscuro(cenaRoot);
-            } else {
-                aplicarTemaClaro(cenaRoot);
-            }
-        });
-    }
-
-    private void aplicarTemaEscuro(Parent root) {
-        if (root != null) {
-            root.getStyleClass().remove("light");
-            root.getStyleClass().add("dark");
-        }
-    }
-
-    private void aplicarTemaClaro(Parent root) {
-        if (root != null) {
-            root.getStyleClass().remove("dark");
-        }
     }
 
     private void carregaDadosUser() {
