@@ -30,7 +30,7 @@ public class RelatorioFinanceiroController {
     @FXML private TableColumn<RelatorioFinanceiro, String> colTipo;
     @FXML private TableColumn<RelatorioFinanceiro, String> colData1;
     @FXML private TableColumn<RelatorioFinanceiro, String> colData3;
-    @FXML private TableColumn<RelatorioFinanceiro, String> Colsaldofinal;
+    @FXML private TableColumn<RelatorioFinanceiro, String> colSaldoFinal;
 
     private ObservableList<RelatorioFinanceiro> transacoes = FXCollections.observableArrayList();
     private FolhaPagRepository folhaRepository = FolhaPagRepository.getInstance();
@@ -44,21 +44,24 @@ public class RelatorioFinanceiroController {
         radioDespesa.setToggleGroup(grupoTipo);
 
         tabelaRelatorio.setItems(transacoes);
-
         configurarColunas();
 
         btnSalvar.setOnAction(event -> salvarTransacao());
         btnSalvarRelatorio.setOnAction(event -> carregarRelatorioCompleto());
 
+        inicializarRelatorio();
+    }
+
+    private void inicializarRelatorio() {
         try {
             relatorioRepository.criarArquivoSeNaoExiste();
+            carregarRelatorioSalvo();
+            carregarDespesasFolhaPagamento();
+            calcularEAdicionarSaldoFinal();
+            salvarTransacoesNoRepository();
         } catch (IOException e) {
-            mostrarAlerta("Erro", "Erro ao criar arquivo: " + e.getMessage());
+            mostrarAlerta("Erro", "Erro ao inicializar relatório: " + e.getMessage());
         }
-
-        carregarRelatorioSalvo();
-        carregarDespesasFolhaPagamento();
-        calcularEAdicionarSaldoFinal();
     }
 
     private void configurarColunas() {
@@ -68,7 +71,7 @@ public class RelatorioFinanceiroController {
         colTipo.setCellValueFactory(cellData -> cellData.getValue().despesasProperty());
         colData1.setCellValueFactory(cellData -> cellData.getValue().valorProperty());
         colData3.setCellValueFactory(cellData -> cellData.getValue().categoriaProperty());
-        Colsaldofinal.setCellValueFactory(cellData -> cellData.getValue().saldoProperty());
+        colSaldoFinal.setCellValueFactory(cellData -> cellData.getValue().saldoProperty());
     }
 
     private void carregarRelatorioSalvo() {
@@ -128,6 +131,8 @@ public class RelatorioFinanceiroController {
             calcularEAdicionarSaldoFinal();
             salvarTransacoesNoRepository();
             limparCampos();
+
+            mostrarAlerta("Sucesso", "Transação salva com sucesso!");
         }
     }
 
@@ -201,7 +206,7 @@ public class RelatorioFinanceiroController {
             calcularEAdicionarSaldoFinal();
             salvarTransacoesNoRepository();
 
-            mostrarAlerta("Sucesso", "Relatório atualizado com sucesso!\n" +
+            mostrarAlerta("Sucesso", "Relatório recarregado e salvo com sucesso!\n" +
                     "Total de " + (transacoes.size() - 1) + " transações.");
 
         } catch (Exception e) {
