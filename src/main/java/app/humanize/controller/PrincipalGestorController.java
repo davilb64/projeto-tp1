@@ -183,7 +183,7 @@ public class PrincipalGestorController {
 
     @FXML
     private void showCandidatos() {
-        loadUI("CandidatosAdm");
+        loadUI("StatusDaCandidaturaGestor");
         setActiveButton(btnCandidatos);
     }
 

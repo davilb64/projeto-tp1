@@ -14,6 +14,7 @@ public class CriarVagaController {
     @FXML private TextField txtSalario;
     @FXML private TextField txtRequisitos;
     @FXML private ChoiceBox<String> choiceStatus;
+    @FXML private TextField txtDepartamento;
 
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
 
@@ -37,6 +38,7 @@ public class CriarVagaController {
         txtCargo.setText(vaga.getCargo());
         txtSalario.setText(vaga.getSalario());
         txtRequisitos.setText(vaga.getRequisitos());
+        txtDepartamento.setText(vaga.getDepartamento());
 
         // CORREÇÃO: Converter enum para String
         choiceStatus.setValue(vaga.getStatus().name());
@@ -44,8 +46,8 @@ public class CriarVagaController {
 
     private boolean validarCampos() {
         if (txtCargo.getText().isBlank() || txtRequisitos.getText().isBlank() ||
-                choiceStatus.getValue() == null) {
-            mostrarAlerta("Campos Obrigatórios", "Os campos Cargo, Status e Requisitos devem ser preenchidos.", null);
+                choiceStatus.getValue() == null || txtDepartamento.getText().isBlank()) {
+            mostrarAlerta("Campos Obrigatórios", "Os campos Cargo, Status, Requisitos e Departamento devem ser preenchidos.", null);
             return false;
         }
         return true;
@@ -60,7 +62,7 @@ public class CriarVagaController {
         if (vagaParaEditar == null) {
 
             try{
-                Vaga vaga = new Vaga(txtCargo.getText(),  StatusVaga.valueOf(choiceStatus.getValue()),  txtSalario.getText(), txtRequisitos.getText());
+                Vaga vaga = new Vaga(txtCargo.getText(),  StatusVaga.valueOf(choiceStatus.getValue()),  txtSalario.getText(), txtRequisitos.getText(), txtDepartamento.getText());
                 vagaRepository.escreveVagaNova(vaga);
             }catch (Exception e){
                 mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
@@ -72,6 +74,7 @@ public class CriarVagaController {
                 vagaParaEditar.setRequisitos(txtRequisitos.getText());
                 vagaParaEditar.setSalario(txtSalario.getText());
                 vagaParaEditar.setStatus(StatusVaga.valueOf(choiceStatus.getValue()));
+                vagaParaEditar.setDepartamento(txtDepartamento.getText());
 
                 vagaRepository.atualizarVaga();
             }catch (Exception e){

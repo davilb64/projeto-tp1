@@ -32,8 +32,9 @@
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
-            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
         <Label styleClass="filter-label" text="ID:" GridPane.halignment="RIGHT" />
@@ -50,6 +51,8 @@
 
         <Label styleClass="filter-label" text="Status:" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
       <ChoiceBox fx:id="choiceStatus" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <TextField fx:id="txtDepartamento" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <Label prefHeight="38.0" prefWidth="80.0" text="Departamento:" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
     </GridPane>
 
     <HBox alignment="CENTER_RIGHT" spacing="10.0">

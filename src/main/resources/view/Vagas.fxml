@@ -81,6 +81,7 @@
         <columns>
             <TableColumn fx:id="colId" maxWidth="100.0" minWidth="31.0" prefWidth="46.0" text="ID" />
             <TableColumn fx:id="colCargo" prefWidth="79.0" text="Cargo" />
+         <TableColumn fx:id="colDepartamento" prefWidth="75.0" text="Departamento" />
             <TableColumn fx:id="colSalario" text="Salário" />
             <TableColumn fx:id="colStatus" maxWidth="200.0" minWidth="54.0" prefWidth="66.0" text="Status" />
             <TableColumn fx:id="colRequisitos" prefWidth="94.0" text="Requisitos" />

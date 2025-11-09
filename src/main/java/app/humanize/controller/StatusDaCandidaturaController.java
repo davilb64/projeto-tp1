@@ -5,15 +5,21 @@ import app.humanize.repository.CandidatoRepository;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import app.humanize.repository.CandidaturaRepository;
 import app.humanize.model.Candidatura;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+
+import static app.humanize.model.StatusCandidatura.PENDENTE;
 
 public class StatusDaCandidaturaController {
 
@@ -39,13 +45,7 @@ public class StatusDaCandidaturaController {
     }
 
 
-    private CandidatosAdmController controllerPai;
-
-    public void setControllerPai(CandidatosAdmController controllerPai) {
-        this.controllerPai = controllerPai;
-    }
-
-    private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
+  /*  private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final ObservableList<Candidato> listaCandidatos = FXCollections.observableArrayList();
 
 
@@ -55,7 +55,7 @@ public class StatusDaCandidaturaController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @FXML
     private void excluirCandidatura() {
@@ -65,35 +65,76 @@ public class StatusDaCandidaturaController {
             mostrarAlerta("Selecione uma candidatura para excluir!");
             return;
         }
+        if(candidaturaSelecionada.getStatus() == PENDENTE){
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Deseja realmente excluir a candidatura de " +
+                            candidaturaSelecionada.getCandidato().getNome() +
+                            " para a vaga " + candidaturaSelecionada.getVaga().getCargo() + "?",
+                    ButtonType.YES, ButtonType.NO);
 
-        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
-                "Deseja realmente excluir a candidatura de " +
-                        candidaturaSelecionada.getCandidato().getNome() +
-                        " para a vaga " + candidaturaSelecionada.getVaga().getCargo() + "?",
-                ButtonType.YES, ButtonType.NO);
+            confirmacao.showAndWait().ifPresent(resposta -> {
+                if (resposta == ButtonType.YES) {
+                    try {
+                        candidaturaRepository.remover(candidaturaSelecionada);
+                        listaCandidaturas.remove(candidaturaSelecionada);
+                        tableCandidaturas.refresh();
 
-        confirmacao.showAndWait().ifPresent(resposta -> {
-            if (resposta == ButtonType.YES) {
-                try {
-                    candidaturaRepository.remover(candidaturaSelecionada);
-                    listaCandidaturas.remove(candidaturaSelecionada);
-                    tableCandidaturas.refresh();
-
-                    Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
-                    sucesso.setTitle("Sucesso");
-                    sucesso.setHeaderText(null);
-                    sucesso.setContentText("Candidatura excluída com sucesso!");
-                    sucesso.showAndWait();
-                } catch (IOException e) {
-                    Alert erro = new Alert(Alert.AlertType.ERROR);
-                    erro.setTitle("Erro");
-                    erro.setHeaderText(null);
-                    erro.setContentText("Erro ao excluir candidatura: " + e.getMessage());
-                    erro.showAndWait();
+                        Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
+                        sucesso.setTitle("Sucesso");
+                        sucesso.setHeaderText(null);
+                        sucesso.setContentText("Candidatura excluída com sucesso!");
+                        sucesso.showAndWait();
+                    } catch (IOException e) {
+                        Alert erro = new Alert(Alert.AlertType.ERROR);
+                        erro.setTitle("Erro");
+                        erro.setHeaderText(null);
+                        erro.setContentText("Erro ao excluir candidatura: " + e.getMessage());
+                        erro.showAndWait();
+                    }
                 }
-            }
-        });
+            });
+        }
+        else{
+            mostrarAlerta("Só é permitido excluir candidaturas pendentes!");
+            return;
+        }
     }
+
+    @FXML
+    private void editarCandidato() {
+        Candidatura selecionada = tableCandidaturas.getSelectionModel().getSelectedItem();
+
+        if (selecionada == null) {
+            mostrarAlerta("Selecione uma candidatura para editar o status!");
+            return;
+        }
+
+        try {
+            // Carrega o popup FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/TrocarStatus.fxml"));
+            Parent root = loader.load();
+
+            // Passa a candidatura selecionada para o controller do popup
+            TrocarStatusController controller = loader.getController();
+            controller.setCandidatura(selecionada);
+            controller.setOnStatusAlterado(() -> {
+                // 🔄 Atualiza a tabela depois da alteração
+                tableCandidaturas.refresh();
+            });
+
+            // Cria e mostra o popup
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Alterar Status da Candidatura");
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.setScene(new Scene(root));
+            popupStage.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Erro ao abrir tela de troca de status: " + e.getMessage());
+        }
+    }
+
 
 
     private void mostrarAlerta(String msg) {

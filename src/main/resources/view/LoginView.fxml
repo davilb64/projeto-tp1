@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.LoginController">
+<BorderPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.LoginController">
 
     <top>
         <StackPane id="cabecalho">
@@ -47,6 +47,13 @@
                     <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
                 </padding>
 
+                <ImageView fx:id="imgFotoPerfil" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true"
+                           preserveRatio="true">
+                    <VBox.margin>
+                        <Insets bottom="10.0"/>
+                    </VBox.margin>
+                    <Image url="@../fotos_perfil/default_avatar.png"/>
+                </ImageView>
                 <GridPane alignment="CENTER" hgap="10.0" vgap="15.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" />
@@ -57,8 +64,8 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                     </rowConstraints>
 
-                    <Text fontSmoothingType="LCD" styleClass="filter-label" strokeType="OUTSIDE" strokeWidth="0.0" text="Usuário:" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
-                    <Text fontSmoothingType="LCD" styleClass="filter-label" strokeType="OUTSIDE" strokeWidth="0.0" text="Senha:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                    <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="filter-label" text="Usuário:" textAlignment="RIGHT" GridPane.halignment="RIGHT" />
+                    <Text fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="filter-label" text="Senha:" textAlignment="RIGHT" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
 
                     <TextField fx:id="txtUsuario" promptText="Digite seu usuário" GridPane.columnIndex="1">
                         <cursor>
@@ -75,7 +82,7 @@
                             </PasswordField>
                             <TextField fx:id="txtSenhaAberta" promptText="Digite sua senha" />
                         </StackPane>
-                        <ToggleButton fx:id="btnMostrarSenha" mnemonicParsing="false" text="👁" />
+                        <ToggleButton fx:id="btnMostrarSenha" mnemonicParsing="false" text="Ver" />
                     </HBox>
                 </GridPane>
 

@@ -83,6 +83,8 @@
                     <Cursor fx:constant="HAND" />
                 </cursor>
             </Button>
+
+
             <Label fx:id="lblArquivo" text="(Nenhum arquivo selecionado)" HBox.hgrow="ALWAYS" />
         </HBox>
 
