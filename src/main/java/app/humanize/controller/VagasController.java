@@ -4,6 +4,7 @@ import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
 import app.humanize.model.Vaga;
 import app.humanize.repository.VagaRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +17,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -35,6 +38,8 @@ public class VagasController {
     @FXML
     private TableColumn<Vaga,Integer> colId;
     @FXML
+    private TableColumn<Vaga, String> colDepartamento;
+    @FXML
     private TableColumn<Vaga,String> colCargo;
     @FXML
     private TableColumn<Vaga,String> colSalario;
@@ -45,10 +50,15 @@ public class VagasController {
 
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCargo.setCellValueFactory(new PropertyValueFactory<>("cargo"));
+        colDepartamento.setCellValueFactory(new PropertyValueFactory<>("departamento"));
         colSalario.setCellValueFactory(new PropertyValueFactory<>("salario"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         colRequisitos.setCellValueFactory(new PropertyValueFactory<>("requisitos"));
@@ -63,10 +73,16 @@ public class VagasController {
 
     @FXML
     private void cadastrarVaga() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CriarVaga.fxml"));
+        URL resource = getClass().getResource("/view/CriarVaga.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("vacancyManagement.alert.fxmlCreateNotFound"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("Cadastrar Vaga");
+        stage.setTitle(bundle.getString("createVacancy.title")); // Chave reutilizada
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -77,18 +93,24 @@ public class VagasController {
     private void editarVaga() throws IOException {
         Vaga vaga = tblVagas.getSelectionModel().getSelectedItem();
         if (vaga == null) {
-            mostrarAlerta("Nenhum vaga selecionada para editar.");
+            mostrarAlerta(bundle.getString("vacancyManagement.alert.noSelectionEdit"));
             return;
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CriarVaga.fxml"));
+
+        URL resource = getClass().getResource("/view/CriarVaga.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("vacancyManagement.alert.fxmlCreateNotFound"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
 
         CriarVagaController controllerDoCadastro = loader.getController();
-
         controllerDoCadastro.prepararParaEdicao(vaga);
 
         Stage stage = new Stage();
-        stage.setTitle("Editar Usuário");
+        stage.setTitle(bundle.getString("vacancyManagement.alert.editTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner((Stage) tblVagas.getScene().getWindow());
@@ -103,16 +125,16 @@ public class VagasController {
 
         if (vagaSelecionado != null) {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacao.setTitle("Confirmar Exclusão");
-            confirmacao.setHeaderText("Excluir vaga: " + vagaSelecionado.getCargo());
-            confirmacao.setContentText("Você tem certeza que deseja excluir esta vaga? Esta ação não pode ser desfeita.");
+            confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle")); // Reutilizada
+            confirmacao.setHeaderText(bundle.getString("vacancyManagement.alert.confirmDeleteHeader") + " " + vagaSelecionado.getCargo());
+            confirmacao.setContentText(bundle.getString("vacancyManagement.alert.confirmDeleteContent"));
 
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.OK) {
                     try {
                         vagaRepository.excluirVaga(vagaSelecionado);
                     } catch (IOException e) {
-                        mostrarAlerta("Erro ao excluir vaga do arquivo.");
+                        mostrarAlerta(bundle.getString("vacancyManagement.alert.deleteError"));
                         e.printStackTrace();
                     }
                     carregarTabela();
@@ -120,13 +142,13 @@ public class VagasController {
             });
 
         } else {
-            mostrarAlerta("Nenhuma vaga foi selecionada para excluir.");
+            mostrarAlerta(bundle.getString("vacancyManagement.alert.noSelectionDelete"));
         }
     }
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
+        alert.setTitle(bundle.getString("userManagement.alert.attention")); // Reutilizada
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
@@ -139,7 +161,6 @@ public class VagasController {
 
     private void carregarFiltro() {
         List<Vaga> vagas = vagaRepository.getTodasVagas();
-
         Stream<Vaga> stream = vagas.stream();
 
         String cargoFiltro = txtCargo.getText().trim();
@@ -155,7 +176,7 @@ public class VagasController {
                 int id = Integer.parseInt(idFiltro);
                 stream = stream.filter(vaga -> vaga.getId() == id);
             } catch (NumberFormatException e) {
-                System.err.println("Filtro de ID inválido, ignorado.");
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
             }
         }
 

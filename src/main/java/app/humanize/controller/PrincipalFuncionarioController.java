@@ -17,10 +17,13 @@ import app.humanize.util.ScreenController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class PrincipalFuncionarioController {
     public BorderPane root;
+    private Image avatarPadrao;
 
     @FXML private Button btnFinanceiro;
     @FXML private Button btnConfig;
@@ -33,64 +36,97 @@ public class PrincipalFuncionarioController {
 
     private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
+    private ResourceBundle bundle;
+
     @FXML private void initialize(){
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
+
         carregarFotoPerfil();
-        if (btnFinanceiro != null) {
-            btnFinanceiro.getStyleClass().add("buttonLateral-active");
-            activeButton = btnFinanceiro;
-        }
         showFinanceiro();
     }
+
+    private void atualizarTextosSidebar() {
+        btnFinanceiro.setText(bundle.getString("sidebar.profile"));
+        btnConfig.setText(bundle.getString("sidebar.settings"));
+    }
+
+
 
     private void carregarFotoPerfil() {
         Usuario usuario = UserSession.getInstance().getUsuarioLogado();
         String caminhoFoto = null;
+        Image imagemParaCarregar = null;
 
         if (usuario instanceof Funcionario) {
             caminhoFoto = ((Funcionario) usuario).getCaminhoFoto();
         }
 
-        try {
-            if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
-                fotoPerfil.setImage(new Image(new FileInputStream(caminhoFoto)));
-            } else {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("Arquivo de foto não encontrado: " + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+        try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
+            if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
+            this.avatarPadrao = new Image(is);
+        } catch (Exception e) {
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
+        }
+
+        if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
             try {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            } catch (FileNotFoundException ex) {
-                System.err.println("Foto padrão também não encontrada em: " + FOTO_PADRAO);
+                imagemParaCarregar = new Image(new FileInputStream(caminhoFoto));
+            } catch (FileNotFoundException e) {
+                System.err.println(bundle.getString("log.error.photoNotFound") + caminhoFoto);
             }
         }
+
+        if (imagemParaCarregar == null) {
+            imagemParaCarregar = avatarPadrao;
+        }
+
+        fotoPerfil.setImage(imagemParaCarregar);
     }
 
     private void loadUI(String fxmlPath) {
         try {
-            System.out.println(">> Tentando carregar: " + getClass().getResource(fxmlPath));
+            URL resource = getClass().getResource(fxmlPath);
+            System.out.println(bundle.getString("log.info.fxmlLoading") + resource);
 
-            Node view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(fxmlPath)));
-
-            if (view != null) {
-                contentArea.getChildren().setAll(view);
-            } else {
-                System.err.println("Erro: FXML não carregado ou nulo: " + fxmlPath);
-                mostrarAlerta("Erro Crítico", "Não foi possível carregar a tela: " + fxmlPath, "Verifique o console para detalhes.");
+            if (resource == null) {
+                throw new IllegalStateException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
             }
 
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
+            Node view = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof ConfiguracoesAdmController) {
+                ((ConfiguracoesAdmController) controller).setMainController(this);
+            }
+
+            contentArea.getChildren().setAll(view);
+
         } catch (IOException e) {
-            System.err.println("Erro de IO ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.io") + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro ao Carregar Tela", "Não foi possível carregar a interface.", e.getMessage());
-        } catch (NullPointerException e) {
-            System.err.println("Erro: Recurso FXML não encontrado: " + fxmlPath);
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.reload.header"),
+                    e.getMessage()
+            );
+        } catch (NullPointerException | IllegalStateException e) {
+            System.err.println(bundle.getString("log.error.fxmlNotFound") + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro Crítico", "Arquivo da interface não encontrado.", "Caminho: " + fxmlPath);
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.fxmlNotFound.header"),
+                    bundle.getString("alert.error.fxmlNotFound.content.path") + fxmlPath
+            );
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.unexpected") + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro Inesperado", "Ocorreu um erro ao tentar carregar a tela.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("alert.error.unexpected.header"),
+                    e.getMessage()
+            );
         }
     }
 
@@ -118,9 +154,12 @@ public class PrincipalFuncionarioController {
 
 
     @FXML
-    private void showConfiguracoes() {
+    void showConfiguracoes() {
         loadUI("/view/ConfiguracoesAdm.fxml");
         setActiveButton(btnConfig);
+
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
     }
 
     @FXML

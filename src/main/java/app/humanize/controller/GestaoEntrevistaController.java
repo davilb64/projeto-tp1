@@ -5,6 +5,7 @@ import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.EntrevistaRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.VagaRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +18,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,15 +61,17 @@ public class GestaoEntrevistaController {
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final EntrevistaRepository entrevistaRepository = EntrevistaRepository.getInstance();
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
-        //chamar os metodos no initialize
+        this.bundle = UserSession.getInstance().getBundle();
+
         carregarVagas();
         carregarCandidatos();
         carregarRecrutadores();
-        //carregar dados da tabela
         carregarTabela();
-        //inicializar as colunas da tabela
+
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCandidato.setCellValueFactory(new PropertyValueFactory<>("candidato"));
         colRecrutador.setCellValueFactory(new PropertyValueFactory<>("recrutador"));
@@ -81,9 +86,8 @@ public class GestaoEntrevistaController {
     }
 
     private void carregarVagas() {
-        cbVaga.getItems().clear(); //pegar o nome do fx:id do choice box e limpar os itens
-        cbVaga.getItems().addAll(vagaRepository.getTodasVagas()); // //adicionar todas as vagas no choice box
-        //note que estou usando o metodo getTodasVagas da classe  VagaRepository
+        cbVaga.getItems().clear();
+        cbVaga.getItems().addAll(vagaRepository.getTodasVagas());
     }
 
     private void carregarCandidatos() {
@@ -99,10 +103,16 @@ public class GestaoEntrevistaController {
 
     @FXML
     public void cadastrarEntrevista() throws IOException{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MarcarEntrevista.fxml"));
+        URL resource = getClass().getResource("/view/MarcarEntrevista.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.scheduleInterview"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("Marcar Entrevista");
+        stage.setTitle(bundle.getString("scheduleInterview.title"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -113,18 +123,24 @@ public class GestaoEntrevistaController {
     public void editarEntrevista() throws IOException {
         Entrevista entrevista = tblEntrevista.getSelectionModel().getSelectedItem();
         if (entrevista == null) {
-            mostrarAlerta("Nenhum entrevista selecionada para editar.");
+            mostrarAlerta(bundle.getString("interviewManagement.alert.noSelectionEdit"));
             return;
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MarcarEntrevista.fxml"));
+
+        URL resource = getClass().getResource("/view/MarcarEntrevista.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.scheduleInterview"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
 
         MarcarEntrevistaController controllerDoCadastro = loader.getController();
-
         controllerDoCadastro.prepararParaEdicao(entrevista);
 
         Stage stage = new Stage();
-        stage.setTitle("Editar Entrevista");
+        stage.setTitle(bundle.getString("interviewManagement.alert.editTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner((Stage) tblEntrevista.getScene().getWindow());
@@ -139,31 +155,29 @@ public class GestaoEntrevistaController {
 
         if (entrevistaSelecionada != null) {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacao.setTitle("Confirmar Exclusão");
-            confirmacao.setHeaderText("Excluir entrevista: " + entrevistaSelecionada.getDataEntrevista());
-            confirmacao.setContentText("Você tem certeza que deseja excluir esta entrevista? Esta ação não pode ser desfeita.");
+            confirmacao.setTitle(bundle.getString("interviewManagement.alert.confirmDeleteTitle"));
+            confirmacao.setHeaderText(bundle.getString("interviewManagement.alert.confirmDeleteHeader") + " " + entrevistaSelecionada.getDataEntrevista());
+            confirmacao.setContentText(bundle.getString("interviewManagement.alert.confirmDeleteContent"));
 
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.OK) {
                     try {
                         entrevistaRepository.excluirEntrevista(entrevistaSelecionada);
                     } catch (IOException e) {
-                        mostrarAlerta("Erro ao excluir entrevista do arquivo.");
+                        mostrarAlerta(bundle.getString("interviewManagement.alert.deleteError"));
                         e.printStackTrace();
                     }
                     carregarTabela();
                 }
             });
         } else {
-            mostrarAlerta("Nenhuma vaga foi selecionada para excluir.");
+            mostrarAlerta(bundle.getString("interviewManagement.alert.noSelectionDelete"));
         }
     }
 
     @FXML
     public void filtra() {
-
         List<Entrevista> entrevistas = entrevistaRepository.getTodasEntrevistas();
-
         Stream<Entrevista> stream = entrevistas.stream();
 
         String idFiltro = txtId.getText().trim();
@@ -172,7 +186,7 @@ public class GestaoEntrevistaController {
                 int id = Integer.parseInt(idFiltro);
                 stream = stream.filter(entrevista -> entrevista.getId() == id);
             } catch (NumberFormatException e) {
-                System.err.println("Filtro de ID inválido, ignorado.");
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
             }
         }
 
@@ -204,7 +218,7 @@ public class GestaoEntrevistaController {
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
+        alert.setTitle(bundle.getString("interviewManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();

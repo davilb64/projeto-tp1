@@ -2,9 +2,9 @@ package app.humanize.controller;
 
 import app.humanize.model.Funcionario;
 import app.humanize.model.Perfil;
-import app.humanize.model.Vaga;
+import app.humanize.model.Usuario;
 import app.humanize.repository.UsuarioRepository;
-import app.humanize.repository.VagaRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +17,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,48 +48,144 @@ public class FuncionarioController {
 
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colCargo.setCellValueFactory(new PropertyValueFactory<>("cargo"));
-        //colSalario.setCellValueFactory(new PropertyValueFactory<>("salario"));
+        colSalario.setCellValueFactory(new PropertyValueFactory<>("salario"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colPerfil.setCellValueFactory(new PropertyValueFactory<>("perfil"));
         carregarTabela();
-        //populando a lista de perfil
+
         cbPerfil.getItems().clear();
         cbPerfil.getItems().addAll(Perfil.values());
     }
 
     private void carregarTabela(){
-
+        ObservableList<Funcionario> dados = FXCollections.observableArrayList(usuarioRepository.getUsuariosInstanceofFuncionario());
+        tblFuncionarios.setItems(dados);
+        tblFuncionarios.refresh();
     }
 
     @FXML
     private void contratarFuncionario() throws IOException {
+        URL resource = getClass().getResource("/view/ContratacaoDeFuncionario.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("employeeManagement.alert.fxmlHireNotFound"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle(bundle.getString("employeeHire.title")); // Chave reutilizada
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        carregarTabela();
     }
 
     @FXML
     private void editarFuncionario() throws IOException {
+        Funcionario funcionarioSelecionado = tblFuncionarios.getSelectionModel().getSelectedItem();
+        if (funcionarioSelecionado == null) {
+            mostrarAlerta(bundle.getString("employeeManagement.alert.noSelectionEdit"));
+            return;
+        }
 
+        // Assume que a edição de funcionário usa a mesma tela de cadastro de usuário
+        URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("employeeManagement.alert.fxmlEditNotFound"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+        Parent root = loader.load();
+
+        CadastroUsuarioAdmController controllerDoCadastro = loader.getController();
+        controllerDoCadastro.prepararParaEdicao(funcionarioSelecionado);
+
+        Stage stage = new Stage();
+        stage.setTitle(bundle.getString("userManagement.alert.editUserTitle")); // Chave reutilizada
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(tblFuncionarios.getScene().getWindow());
+        stage.showAndWait();
+
+        carregarTabela();
     }
 
     @FXML
     private void demitirFuncionario() {
+        Funcionario funcionarioSelecionado = tblFuncionarios.getSelectionModel().getSelectedItem();
+        if (funcionarioSelecionado == null) {
+            mostrarAlerta(bundle.getString("employeeManagement.alert.noSelectionDelete"));
+            return;
+        }
 
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle")); // Chave reutilizada
+        confirmacao.setHeaderText(bundle.getString("employeeManagement.alert.confirmDeleteHeader") + " " + funcionarioSelecionado.getNome());
+        confirmacao.setContentText(bundle.getString("userManagement.alert.confirmDeleteContent")); // Chave reutilizada
+
+        confirmacao.showAndWait().ifPresent(resposta -> {
+            if (resposta == ButtonType.OK) {
+                try {
+                    usuarioRepository.excluirUsuario(funcionarioSelecionado);
+                } catch (IOException e) {
+                    mostrarAlerta(bundle.getString("employeeManagement.alert.deleteError"));
+                    e.printStackTrace();
+                }
+                carregarTabela();
+            }
+        });
     }
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
+        alert.setTitle(bundle.getString("userManagement.alert.attention")); // Chave reutilizada
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
 
     @FXML
-    public void filtra(){
+    public void filtra() {
+        List<Funcionario> funcionarios = usuarioRepository.getUsuariosInstanceofFuncionario();
+        Stream<Funcionario> stream = funcionarios.stream();
 
+        String nomeFiltro = txtNome.getText().trim().toLowerCase();
+        if (!nomeFiltro.isEmpty()) {
+            stream = stream.filter(func -> func.getNome().toLowerCase().contains(nomeFiltro));
+        }
+
+        String idFiltro = txtId.getText().trim();
+        if (!idFiltro.isEmpty()) {
+            try {
+                int id = Integer.parseInt(idFiltro);
+                stream = stream.filter(func -> func.getId() == id);
+            } catch (NumberFormatException e) {
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
+            }
+        }
+
+        String cargoFiltro = txtCargo.getText().trim().toLowerCase();
+        if (!cargoFiltro.isEmpty()) {
+            stream = stream.filter(func -> func.getCargo().toLowerCase().contains(cargoFiltro));
+        }
+
+        Perfil perfilFiltro = cbPerfil.getValue();
+        if (perfilFiltro != null) {
+            stream = stream.filter(func -> func.getPerfil() == perfilFiltro);
+        }
+
+        List<Funcionario> filtrados = stream.collect(Collectors.toList());
+        tblFuncionarios.setItems(FXCollections.observableArrayList(filtrados));
+        tblFuncionarios.refresh();
     }
-
 }

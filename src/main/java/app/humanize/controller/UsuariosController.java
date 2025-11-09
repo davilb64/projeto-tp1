@@ -3,18 +3,29 @@ package app.humanize.controller;
 import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
 import app.humanize.repository.UsuarioRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream; // Importar
+import java.net.URL;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +40,8 @@ public class UsuariosController {
     @FXML
     private TableView<Usuario> tblUsuarios;
     @FXML
+    private TableColumn<Usuario, String> colFoto;
+    @FXML
     private TableColumn<Usuario,Integer> colId;
     @FXML
     private TableColumn<Usuario,String> colNome;
@@ -39,15 +52,67 @@ public class UsuariosController {
     @FXML
     private ComboBox<Perfil> comboPerfil;
 
-
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
+
+    private ResourceBundle bundle;
+    private Image avatarPadrao; // Variável para guardar o avatar
 
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
+        // Carrega o avatar padrão UMA VEZ de dentro do JAR
+        try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
+            if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
+            this.avatarPadrao = new Image(is);
+        } catch (Exception e) {
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
+        }
+
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colPerfil.setCellValueFactory(new PropertyValueFactory<>("perfil"));
+
+        colFoto.setCellValueFactory(new PropertyValueFactory<>("caminhoFoto"));
+
+        // LÓGICA DE CARREGAMENTO DA FOTO CORRIGIDA
+        colFoto.setCellFactory(col -> new TableCell<Usuario, String>() {
+            private final ImageView imageView = new ImageView();
+            {
+                imageView.setFitHeight(50);
+                imageView.setFitWidth(50);
+                imageView.setPreserveRatio(true);
+                setAlignment(Pos.CENTER);
+            }
+
+            @Override
+            protected void updateItem(String caminho, boolean empty) {
+                super.updateItem(caminho, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                } else if (caminho == null || caminho.isEmpty()) {
+                    // Caminho vazio: Usa o avatar padrão
+                    imageView.setImage(avatarPadrao);
+                    setGraphic(imageView);
+                } else {
+                    // Caminho existe: Tenta carregar do disco
+                    try {
+                        File file = new File(caminho);
+                        Image img = new Image(file.toURI().toString());
+                        imageView.setImage(img);
+                        setGraphic(imageView);
+                    } catch (Exception e) {
+                        // Erro ao carregar (ex: arquivo não encontrado): Usa o avatar padrão
+                        System.err.println(bundle.getString("log.error.photoNotFound") + caminho);
+                        imageView.setImage(avatarPadrao);
+                        setGraphic(imageView);
+                    }
+                }
+            }
+        });
+
         comboPerfil.getItems().setAll(Perfil.values());
         carregarTabela();
     }
@@ -58,8 +123,8 @@ public class UsuariosController {
     }
 
     private void carregarFiltro() {
+        // ... (lógica de filtro não muda) ...
         List<Usuario> usuarios = usuarioRepository.getTodosUsuarios();
-
         Stream<Usuario> stream = usuarios.stream();
 
         String nomeFiltro = txtNome.getText().trim();
@@ -75,7 +140,7 @@ public class UsuariosController {
                 int id = Integer.parseInt(idFiltro);
                 stream = stream.filter(usuario -> usuario.getId() == id);
             } catch (NumberFormatException e) {
-                System.err.println("Filtro de ID inválido, ignorado.");
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
             }
         }
 
@@ -103,10 +168,15 @@ public class UsuariosController {
 
     @FXML
     private void cadastrarUsuario() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroUsuarioAdm.fxml"));
+        // ... (método não muda) ...
+        URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("Cadastrar Usuário");
+
+        stage.setTitle(bundle.getString("userRegistration.title"));
+
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -116,60 +186,63 @@ public class UsuariosController {
 
     @FXML
     private void editarUsuario() throws IOException {
+        // ... (método não muda) ...
         Usuario usuarioSelecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (usuarioSelecionado == null) {
-            mostrarAlerta("Nenhum usuário selecionado para editar.");
+            mostrarAlerta(bundle.getString("userManagement.alert.noUserSelectedEdit"));
             return;
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroUsuarioAdm.fxml"));
+
+        URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+
         Parent root = loader.load();
 
         CadastroUsuarioAdmController controllerDoCadastro = loader.getController();
-
         controllerDoCadastro.prepararParaEdicao(usuarioSelecionado);
 
         Stage stage = new Stage();
-        stage.setTitle("Editar Usuário");
+        stage.setTitle(bundle.getString("userManagement.alert.editUserTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(tblUsuarios.getScene().getWindow());
         stage.showAndWait();
 
-        // --- CORREÇÃO AQUI ---
         carregarFiltro();
     }
 
     @FXML
     private void excluirUsuario() {
+        // ... (método não muda) ...
         Usuario usuarioSelecionado = tblUsuarios.getSelectionModel().getSelectedItem();
 
         if (usuarioSelecionado != null) {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacao.setTitle("Confirmar Exclusão");
-            confirmacao.setHeaderText("Excluir usuário: " + usuarioSelecionado.getNome());
-            confirmacao.setContentText("Você tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.");
+
+            confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle"));
+            confirmacao.setHeaderText(bundle.getString("userManagement.alert.confirmDeleteHeader") + " " + usuarioSelecionado.getNome());
+            confirmacao.setContentText(bundle.getString("userManagement.alert.confirmDeleteContent"));
 
             confirmacao.showAndWait().ifPresent(resposta -> {
                 if (resposta == ButtonType.OK) {
                     try {
                         usuarioRepository.excluirUsuario(usuarioSelecionado);
                     } catch (IOException e) {
-                        mostrarAlerta("Erro ao excluir usuário do arquivo.");
+                        mostrarAlerta(bundle.getString("userManagement.alert.deleteError"));
                         e.printStackTrace();
                     }
-
                     carregarFiltro();
                 }
             });
 
         } else {
-            mostrarAlerta("Nenhum usuário foi selecionado para excluir.");
+            mostrarAlerta(bundle.getString("userManagement.alert.noUserSelectedDelete"));
         }
     }
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
+        alert.setTitle(bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();

@@ -16,7 +16,9 @@ import app.humanize.util.ScreenController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 public class PrincipalAdministradorController {
 
@@ -27,7 +29,6 @@ public class PrincipalAdministradorController {
     private StackPane contentArea;
 
     @FXML private Button btnDashboard;
-
     @FXML private Button btnUsuarios;
     @FXML private Button btnRelatorios;
     @FXML private Button btnConfig;
@@ -39,80 +40,103 @@ public class PrincipalAdministradorController {
     @FXML private Button btnFuncionarios;
     @FXML private Button btnContratacoes;
     @FXML private Button btnPerfil;
+    private Image avatarPadrao;
 
     private Button activeButton;
     private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
         carregarFotoPerfil();
-
-        if (btnDashboard != null) {
-            btnDashboard.getStyleClass().add("buttonLateral-active");
-            activeButton = btnDashboard;
-        }
         showDashboard();
     }
+
+    private void atualizarTextosSidebar() {
+        btnDashboard.setText(bundle.getString("sidebar.dashboard"));
+        btnUsuarios.setText(bundle.getString("sidebar.users"));
+        btnRelatorios.setText(bundle.getString("sidebar.reports"));
+        btnConfig.setText(bundle.getString("sidebar.settings"));
+        btnFinanceiro.setText(bundle.getString("sidebar.finance"));
+        btnRecrutadores.setText(bundle.getString("sidebar.recruiters"));
+        btnCandidatos.setText(bundle.getString("sidebar.candidates"));
+        btnVagas.setText(bundle.getString("sidebar.vacancies"));
+        btnEntrevistas.setText(bundle.getString("sidebar.interviews"));
+        btnFuncionarios.setText(bundle.getString("sidebar.employees"));
+        btnContratacoes.setText(bundle.getString("sidebar.hires"));
+        btnPerfil.setText(bundle.getString("sidebar.profile"));
+    }
+
+
 
     private void carregarFotoPerfil() {
         Usuario usuario = UserSession.getInstance().getUsuarioLogado();
         String caminhoFoto = null;
+        Image imagemParaCarregar = null;
 
         if (usuario instanceof Funcionario) {
             caminhoFoto = ((Funcionario) usuario).getCaminhoFoto();
         }
 
-        try {
-            if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
-                fotoPerfil.setImage(new Image(new FileInputStream(caminhoFoto)));
-            } else {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("Arquivo de foto não encontrado: " + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+        try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
+            if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
+            this.avatarPadrao = new Image(is);
+        } catch (Exception e) {
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
+        }
+
+        if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
             try {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            } catch (FileNotFoundException ex) {
-                System.err.println("Foto padrão também não encontrada em: " + FOTO_PADRAO);
+                imagemParaCarregar = new Image(new FileInputStream(caminhoFoto));
+            } catch (FileNotFoundException e) {
+                System.err.println(bundle.getString("log.error.photoNotFound") + caminhoFoto);
             }
         }
-    }
 
-
-    private boolean isDarkThemeActive() {
-        if (root != null && root.getStyleClass().contains("dark")) {
-            return true;
+        if (imagemParaCarregar == null) {
+            imagemParaCarregar = avatarPadrao;
         }
-        return contentArea != null && contentArea.getScene() != null && contentArea.getScene().getRoot().getStyleClass().contains("dark");
+
+        fotoPerfil.setImage(imagemParaCarregar);
     }
 
-    private void applyCurrentTheme(Node node) {
-        if (isDarkThemeActive()) {
-            node.getStyleClass().add("dark");
-        } else {
-            node.getStyleClass().remove("dark");
-        }
-    }
 
     private void loadUI(String fxml) {
         try {
-            URL resource = getClass().getResource("/view/" + fxml + ".fxml");
-            System.out.println(">> Tentando carregar: " + resource);
+            ResourceBundle bundle = UserSession.getInstance().getBundle();
+
+            String fxmlPath = "/view/" + fxml + ".fxml";
+            URL resource = getClass().getResource(fxmlPath);
+            System.out.println(bundle.getString("log.info.fxmlLoading") + resource);
 
             if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxml);
+                throw new IllegalStateException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
             }
 
-            Node view = FXMLLoader.load(resource);
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
 
-            applyCurrentTheme(view);
+            Node view = loader.load();
+
+            Object controller = loader.getController();
+
+            if (controller instanceof DashboardAdministradorController) {
+                ((DashboardAdministradorController) controller).setMainController(this);
+            }
+
+            if (controller instanceof ConfiguracoesAdmController) {
+                ((ConfiguracoesAdmController) controller).setMainController(this);
+            }
 
             contentArea.getChildren().setAll(view);
+
         } catch (IOException e) {
-            System.err.println("Erro de IO ao carregar FXML: " + fxml);
+            System.err.println(bundle.getString("log.error.fxmlLoad.io") + fxml);
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar UI: " + e.getMessage());
+            System.err.println(bundle.getString("log.error.uiLoad.unexpected") + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -157,9 +181,13 @@ public class PrincipalAdministradorController {
     }
 
     @FXML
-    private void showConfiguracoes() {
+    void showConfiguracoes() {
         loadUI("ConfiguracoesAdm");
         setActiveButton(btnConfig);
+
+        // Atualiza a sidebar quando a tela de config é (re)carregada
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
     }
 
     @FXML

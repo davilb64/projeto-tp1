@@ -8,9 +8,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CandidaturaRepository {
+public class CandidaturaRepository extends BaseRepository {
     private static final CandidaturaRepository instance = new CandidaturaRepository();
-    private final String arquivoCsv = "./src/main/resources/candidaturas.csv";
+    private static final String NOME_ARQUIVO = "candidaturas.csv";
     private final List<Candidatura> candidaturasEmMemoria;
 
     private CandidaturaRepository() {
@@ -24,6 +24,16 @@ public class CandidaturaRepository {
 
     public List<Candidatura> getTodas() {
         return new ArrayList<>(candidaturasEmMemoria);
+    }
+
+    public List<Candidatura> getCandidaturasEmAnalise() {
+        List<Candidatura> candidaturas = new ArrayList<>();
+        for(Candidatura candidatura : candidaturasEmMemoria) {
+            if (candidatura.getStatus() == StatusCandidatura.EM_ANALISE){
+                candidaturas.add(candidatura);
+            }
+        }
+        return candidaturas;
     }
 
     /** Verifica se já existe uma candidatura do mesmo candidato para a mesma vaga */
@@ -61,7 +71,8 @@ public class CandidaturaRepository {
 
     /** Persiste todas as candidaturas no CSV */
     private void persistirAlteracoesNoCSV() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoCsv, false))) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo, false))) {
             writer.write("CPF_Candidato;Nome_Candidato;Vaga_ID;Cargo;Data;Status\n");
             for (Candidatura c : candidaturasEmMemoria) {
                 writer.write(formatarCandidaturaParaCSV(c));
@@ -71,8 +82,17 @@ public class CandidaturaRepository {
 
     /** Lê candidaturas do CSV para a memória */
     private void carregarCandidaturasDoCSV() {
-        File arquivo = new File(arquivoCsv);
-        if (!arquivo.exists()) return;
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        if (!arquivo.exists()){
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
+            }
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             reader.readLine(); // Pular cabeçalho
@@ -144,6 +164,20 @@ public class CandidaturaRepository {
                 .orElse("Sem candidatura");
     }
 
+    public void salvarOuAtualizar(Candidatura candidatura) throws IOException {
+        // Se já existir a mesma candidatura, atualiza o status
+        for (Candidatura c : candidaturasEmMemoria) {
+            if (c.getCandidato().equals(candidatura.getCandidato()) &&
+                    c.getVaga().equals(candidatura.getVaga())) {
+                c.setStatus(candidatura.getStatus());
+                persistirAlteracoesNoCSV();
+                return;
+            }
+        }
+        // Caso contrário, adiciona nova
+        candidaturasEmMemoria.add(candidatura);
+        persistirAlteracoesNoCSV();
+    }
 
 
     /** Mostra alerta de erro visual no JavaFX */

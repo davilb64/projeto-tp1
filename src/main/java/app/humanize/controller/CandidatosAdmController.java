@@ -1,5 +1,7 @@
 package app.humanize.controller;
 
+import app.humanize.model.Candidato;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -7,10 +9,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import app.humanize.model.Candidato;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class CandidatosAdmController {
     public BorderPane root;
@@ -26,34 +28,50 @@ public class CandidatosAdmController {
     private Button btnStatus;
     private Button activeButton;
 
+    private ResourceBundle bundle;
+
+    @FXML
+    public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+        showCadastro(); // Carrega a primeira tela (Cadastro) por padrão
+    }
+
     private void loadUI(String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            URL resource = getClass().getResource(fxmlPath);
+            if (resource == null) {
+                throw new NullPointerException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
             Node view = loader.load();
 
-            /* 🔹 Se o FXML carregado tiver um controller que aceite o pai, passa a referência
-            Object childController = loader.getController();
-            if (childController instanceof CadastroDeCandidatoController cadastroController) {
-                cadastroController.setControllerPai(this);
-            } else if (childController instanceof StatusDaCandidaturaController statusController) {
-                statusController.setControllerPai(this);
-            }*/
-
             contentArea.getChildren().setAll(view);
-            //view.getProperties().put("controllerPai", this);
 
         } catch (IOException e) {
-            System.err.println("Erro de IO ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.io") + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro ao Carregar Tela", "Não foi possível carregar a interface.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.reload.header"),
+                    e.getMessage()
+            );
         } catch (NullPointerException e) {
-            System.err.println("Erro: Recurso FXML não encontrado: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlNotFound") + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro Crítico", "Arquivo da interface não encontrado.", "Caminho: " + fxmlPath);
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.fxmlNotFound.header"),
+                    bundle.getString("alert.error.fxmlNotFound.content.path") + fxmlPath
+            );
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.unexpected") + fxmlPath);
             e.printStackTrace();
-            mostrarAlerta("Erro Inesperado", "Ocorreu um erro ao tentar carregar a tela.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("alert.error.unexpected.header"),
+                    e.getMessage()
+            );
         }
     }
 
@@ -93,28 +111,27 @@ public class CandidatosAdmController {
 
     public void editarCandidatoExistente(Candidato candidato) {
         try {
-            // Carrega a tela de cadastro
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroDeCandidato.fxml"));
+            URL resource = getClass().getResource("/view/CadastroDeCandidato.fxml");
+            if (resource == null) {
+                throw new NullPointerException(bundle.getString("exception.fxmlNotFound.cadastroCandidato"));
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
             Node view = loader.load();
 
-            // Obtém o controller da tela de cadastro
             CadastroDeCandidatoController controller = loader.getController();
-
-            // Preenche os campos com o candidato selecionado
             controller.prepararParaEdicao(candidato);
 
-            // Troca o conteúdo do StackPane
             contentArea.getChildren().setAll(view);
-
-            // Atualiza o botão ativo na lateral
             setActiveButton(btnCadastro);
 
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             e.printStackTrace();
-            mostrarAlerta("Erro ao abrir cadastro", "Falha ao carregar a tela de edição.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("candidatesMain.alert.error.loadEdit.title"),
+                    bundle.getString("candidatesMain.alert.error.loadEdit.header"),
+                    e.getMessage()
+            );
         }
     }
-
-
-
 }

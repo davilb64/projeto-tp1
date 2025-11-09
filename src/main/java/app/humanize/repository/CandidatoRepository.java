@@ -8,10 +8,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CandidatoRepository {
+public class CandidatoRepository extends BaseRepository {
 
     private static final CandidatoRepository instance = new CandidatoRepository();
-    private final String arquivoCsv = "./src/main/resources/candidatos.csv";
+    private static final String NOME_ARQUIVO = "candidatos.csv";
     private final List<Candidato> candidatosEmMemoria = new ArrayList<>();
 
     private CandidatoRepository() {
@@ -25,6 +25,8 @@ public class CandidatoRepository {
     public List<Candidato> getTodos() {
         return new ArrayList<>(candidatosEmMemoria);
     }
+
+
 
     public int getQtdCandidatos() {
         return candidatosEmMemoria.size();
@@ -45,8 +47,17 @@ public class CandidatoRepository {
     }
 
     private void carregarDoCSV() {
-        File arquivo = new File(arquivoCsv);
-        if (!arquivo.exists()) return;
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        if (!arquivo.exists()){
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
+            }
+        }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             reader.readLine(); // cabeçalho
@@ -78,8 +89,9 @@ public class CandidatoRepository {
     }
 
     private void persistirNoCSV() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoCsv))) {
-            writer.write("Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Vaga;DataCadastro;Documento\n");
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo))) {
+            writer.write("Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Experiencia;DataCadastro;Documento\n");
             for (Candidato c : candidatosEmMemoria) {
                 writer.write(formatarCandidato(c));
                 writer.newLine();
@@ -94,9 +106,9 @@ public class CandidatoRepository {
                 c.getEmail(),
                 c.getTelefone(),
                 c.getFormacao(),
-                c.getExperiencia(),
                 c.getDisponibilidade(),
                 String.valueOf(c.getPretencaoSalarial()),
+                c.getExperiencia(),
                 c.getCaminhoDocumento() != null ? c.getCaminhoDocumento() : ""
 
         );

@@ -16,12 +16,13 @@ public class Vaga {
 
     public Vaga(){}
 
-    public Vaga(String cargo, StatusVaga status, String salario, String requisitos){
+    public Vaga(String cargo, StatusVaga status, String salario, String requisitos, String departamento){
         this.id = ++idCounter;
         this.cargo = cargo;
         this.status = status;
         this.salario = salario;
         this.requisitos = requisitos;
+        this.departamento = departamento;
     }
     public void criar(String cargo, String salario){
         this.id = ++idCounter;

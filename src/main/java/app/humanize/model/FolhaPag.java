@@ -1,5 +1,7 @@
 package app.humanize.model;
 
+import java.time.LocalDate;
+
 public class FolhaPag {
     private String nome;
     private String cargo;
@@ -10,13 +12,13 @@ public class FolhaPag {
     private double adicionais;
     private double descontos;
     private double salarioLiquido;
+    private LocalDate data;
 
     public FolhaPag() {}
 
     public FolhaPag(String nome, String cargo, String nivel,
                     double salarioBase, double adicionalNivel, double beneficios,
                     double adicionais, double descontos, double salarioLiquido) {
-
         this.nome = nome;
         this.cargo = cargo;
         this.nivel = nivel;
@@ -26,6 +28,22 @@ public class FolhaPag {
         this.adicionais = adicionais;
         this.descontos = descontos;
         this.salarioLiquido = salarioLiquido;
+        this.data = LocalDate.now();
+    }
+
+    public FolhaPag(String nome, String cargo, String nivel,
+                    double salarioBase, double adicionalNivel, double beneficios,
+                    double adicionais, double descontos, double salarioLiquido, LocalDate data) {
+        this.nome = nome;
+        this.cargo = cargo;
+        this.nivel = nivel;
+        this.salarioBase = salarioBase;
+        this.adicionalNivel = adicionalNivel;
+        this.beneficios = beneficios;
+        this.adicionais = adicionais;
+        this.descontos = descontos;
+        this.salarioLiquido = salarioLiquido;
+        this.data = data;
     }
 
     public String getNome() { return nome; }
@@ -54,4 +72,7 @@ public class FolhaPag {
 
     public double getSalarioLiquido() { return salarioLiquido; }
     public void setSalarioLiquido(double salarioLiquido) { this.salarioLiquido = salarioLiquido; }
+
+    public LocalDate getData() { return data; }
+    public void setData(LocalDate data) { this.data = data; }
 }

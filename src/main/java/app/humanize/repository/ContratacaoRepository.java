@@ -10,10 +10,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContratacaoRepository {
+public class ContratacaoRepository extends BaseRepository {
 
     private static final ContratacaoRepository instance = new ContratacaoRepository();
-    private final String arquivoCsv = "./src/main/resources/contratacoes.csv";
+    private static final String NOME_ARQUIVO = "contratacoes.csv";
     private final List<Contratacao> contratacoesEmMemoria;
 
     private ContratacaoRepository() {
@@ -45,7 +45,8 @@ public class ContratacaoRepository {
                 + 1;
     }
     private void persistirAlteracoesNoCSV() throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("idContratacao;DataContratacao;RegimeContratacao;Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;idVaga;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;\n");
             for (Contratacao contratacao : this.contratacoesEmMemoria) {
                 escritor.write(formatarContratacaoParaCSV(contratacao));
@@ -83,9 +84,16 @@ public class ContratacaoRepository {
 
     //recuperar dados do arquivo csv
     public void carregarContratacaoDoCSV() {
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
         if (!arquivo.exists()) {
-            return;
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
+            }
         }
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
             leitor.readLine(); // Pula o cabeçalho

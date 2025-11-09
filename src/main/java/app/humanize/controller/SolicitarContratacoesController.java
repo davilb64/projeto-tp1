@@ -6,10 +6,12 @@ import app.humanize.model.Vaga;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.ContratacaoRepository;
 import app.humanize.repository.VagaRepository;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 
 public class SolicitarContratacoesController
 {
@@ -28,13 +30,16 @@ public class SolicitarContratacoesController
     @FXML
     private Button btnContratar;
 
-    // Repositórios simulando acesso a dados (pode ser lista em memória ou banco)
+    // Repositórios
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final ContratacaoRepository contratacaoRepository = ContratacaoRepository.getInstance();
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
         //chamar os metodos no initialize
         carregarCandidatos();
         carregarVagas();
@@ -74,7 +79,11 @@ public class SolicitarContratacoesController
             // Limpa os campos da tela
             limparCampos();
         }catch (Exception e){
-            mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("alert.error.unexpected.header.tryAgain"),
+                    e.getMessage()
+            );
         }
     }
 
@@ -95,39 +104,43 @@ public class SolicitarContratacoesController
         StringBuilder erros = new StringBuilder();
 
         if (candidato == null) {
-            erros.append("- Selecione um candidato.\n");
+            erros.append(bundle.getString("requestHire.validation.candidate")).append("\n");
         }
         if (vaga == null) {
-            erros.append("- Selecione uma vaga.\n");
+            erros.append(bundle.getString("requestHire.validation.job")).append("\n");
         }
         if (data == null) {
-            erros.append("- Informe a data de contratação.\n");
+            erros.append(bundle.getString("requestHire.validation.date")).append("\n");
         }
         if (regime == null || regime.trim().isEmpty()) {
-            erros.append("- Digite o regime (ex: CLT, Estágio, PJ).\n");
+            erros.append(bundle.getString("requestHire.validation.regime")).append("\n");
         }
 
         if (!erros.isEmpty()) {
-            mostrarAlerta("Campos obrigatórios", erros.toString(), null);
+            mostrarAlerta(
+                    bundle.getString("requestHire.validation.title"),
+                    bundle.getString("requestHire.validation.header"),
+                    erros.toString()
+            );
             return false;
         }
 
         return true;
     }
 
-    private void mostrarAlerta(String titulo, String mensagem, String conteudo) {
+    private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setHeaderText(titulo);
-        alert.setContentText(mensagem);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
         alert.setContentText(conteudo);
         alert.showAndWait();
     }
 
     private void mostrarMensagemSucesso() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Sucesso");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION); // Alterado para INFORMATION
+        alert.setTitle(bundle.getString("alert.success.title"));
         alert.setHeaderText(null);
-        alert.setContentText("Contratação salva com sucesso!");
+        alert.setContentText(bundle.getString("requestHire.alert.success.header"));
         alert.showAndWait();
     }
 }

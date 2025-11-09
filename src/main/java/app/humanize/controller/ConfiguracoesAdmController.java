@@ -6,63 +6,74 @@ import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.validacoes.ValidaSenha;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox; // Importe VBox
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class ConfiguracoesAdmController {
-    public ToggleGroup tema;
     @FXML private ComboBox<String> idiomaCombo;
-    @FXML private ComboBox<String> fusoCombo;
     @FXML private TextField txtNome;
     @FXML private TextField txtEmail;
     @FXML private TextField txtSenha;
     @FXML private ToggleButton btnAlterarSenha;
-    @FXML private RadioButton radioClaro;
-    @FXML private RadioButton radioEscuro;
-
     @FXML private VBox rootVBox;
 
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final ValidaSenha validaSenha = new ValidaSenha();
-    Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
+    private final Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
+    private ResourceBundle bundle;
+    private PrincipalAdministradorController mainController;
+    private PrincipalGestorController mainControllerGestor;
+    private PrincipalRecrutadorController mainControllerRecrutador;
+    private PrincipalFuncionarioController mainControllerFuncionario;
+
+    private final Map<String, String> idiomaMap = new HashMap<>();
+
+    public void setMainController(PrincipalAdministradorController mainController) {
+        this.mainController = mainController;
+    }
+    public void setMainController(PrincipalGestorController mainController) {
+        this.mainControllerGestor = mainController;
+    }
+    public void setMainController(PrincipalRecrutadorController mainController) {
+        this.mainControllerRecrutador = mainController;
+    }
+    public void setMainController(PrincipalFuncionarioController mainController) {
+        this.mainControllerFuncionario = mainController;
+    }
 
     @FXML
     public void initialize() {
-        idiomaCombo.getItems().addAll("Português", "Inglês", "Espanhol");
-        idiomaCombo.setValue("Português");
-        fusoCombo.getItems().addAll("GMT-3", "GMT-5", "UTC");
-        fusoCombo.setValue("GMT-3");
+        this.bundle = UserSession.getInstance().getBundle();
+
+        String keyPt = "profile.language.portuguese";
+        String keyEn = "profile.language.english";
+        String keyEs = "profile.language.spanish";
+
+        String valPt = bundle.getString(keyPt);
+        String valEn = bundle.getString(keyEn);
+        String valEs = bundle.getString(keyEs);
+
+        idiomaMap.put(valPt, keyPt);
+        idiomaMap.put(valEn, keyEn);
+        idiomaMap.put(valEs, keyEs);
+
+        idiomaCombo.getItems().addAll(valPt, valEn, valEs);
+
+        String chaveIdiomaAtual = UserSession.getInstance().getStringFromLocale();
+        idiomaCombo.setValue(bundle.getString(chaveIdiomaAtual));
+
+
         txtSenha.setEditable(false);
         txtSenha.setDisable(true);
         carregaDadosUser();
-
-        tema.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
-            Parent cenaRoot = txtNome.getScene().getRoot();
-
-            if (newToggle == radioEscuro) {
-                aplicarTemaEscuro(cenaRoot);
-            } else {
-                aplicarTemaClaro(cenaRoot);
-            }
-        });
-    }
-
-    private void aplicarTemaEscuro(Parent root) {
-        if (root != null) {
-            root.getStyleClass().remove("light");
-            root.getStyleClass().add("dark");
-        }
-    }
-
-    private void aplicarTemaClaro(Parent root) {
-        if (root != null) {
-            root.getStyleClass().remove("dark");
-        }
+        atualizarTextoBotaoSenha();
     }
 
     private void carregaDadosUser() {
@@ -77,9 +88,9 @@ public class ConfiguracoesAdmController {
             txtSenha.setEditable(true);
             txtSenha.setDisable(false);
             txtSenha.clear();
-            txtSenha.setPromptText("Digite a nova senha");
+            txtSenha.setPromptText(bundle.getString("profile.password.prompt"));
             txtSenha.requestFocus();
-            btnAlterarSenha.setText("Salvar");
+            btnAlterarSenha.setText(bundle.getString("profile.savePassword"));
 
         } else {
             String novaSenha = txtSenha.getText();
@@ -91,16 +102,33 @@ public class ConfiguracoesAdmController {
                 txtSenha.setEditable(false);
                 txtSenha.setDisable(true);
                 txtSenha.setText("**********");
-                btnAlterarSenha.setText("Alterar Senha");
+
+                atualizarTextoBotaoSenha();
 
             } catch (SenhaInvalidaException e) {
-                mostrarAlerta("Senha Inválida", "A senha não atende aos critérios de existência!", e.getMessage());
+                mostrarAlerta(
+                        bundle.getString("alert.error.invalidPassword.title"),
+                        bundle.getString("alert.error.invalidPassword.header"),
+                        e.getMessage()
+                );
                 btnAlterarSenha.setSelected(true);
 
             } catch (Exception e) {
-                mostrarAlerta("Erro inesperado", "Tente novamente", e.getMessage());
+                mostrarAlerta(
+                        bundle.getString("alert.error.unexpected.title"),
+                        bundle.getString("alert.error.unexpected.header"),
+                        e.getMessage()
+                );
                 btnAlterarSenha.setSelected(true);
             }
+        }
+    }
+
+    private void atualizarTextoBotaoSenha() {
+        if (btnAlterarSenha.isSelected()) {
+            btnAlterarSenha.setText(bundle.getString("profile.savePassword"));
+        } else {
+            btnAlterarSenha.setText(bundle.getString("profile.changePassword"));
         }
     }
 
@@ -109,8 +137,8 @@ public class ConfiguracoesAdmController {
         usuarioLogado.setSenha(hashNovaSenha);
         usuarioRepository.atualizarUsuario(usuarioLogado);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sucesso");
-        alert.setHeaderText("Senha alterada com sucesso!");
+        alert.setTitle(bundle.getString("alert.success.title"));
+        alert.setHeaderText(bundle.getString("alert.success.passwordChanged.header"));
         alert.showAndWait();
     }
 
@@ -124,15 +152,45 @@ public class ConfiguracoesAdmController {
 
     @FXML
     private void restaurarPadroes() {
-        // Implementar lógica de restauração
-        // Ex: idiomaCombo.setValue("Português");
-        // Ex: radioClaro.setSelected(true);
+        idiomaCombo.setValue(bundle.getString("profile.language.portuguese"));
+        salvarAlteracoes();
     }
 
     @FXML
     private void salvarAlteracoes() {
-        // Implementar lógica de salvamento de idioma/fuso/notificações
-        // Ex: usuarioRepository.salvarPreferencia(usuarioLogado.getId(), idiomaCombo.getValue());
+        try {
+            String idiomaSelecionado = idiomaCombo.getValue();
+            String chaveSelecionada = idiomaMap.get(idiomaSelecionado);
+            if (chaveSelecionada != null) {
+                UserSession.getInstance().setLocaleFromString(chaveSelecionada);
+            } else {
+                UserSession.getInstance().setLocaleFromString("profile.language.portuguese");
+            }
+            if (mainController != null) {
+                mainController.showConfiguracoes();
+            } else if (mainControllerGestor != null) {
+                mainControllerGestor.showConfig();
+            } else if (mainControllerRecrutador != null) {
+                mainControllerRecrutador.showConfiguracoes();
+            } else if (mainControllerFuncionario != null) {
+                mainControllerFuncionario.showConfiguracoes();
+            } else {
+                System.err.println(bundle.getString("log.error.mainControllerNull"));
+                mostrarAlerta(
+                        bundle.getString("alert.error.reload.title"),
+                        bundle.getString("alert.error.mainControllerNull.header"),
+                        null
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.reload.header"),
+                    e.getMessage()
+            );
+        }
     }
 
     @FXML

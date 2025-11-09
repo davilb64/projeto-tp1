@@ -8,11 +8,13 @@ import app.humanize.model.StatusCandidatura;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.VagaRepository;
 import app.humanize.repository.CandidaturaRepository;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class CandidaturaAVagaController {
@@ -26,9 +28,9 @@ public class CandidaturaAVagaController {
     private CandidaturaRepository candidaturaRepository;
     private CandidatoRepository candidatoRepository;
     private VagaRepository vagaRepository;
+    private ResourceBundle bundle;
 
     public CandidaturaAVagaController() {
-        // Inicializar repositórios (ajuste conforme sua implementação)
         this.candidaturaRepository = CandidaturaRepository.getInstance();
         this.candidatoRepository = CandidatoRepository.getInstance();
         this.vagaRepository = VagaRepository.getInstance();
@@ -36,6 +38,7 @@ public class CandidaturaAVagaController {
 
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
         carregarDados();
         configurarBotoes();
         configurarListViews();
@@ -108,13 +111,21 @@ public class CandidaturaAVagaController {
         Vaga vagaSelecionada = listVagas.getSelectionModel().getSelectedItem();
 
         if (candidatoSelecionado == null || vagaSelecionada == null) {
-            mostrarAlerta("Selecione um candidato e uma vaga");
+            mostrarAlerta(
+                    bundle.getString("applyToJob.alert.validation.title"),
+                    bundle.getString("applyToJob.alert.validation.header"),
+                    bundle.getString("applyToJob.alert.validation.content")
+            );
             return;
         }
 
         try {
             if (candidaturaRepository.existeCandidatura(candidatoSelecionado, vagaSelecionada)) {
-                mostrarAlerta("Este candidato já se candidatou a esta vaga");
+                mostrarAlerta(
+                        bundle.getString("applyToJob.alert.alreadyApplied.title"),
+                        bundle.getString("applyToJob.alert.alreadyApplied.header"),
+                        bundle.getString("applyToJob.alert.alreadyApplied.content")
+                );
                 return;
             }
 
@@ -126,7 +137,11 @@ public class CandidaturaAVagaController {
 
             candidaturaRepository.salvar(novaCandidatura);
 
-            mostrarSucesso("Candidatura associada com sucesso!");
+            mostrarSucesso(
+                    bundle.getString("applyToJob.alert.success.title"),
+                    bundle.getString("applyToJob.alert.success.header"),
+                    bundle.getString("applyToJob.alert.success.content")
+            );
             limparSelecoes();
 
            /* if (controllerPai != null) {
@@ -134,7 +149,11 @@ public class CandidaturaAVagaController {
             }*/
 
         } catch (Exception e) {
-            mostrarErro("Erro ao associar candidatura: " + e.getMessage());
+            mostrarErro(
+                    bundle.getString("applyToJob.alert.error.title"),
+                    bundle.getString("applyToJob.alert.error.header"),
+                    e.getMessage()
+            );
         }
     }
 
@@ -145,27 +164,27 @@ public class CandidaturaAVagaController {
     }
 
     // Métodos auxiliares para mostrar alertas
-    private void mostrarAlerta(String mensagem) {
+    private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Atenção");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo);
         alert.showAndWait();
     }
 
-    private void mostrarSucesso(String mensagem) {
+    private void mostrarSucesso(String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sucesso");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo);
         alert.showAndWait();
     }
 
-    private void mostrarErro(String mensagem) {
+    private void mostrarErro(String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro");
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo);
         alert.showAndWait();
     }
 }

@@ -5,10 +5,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SalarioRepository {
+public class SalarioRepository extends BaseRepository {
 
     private static final SalarioRepository instance = new SalarioRepository();
-    private final String arquivoCsv = "./src/main/resources/regras_salariais.csv";
+    private static final String NOME_ARQUIVO = "regras_salariais.csv";
 
     private SalarioRepository() {}
 
@@ -29,10 +29,17 @@ public class SalarioRepository {
 
     public List<RegraSalarial> carregarTodasRegras() {
         List<RegraSalarial> regras = new ArrayList<>();
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
 
         if (!arquivo.exists()) {
-            return regras;
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return regras;
+            }
         }
 
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
@@ -61,7 +68,8 @@ public class SalarioRepository {
     }
 
     private void salvarTodasRegras(List<RegraSalarial> regras) throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("Cargo;Nivel;SalarioBase;AdicionalNivel;Beneficios;SalarioTotal\n");
 
             for (RegraSalarial regra : regras) {

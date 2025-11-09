@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class VagaRepository {
+public class VagaRepository extends BaseRepository {
 
     private static final VagaRepository instance = new VagaRepository();
-    private final String arquivoCsv = "./src/main/resources/vagas.csv";
+    private static final String NOME_ARQUIVO = "vagas.csv";
     private final List<Vaga> vagaEmMemoria;
 
     private VagaRepository() {
@@ -27,6 +27,15 @@ public class VagaRepository {
         return new ArrayList<>(this.vagaEmMemoria);
     }
 
+    public List<Vaga> getVagasAbertas() {
+        List<Vaga> vagasAbertas = new ArrayList<>();
+        for (Vaga vaga : this.vagaEmMemoria) {
+            if (vaga.getStatus() == StatusVaga.ABERTA) {
+                vagasAbertas.add(vaga);
+            }
+        }
+        return vagasAbertas;
+    }
 
     public List<String> getTodosCargos() {
         List<String> cargos = new ArrayList<>();
@@ -57,9 +66,16 @@ public class VagaRepository {
     }
 
     public void carregarVagaDoCSV() {
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
         if (!arquivo.exists()) {
-            return;
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
+            }
         }
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
             leitor.readLine(); // Pula o cabeçalho
@@ -76,7 +92,8 @@ public class VagaRepository {
     }
 
     private void persistirAlteracoesNoCSV() throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;\n");
             for (Vaga vaga : this.vagaEmMemoria) {
                 escritor.write(formatarVagaParaCSV(vaga));

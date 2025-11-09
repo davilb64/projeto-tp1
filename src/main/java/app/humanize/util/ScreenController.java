@@ -4,8 +4,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
 import java.io.IOException;
+import java.net.URL; // Importação necessária
 import java.util.Objects;
+import java.util.ResourceBundle; // Importação necessária
 
 /**
  * Classe utilitária para gerir e trocar as cenas.
@@ -45,13 +48,25 @@ public class ScreenController {
                 System.err.println("Erro: O Stage não foi definido no ScreenController.");
                 return;
             }
-            Parent root = FXMLLoader.load(Objects.requireNonNull(ScreenController.class.getResource(fxmlPath), "Não foi possível carregar o arquivo FXML: " + fxmlPath));
+
+            ResourceBundle bundle = UserSession.getInstance().getBundle();
+
+            URL resource = ScreenController.class.getResource(fxmlPath);
+            if (resource == null) {
+                throw new NullPointerException("Não foi possível carregar o arquivo FXML: " + fxmlPath);
+            }
+
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
+
+            Parent root = loader.load();
+
+
             stage.setTitle("Humanize");
 
             if (stage.getIcons().isEmpty()) {
                 stage.getIcons().add(image);
             }
-            stage.setScene(new Scene(root, 1080, 700));
+            stage.setScene(new Scene(root, 1080, 600));
             stage.show();
 
         } catch (IOException e) {

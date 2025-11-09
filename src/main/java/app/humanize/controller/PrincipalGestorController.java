@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,7 +18,9 @@ import app.humanize.util.ScreenController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 public class PrincipalGestorController {
     public BorderPane root;
@@ -45,63 +48,121 @@ public class PrincipalGestorController {
     private Button btnPerfil;
     @FXML
     private Button btnEntrevistas;
+    @FXML
+    private Button btnCandidatos;
+    @FXML
+    private Button btnFuncionarios;
 
+    private Image avatarPadrao;
     private Button activeButton;
 
     private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
+    private ResourceBundle bundle;
+
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
+
         carregarFotoPerfil();
-        if (btnDashboard != null) {
-            btnDashboard.getStyleClass().add("buttonLateral-active");
-            activeButton = btnDashboard;
-        }
         showDashboard();
     }
+
+    private void atualizarTextosSidebar() {
+        btnDashboard.setText(bundle.getString("sidebar.dashboard"));
+        btnContratacoes.setText(bundle.getString("sidebar.hires"));
+        btnRecrutadores.setText(bundle.getString("sidebar.recruiters"));
+        btnRelatorios.setText(bundle.getString("sidebar.reports"));
+        btnVagas.setText(bundle.getString("sidebar.vacancies"));
+        btnFinanceiro.setText(bundle.getString("sidebar.finance"));
+        btnConfig.setText(bundle.getString("sidebar.settings"));
+        btnPerfil.setText(bundle.getString("sidebar.profile"));
+        btnEntrevistas.setText(bundle.getString("sidebar.interviews"));
+        btnCandidatos.setText(bundle.getString("sidebar.candidates"));
+        btnFuncionarios.setText(bundle.getString("sidebar.employees"));
+    }
+
+
 
     private void carregarFotoPerfil() {
         Usuario usuario = UserSession.getInstance().getUsuarioLogado();
         String caminhoFoto = null;
+        Image imagemParaCarregar = null;
 
         if (usuario instanceof Funcionario) {
             caminhoFoto = ((Funcionario) usuario).getCaminhoFoto();
         }
 
-        try {
-            if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
-                fotoPerfil.setImage(new Image(new FileInputStream(caminhoFoto)));
-            } else {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("Arquivo de foto não encontrado: " + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+        try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
+            if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
+            this.avatarPadrao = new Image(is);
+        } catch (Exception e) {
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
+        }
+
+        if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
             try {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            } catch (FileNotFoundException ex) {
-                System.err.println("Foto padrão também não encontrada em: " + FOTO_PADRAO);
+                imagemParaCarregar = new Image(new FileInputStream(caminhoFoto));
+            } catch (FileNotFoundException e) {
+                System.err.println(bundle.getString("log.error.photoNotFound") + caminhoFoto);
             }
         }
+
+        if (imagemParaCarregar == null) {
+            imagemParaCarregar = avatarPadrao;
+        }
+
+        fotoPerfil.setImage(imagemParaCarregar);
     }
 
     private void loadUI(String fxml) {
         try {
-            URL resource = getClass().getResource("/view/" + fxml + ".fxml");
-            System.out.println(">> Tentando carregar: " + resource);
+            String fxmlPath = "/view/" + fxml + ".fxml";
+            URL resource = getClass().getResource(fxmlPath);
+            System.out.println(bundle.getString("log.info.fxmlLoading") + resource);
 
             if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxml);
+                throw new IllegalStateException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
             }
 
-            Node view = FXMLLoader.load(resource);
+            FXMLLoader loader = new FXMLLoader(resource, bundle);
+            Node view = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof DashboardGestorController) {
+                ((DashboardGestorController) controller).setMainController(this);
+            }
+            if (controller instanceof ConfiguracoesAdmController) {
+                ((ConfiguracoesAdmController) controller).setMainController(this);
+            }
+
             contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
             e.printStackTrace();
+            mostrarAlerta(
+                    bundle.getString("alert.error.reload.title"),
+                    bundle.getString("alert.error.reload.header"),
+                    e.getMessage()
+            );
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar UI: " + e.getMessage());
+            System.err.println(bundle.getString("log.error.uiLoad.unexpected") + e.getMessage());
             e.printStackTrace();
+            mostrarAlerta(
+                    bundle.getString("alert.error.unexpected.title"),
+                    bundle.getString("alert.error.unexpected.header"),
+                    e.getMessage()
+            );
         }
+    }
+
+    private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo != null ? conteudo : "");
+        alert.showAndWait();
     }
 
     private void setActiveButton(Button button) {
@@ -114,23 +175,12 @@ public class PrincipalGestorController {
 
     @FXML
     private void showDashboard() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/DashboardGestor.fxml"));
-            Parent dashboardNode = loader.load();
-
-            DashboardGestorController dashboardController = loader.getController();
-            dashboardController.setMainController(this);
-
-            contentArea.getChildren().setAll(dashboardNode);
-            setActiveButton(btnDashboard);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadUI("DashboardGestor");
+        setActiveButton(btnDashboard);
     }
 
     @FXML
-    private void showRecrutadores() {
+    public void showRecrutadores() {
         loadUI("AtribuirRecrutadorAVaga");
         setActiveButton(btnRecrutadores);
     }
@@ -172,9 +222,24 @@ public class PrincipalGestorController {
     }
 
     @FXML
-    private void showConfig() {
+    void showConfig() {
         loadUI("ConfiguracoesAdm");
         setActiveButton(btnConfig);
+
+        this.bundle = UserSession.getInstance().getBundle();
+        atualizarTextosSidebar();
+    }
+
+    @FXML
+    private void showCandidatos() {
+        loadUI("StatusDaCandidaturaGestor");
+        setActiveButton(btnCandidatos);
+    }
+
+    @FXML
+    public void showFuncionarios() {
+        loadUI("Funcionario");
+        setActiveButton(btnFuncionarios);
     }
 
     @FXML
