@@ -90,7 +90,7 @@ public class UsuariosController {
                         imageView.setImage(img);
                         setGraphic(imageView);
                     } catch (Exception e) {
-                        System.err.println("Foto não encontrada: " + caminho);
+                        System.err.println(bundle.getString("log.error.photoNotFound") + caminho);
                         setGraphic(null);
                     }
                 }
@@ -123,7 +123,7 @@ public class UsuariosController {
                 int id = Integer.parseInt(idFiltro);
                 stream = stream.filter(usuario -> usuario.getId() == id);
             } catch (NumberFormatException e) {
-                System.err.println("Filtro de ID inválido, ignorado.");
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
             }
         }
 

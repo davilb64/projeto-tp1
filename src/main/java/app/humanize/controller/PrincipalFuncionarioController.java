@@ -64,11 +64,11 @@ public class PrincipalFuncionarioController {
                 fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Arquivo de foto não encontrado: " + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+            System.err.println(bundle.getString("log.error.photoNotFound") + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
             try {
                 fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
             } catch (FileNotFoundException ex) {
-                System.err.println("Foto padrão também não encontrada em: " + FOTO_PADRAO);
+                System.err.println(bundle.getString("log.error.photoDefaultNotFound") + FOTO_PADRAO);
             }
         }
     }
@@ -76,10 +76,10 @@ public class PrincipalFuncionarioController {
     private void loadUI(String fxmlPath) {
         try {
             URL resource = getClass().getResource(fxmlPath);
-            System.out.println(">> Tentando carregar: " + resource);
+            System.out.println(bundle.getString("log.info.fxmlLoading") + resource);
 
             if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxmlPath);
+                throw new IllegalStateException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
             }
 
             FXMLLoader loader = new FXMLLoader(resource, bundle);
@@ -93,23 +93,23 @@ public class PrincipalFuncionarioController {
             contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
-            System.err.println("Erro de IO ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.io") + fxmlPath);
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.reload.title"),
                     bundle.getString("alert.error.reload.header"),
                     e.getMessage()
             );
-        } catch (NullPointerException e) {
-            System.err.println("Erro: Recurso FXML não encontrado: " + fxmlPath);
+        } catch (NullPointerException | IllegalStateException e) {
+            System.err.println(bundle.getString("log.error.fxmlNotFound") + fxmlPath);
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.reload.title"),
                     bundle.getString("alert.error.fxmlNotFound.header"),
-                    "Caminho: " + fxmlPath
+                    bundle.getString("alert.error.fxmlNotFound.content.path") + fxmlPath
             );
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.unexpected") + fxmlPath);
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.unexpected.title"),

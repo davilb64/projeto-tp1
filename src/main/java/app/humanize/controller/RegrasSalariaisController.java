@@ -4,13 +4,17 @@ import app.humanize.model.Funcionario;
 import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.model.RegraSalarial;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class RegrasSalariaisController {
 
@@ -34,9 +38,13 @@ public class RegrasSalariaisController {
     private final ObservableList<String> cargosValidos = FXCollections.observableArrayList();
     private final ObservableList<String> niveisValidos = FXCollections.observableArrayList();
     private final ObservableList<String> beneficiosValidos = FXCollections.observableArrayList();
+    private final Map<String, String> beneficioMap = new HashMap<>(); // Mapeia Texto Traduzido -> Chave interna
 
     private final ObservableList<RegraSalarial> regrasList = FXCollections.observableArrayList();
+    private ResourceBundle bundle;
 
+    // Este enum é mantido como está ("Júnior", "Pleno") para não quebrar o método estático fromString()
+    // que é usado em outros controllers (ex: FolhaDePagamentoController).
     public enum NivelExperiencia {
         JUNIOR("Júnior", 0.0),
         PLENO("Pleno", 100.0),
@@ -71,6 +79,7 @@ public class RegrasSalariaisController {
 
     @FXML
     private void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
         carregarCargosDoRepository();
         carregarNiveis();
         carregarBeneficios();
@@ -104,7 +113,7 @@ public class RegrasSalariaisController {
                 if (vazio || valor == null) {
                     setText(null);
                 } else {
-                    setText(String.format("R$ %.2f", valor));
+                    setText(String.format(bundle.getString("salaryRules.table.currencyFormat"), valor));
                 }
             }
         });
@@ -117,10 +126,11 @@ public class RegrasSalariaisController {
             List<RegraSalarial> regras = salarioRepository.carregarTodasRegras();
             regrasList.addAll(regras);
 
-            System.out.println("Regras carregadas na tabela: " + regrasList.size());
+            System.out.println(bundle.getString("log.info.salaryRulesLoaded") + regrasList.size());
 
         } catch (Exception e) {
-            mostrarAlerta("Erro", "Erro ao carregar regras existentes: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta(bundle.getString("alert.error.title"),
+                    bundle.getString("salaryRules.alert.loadError") + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -142,14 +152,16 @@ public class RegrasSalariaisController {
                 CBcargo.setValue(cargosValidos.get(0));
             }
         }
-
-        System.out.println("Cargos carregados: " + cargosValidos.size());
-        System.out.println("Cargos: " + cargosValidos);
+        // Logs
+        System.out.println(bundle.getString("log.info.positionsLoaded") + cargosValidos.size());
+        System.out.println(bundle.getString("log.info.positionsList") + cargosValidos);
     }
 
     private void carregarNiveis() {
+        // Como o Enum NivelExperiencia é usado em outro controller (FolhaPagamento),
+        // mantemos as descrições hardcoded ("Júnior", "Pleno") para garantir que
+        // NivelExperiencia.fromString() funcione.
         niveisValidos.clear();
-
         for (NivelExperiencia nivel : NivelExperiencia.values()) {
             niveisValidos.add(nivel.getDescricao());
         }
@@ -164,14 +176,28 @@ public class RegrasSalariaisController {
 
     private void carregarBeneficios() {
         beneficiosValidos.clear();
-        beneficiosValidos.addAll("Nenhum", "VR", "VT", "Plano Saúde", "VR + VT", "VR + Plano Saúde", "VT + Plano Saúde", "VR + VT + Plano Saúde");
+        beneficioMap.clear();
+
+        // Mapeia a chave de tradução para a chave de lógica interna
+        addBeneficio(bundle.getString("salaryRules.benefits.none"), "NONE");
+        addBeneficio(bundle.getString("salaryRules.benefits.vr"), "VR");
+        addBeneficio(bundle.getString("salaryRules.benefits.vt"), "VT");
+        addBeneficio(bundle.getString("salaryRules.benefits.healthPlan"), "HEALTH");
+        addBeneficio(bundle.getString("salaryRules.benefits.vr_vt"), "VR_VT");
+        addBeneficio(bundle.getString("salaryRules.benefits.vr_health"), "VR_HEALTH");
+        addBeneficio(bundle.getString("salaryRules.benefits.vt_health"), "VT_HEALTH");
+        addBeneficio(bundle.getString("salaryRules.benefits.all"), "ALL");
 
         if (CBbeneficios != null) {
             CBbeneficios.setItems(beneficiosValidos);
-            if (!beneficiosValidos.isEmpty()) {
-                CBbeneficios.setValue(beneficiosValidos.get(0));
-            }
+            CBbeneficios.setValue(bundle.getString("salaryRules.benefits.none")); // Padrão
         }
+    }
+
+    // Helper para popular ChoiceBox e Mapa
+    private void addBeneficio(String translatedText, String internalKey) {
+        beneficiosValidos.add(translatedText);
+        beneficioMap.put(translatedText, internalKey);
     }
 
     private void configurarBotoes() {
@@ -189,101 +215,113 @@ public class RegrasSalariaisController {
         });
     }
 
-    private double calcularValorBeneficios(String beneficioSelecionado) {
-        if (beneficioSelecionado == null || beneficioSelecionado.equals("Nenhum")) {
-            return 0.0;
-        }
+    private double calcularValorBeneficios(String beneficioSelecionadoTraduzido) {
+        String key = beneficioMap.getOrDefault(beneficioSelecionadoTraduzido, "NONE");
 
-        double totalBeneficios = 0.0;
-
-        if (beneficioSelecionado.contains("VR")) {
-            totalBeneficios += VALOR_VALE_REFEICAO;
+        switch (key) {
+            case "NONE":
+                return 0.0;
+            case "VR":
+                return VALOR_VALE_REFEICAO;
+            case "VT":
+                return VALOR_VALE_TRANSPORTE;
+            case "HEALTH":
+                return VALOR_PLANO_SAUDE;
+            case "VR_VT":
+                return VALOR_VALE_REFEICAO + VALOR_VALE_TRANSPORTE;
+            case "VR_HEALTH":
+                return VALOR_VALE_REFEICAO + VALOR_PLANO_SAUDE;
+            case "VT_HEALTH":
+                return VALOR_VALE_TRANSPORTE + VALOR_PLANO_SAUDE;
+            case "ALL":
+                return VALOR_VALE_REFEICAO + VALOR_VALE_TRANSPORTE + VALOR_PLANO_SAUDE;
+            default:
+                return 0.0;
         }
-        if (beneficioSelecionado.contains("VT")) {
-            totalBeneficios += VALOR_VALE_TRANSPORTE;
-        }
-        if (beneficioSelecionado.contains("Plano Saúde")) {
-            totalBeneficios += VALOR_PLANO_SAUDE;
-        }
-
-        return totalBeneficios;
     }
 
     private void salvarRegra() {
         try {
             if (!validarCampos()) {
-                mostrarAlerta("Erro", "Preencha todos os campos obrigatórios.", Alert.AlertType.ERROR);
+                mostrarAlerta(bundle.getString("alert.error.title"),
+                        bundle.getString("salaryRules.alert.requiredFields"), Alert.AlertType.ERROR);
                 return;
             }
 
             String cargo = CBcargo.getValue();
-            String nivelDescricao = CBnivel.getValue();
-            String beneficio = CBbeneficios.getValue();
+            String nivelDescricao = CBnivel.getValue(); // "Júnior", "Pleno", etc.
+            String beneficioTraduzido = CBbeneficios.getValue();
 
             NivelExperiencia nivel = NivelExperiencia.fromString(nivelDescricao);
             if (nivel == null) {
+                // O usuário digitou algo inválido no ChoiceBox? Isso não deveria acontecer.
+                // Mas se o enum falhar, mostramos o alerta.
                 mostrarNiveisDisponiveis(nivelDescricao);
                 return;
             }
 
-            double salarioBase = validarEConverterDouble(txtSalarioBase.getText(), "Salário Base");
+            double salarioBase = validarEConverterDouble(txtSalarioBase.getText(),
+                    bundle.getString("salaryRules.field.baseSalary"));
             if (salarioBase < 0) {
-                mostrarAlerta("Erro", "Salário base não pode ser negativo.", Alert.AlertType.ERROR);
+                mostrarAlerta(bundle.getString("alert.error.title"),
+                        bundle.getString("salaryRules.alert.negativeSalary"), Alert.AlertType.ERROR);
                 return;
             }
 
             double adicionalNivel = nivel.getAdicional();
-            double valorBeneficios = calcularValorBeneficios(beneficio);
+            double valorBeneficios = calcularValorBeneficios(beneficioTraduzido);
             double salarioTotal = salarioBase + adicionalNivel + valorBeneficios;
 
             RegraSalarial novaRegra = new RegraSalarial(cargo, nivel.getDescricao(), salarioBase, adicionalNivel, valorBeneficios, salarioTotal);
 
             try {
-
                 salarioRepository.salvarRegra(novaRegra);
-
                 regrasList.add(novaRegra);
-
                 mostrarMensagemSucesso(novaRegra);
                 limparCampos();
 
             } catch (IOException e) {
-                mostrarAlerta("Erro", "Erro ao salvar no repositório: " + e.getMessage(), Alert.AlertType.ERROR);
+                mostrarAlerta(bundle.getString("alert.error.title"),
+                        bundle.getString("salaryRules.alert.saveError") + e.getMessage(), Alert.AlertType.ERROR);
             }
 
         } catch (NumberFormatException e) {
-            mostrarAlerta("Erro de Formato", "Verifique os valores numéricos digitados.", Alert.AlertType.ERROR);
+            mostrarAlerta(bundle.getString("alert.error.format.title"),
+                    e.getMessage(), Alert.AlertType.ERROR); // A mensagem já está formatada
         } catch (Exception e) {
-            mostrarAlerta("Erro", "Erro ao salvar regra: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta(bundle.getString("alert.error.title"),
+                    bundle.getString("salaryRules.alert.genericSaveError") + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     private void mostrarNiveisDisponiveis(String nivelDigitado) {
-        StringBuilder niveisDisponiveis = new StringBuilder("Níveis válidos:\n");
+        StringBuilder niveisDisponiveis = new StringBuilder(bundle.getString("salaryRules.alert.invalidLevel.valid") + "\n");
         for (NivelExperiencia nivel : NivelExperiencia.values()) {
-            niveisDisponiveis.append("• ").append(nivel.getDescricao()).append("\n");
+            niveisDisponiveis.append("• ").append(nivel.getDescricao()).append("\n"); // Mostra "Júnior", "Pleno"
         }
 
-        mostrarAlerta("Nível Inválido",
-                "Nível '" + nivelDigitado + "' não reconhecido.\n\n" +
+        mostrarAlerta(bundle.getString("salaryRules.alert.invalidLevel.title"),
+                String.format(bundle.getString("salaryRules.alert.invalidLevel.header"), nivelDigitado) + "\n\n" +
                         niveisDisponiveis.toString(),
                 Alert.AlertType.ERROR);
     }
 
     private void mostrarMensagemSucesso(RegraSalarial regra) {
-        String mensagemSucesso =
-                " **REGRA SALARIAL SALVA COM SUCESSO!**\n\n" +
-                        " **DETALHAMENTO DOS VALORES:**\n" +
-                        "────────────────────────────\n" +
-                        "• Cargo: " + regra.getCargo() + "\n" +
-                        "• Nível: " + regra.getNivel() + "\n" +
-                        "• Salário Base: R$ " + String.format("%.2f", regra.getSalarioBase()) + "\n" +
-                        "• Adicional do Nível: R$ " + String.format("%.2f", regra.getAdicionalNivel()) + "\n" +
-                        "• Benefícios: R$ " + String.format("%.2f", regra.getBeneficios()) + "\n" +
-                        "────────────────────────────\n" +
-                        " **SALÁRIO TOTAL: R$ " + String.format("%.2f", regra.getSalarioTotal()) + "**";
+        String currencyFormat = bundle.getString("salaryRules.table.currencyFormat");
 
-        mostrarAlerta("Sucesso", mensagemSucesso, Alert.AlertType.INFORMATION);
+        String mensagemSucesso =
+                " **" + bundle.getString("salaryRules.alert.success.header") + "**\n\n" +
+                        " **" + bundle.getString("salaryRules.alert.success.details") + "**\n" +
+                        "────────────────────────────\n" +
+                        "• " + bundle.getString("salaryRules.alert.success.position") + ": " + regra.getCargo() + "\n" +
+                        "• " + bundle.getString("salaryRules.alert.success.level") + ": " + regra.getNivel() + "\n" +
+                        "• " + bundle.getString("salaryRules.alert.success.baseSalary") + ": " + String.format(currencyFormat, regra.getSalarioBase()) + "\n" +
+                        "• " + bundle.getString("salaryRules.alert.success.levelBonus") + ": " + String.format(currencyFormat, regra.getAdicionalNivel()) + "\n" +
+                        "• " + bundle.getString("salaryRules.alert.success.benefits") + ": " + String.format(currencyFormat, regra.getBeneficios()) + "\n" +
+                        "────────────────────────────\n" +
+                        " **" + bundle.getString("salaryRules.alert.success.totalSalary") + ": " + String.format(currencyFormat, regra.getSalarioTotal()) + "**";
+
+        mostrarAlerta(bundle.getString("alert.success.title"), mensagemSucesso, Alert.AlertType.INFORMATION);
     }
 
     private boolean validarCampos() {
@@ -296,7 +334,7 @@ public class RegrasSalariaisController {
         try {
             return Double.parseDouble(valor.replace(",", "."));
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Campo '" + campo + "' deve conter um valor numérico válido.");
+            throw new NumberFormatException(String.format(bundle.getString("salaryRules.alert.validation.mustBeNumeric"), campo));
         }
     }
 
@@ -308,7 +346,7 @@ public class RegrasSalariaisController {
             CBnivel.setValue(niveisValidos.get(0));
         }
         if (CBbeneficios != null && !beneficiosValidos.isEmpty()) {
-            CBbeneficios.setValue(beneficiosValidos.get(0));
+            CBbeneficios.setValue(bundle.getString("salaryRules.benefits.none")); // Padrão
         }
         if (txtSalarioBase != null) {
             txtSalarioBase.clear();

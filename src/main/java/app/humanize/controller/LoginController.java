@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class LoginController {
     @FXML
@@ -33,10 +34,14 @@ public class LoginController {
 
     private Image avatarPadrao;
     private static final String DIRETORIO_FOTOS = "src/main/resources/fotos_perfil/";
+    private ResourceBundle bundle;
 
 
     @FXML
     public void initialize() {
+        // Inicializa o bundle
+        this.bundle = UserSession.getInstance().getBundle();
+
         // senha
         txtSenhaAberta.textProperty().bindBidirectional(txtSenhaOculta.textProperty());
         txtSenhaAberta.visibleProperty().bind(btnMostrarSenha.selectedProperty());
@@ -44,11 +49,10 @@ public class LoginController {
         UserSession.getInstance().logout();
 
         // foto
-
         try {
             avatarPadrao = new Image(new FileInputStream(DIRETORIO_FOTOS + "default_avatar.png"));
         } catch (FileNotFoundException e) {
-            System.err.println("Avatar padrão não encontrado!");
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
             avatarPadrao = null;
         }
         imgFotoPerfil.setImage(avatarPadrao); // imagem inicial
@@ -67,7 +71,6 @@ public class LoginController {
                     if (usuario instanceof Funcionario) {
                         // cast
                         caminho = ((Funcionario) usuario).getCaminhoFoto();
-
                     }
                     return carregarImagem(caminho);
                 }).orElse(avatarPadrao);
@@ -87,7 +90,7 @@ public class LoginController {
         try {
             return new Image(new FileInputStream(caminho));
         } catch (FileNotFoundException e) {
-            System.err.println("Foto de login não encontrada: " + caminho);
+            System.err.println(bundle.getString("log.error.loginPhotoNotFound") + caminho);
             return avatarPadrao;
         }
     }
@@ -118,16 +121,32 @@ public class LoginController {
                     break;
             }
         }catch (ValidacaoException e) {
-            mostrarAlerta("Campo Vazio", "Usuário / senha vazio", "Informe um usuário e senha.");
+            mostrarAlerta(
+                    bundle.getString("login.alert.emptyFields.title"),
+                    bundle.getString("login.alert.emptyFields.header"),
+                    bundle.getString("login.alert.emptyFields.content")
+            );
         }
         catch (UsuarioNaoEncontradoException e) {
-            mostrarAlerta("Usuário não encontrado", "Seu usuário não foi encontrado", "Tente novamente ou entre em contato com seu superior");
+            mostrarAlerta(
+                    bundle.getString("login.alert.userNotFound.title"),
+                    bundle.getString("login.alert.userNotFound.header"),
+                    bundle.getString("login.alert.userNotFound.content")
+            );
         }
         catch (SenhaIncorretaException e) {
-            mostrarAlerta("Senha incorreta", "Sua senha não corresponde ao usuário informado.", "Tente novamente ou entre em contato com seu superior");
+            mostrarAlerta(
+                    bundle.getString("login.alert.wrongPassword.title"),
+                    bundle.getString("login.alert.wrongPassword.header"),
+                    bundle.getString("login.alert.wrongPassword.content")
+            );
         }
         catch (Exception e) {
-            mostrarAlerta("Erro Inesperado", "Ocorreu um erro", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("login.alert.unexpectedError.title"),
+                    bundle.getString("login.alert.unexpectedError.header"),
+                    e.getMessage()
+            );
         }
     }
 

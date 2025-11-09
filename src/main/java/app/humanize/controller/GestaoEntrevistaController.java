@@ -105,7 +105,7 @@ public class GestaoEntrevistaController {
     public void cadastrarEntrevista() throws IOException{
         URL resource = getClass().getResource("/view/MarcarEntrevista.fxml");
         if (resource == null) {
-            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.header"));
+            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.scheduleInterview"));
             return;
         }
 
@@ -129,7 +129,7 @@ public class GestaoEntrevistaController {
 
         URL resource = getClass().getResource("/view/MarcarEntrevista.fxml");
         if (resource == null) {
-            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.header"));
+            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.scheduleInterview"));
             return;
         }
 
@@ -155,7 +155,7 @@ public class GestaoEntrevistaController {
 
         if (entrevistaSelecionada != null) {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle"));
+            confirmacao.setTitle(bundle.getString("interviewManagement.alert.confirmDeleteTitle"));
             confirmacao.setHeaderText(bundle.getString("interviewManagement.alert.confirmDeleteHeader") + " " + entrevistaSelecionada.getDataEntrevista());
             confirmacao.setContentText(bundle.getString("interviewManagement.alert.confirmDeleteContent"));
 
@@ -186,7 +186,7 @@ public class GestaoEntrevistaController {
                 int id = Integer.parseInt(idFiltro);
                 stream = stream.filter(entrevista -> entrevista.getId() == id);
             } catch (NumberFormatException e) {
-                System.err.println("Filtro de ID inválido, ignorado.");
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
             }
         }
 
@@ -218,7 +218,7 @@ public class GestaoEntrevistaController {
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(bundle.getString("userManagement.alert.attention"));
+        alert.setTitle(bundle.getString("interviewManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();

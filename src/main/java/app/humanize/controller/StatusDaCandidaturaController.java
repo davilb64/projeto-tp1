@@ -2,6 +2,7 @@ package app.humanize.controller;
 
 import app.humanize.model.Candidato;
 import app.humanize.model.Candidatura;
+import app.humanize.model.StatusCandidatura;
 import app.humanize.repository.CandidaturaRepository;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
@@ -35,6 +36,15 @@ public class StatusDaCandidaturaController {
 
     private ResourceBundle bundle;
 
+    // Método auxiliar para traduzir o status
+    private String getTraducaoStatus(StatusCandidatura status) {
+        if (status == null) return "";
+        // Busca a chave, ex: "statusCandidatura.PENDENTE"
+        String key = "statusCandidatura." + status.name();
+        // Retorna a tradução se existir, senão o nome do enum formatado
+        return bundle.containsKey(key) ? bundle.getString(key) : status.name().replace("_", " ");
+    }
+
     @FXML
     private void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
@@ -43,8 +53,10 @@ public class StatusDaCandidaturaController {
                 new javafx.beans.property.SimpleStringProperty(cellData.getValue().getCandidato().getNome()));
         colCargo.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(cellData.getValue().getVaga().getCargo()));
+
+        // Coluna de Status agora usa o método de tradução
         colStatus.setCellValueFactory(cellData ->
-                new javafx.beans.property.SimpleStringProperty(cellData.getValue().getStatus().name().replace("_", " ")));
+                new javafx.beans.property.SimpleStringProperty(getTraducaoStatus(cellData.getValue().getStatus())));
 
         listaCandidaturas.addAll(candidaturaRepository.getTodas());
         tableCandidaturas.setItems(listaCandidaturas);
@@ -107,7 +119,7 @@ public class StatusDaCandidaturaController {
         try {
             URL resource = getClass().getResource("/view/TrocarStatus.fxml");
             if (resource == null) {
-                throw new IOException("FXML não encontrado: /view/TrocarStatus.fxml");
+                throw new IOException(bundle.getString("applicationStatus.exception.fxmlNotFound.trocarStatus"));
             }
 
             FXMLLoader loader = new FXMLLoader(resource, bundle);

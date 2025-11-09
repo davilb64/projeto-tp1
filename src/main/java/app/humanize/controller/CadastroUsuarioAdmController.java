@@ -97,7 +97,7 @@ public class CadastroUsuarioAdmController {
         try {
             Files.createDirectories(Paths.get(DIRETORIO_FOTOS));
         } catch (IOException e) {
-            System.err.println("Falha ao criar diretório de fotos: " + e.getMessage());
+            System.err.println(bundle.getString("log.error.photoDirFailed") + e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class CadastroUsuarioAdmController {
             File file = new File(this.caminhoFotoAtualSalva);
             return new Image(file.toURI().toString());
         } catch (Exception e) {
-            System.err.println("Foto padrão não encontrada!");
+            System.err.println(bundle.getString("log.error.photoDefaultNotFound"));
             return null;
         }
     }
@@ -130,7 +130,7 @@ public class CadastroUsuarioAdmController {
                     in.close();
                     return imageBytes;
                 } catch (Exception e) {
-                    System.err.println("Falha ao buscar Pokémon da API: " + e.getMessage());
+                    System.err.println(bundle.getString("log.error.pokemonApiFailed") + e.getMessage());
                     throw e;
                 }
             }
@@ -145,7 +145,7 @@ public class CadastroUsuarioAdmController {
         });
 
         loadPokemonTask.setOnFailed(event -> {
-            System.err.println("Falha na Task de carregar Pokémon.");
+            System.err.println(bundle.getString("log.error.pokemonTaskFailed"));
             imgFotoPerfil.setImage(carregarAvatarLocal());
             btnEscolherFoto.setDisable(false);
             btnGerarPokemon.setDisable(false);
@@ -188,7 +188,7 @@ public class CadastroUsuarioAdmController {
                 Image foto = new Image(file.toURI().toString());
                 imgFotoPerfil.setImage(foto);
             } catch (Exception e) {
-                System.err.println("Foto de perfil não encontrada: " + this.caminhoFotoAtualSalva);
+                System.err.println(bundle.getString("log.error.profilePhotoNotFound") + this.caminhoFotoAtualSalva);
                 imgFotoPerfil.setImage(carregarAvatarLocal());
             }
         } else {
@@ -235,7 +235,7 @@ public class CadastroUsuarioAdmController {
         try {
             URL resource = getClass().getResource("/view/CadastroEndereco.fxml");
             if (resource == null) {
-                throw new IOException("FXML não encontrado: /view/CadastroEndereco.fxml");
+                throw new IOException(bundle.getString("exception.fxmlNotFound.cadastroEndereco"));
             }
             FXMLLoader loader = new FXMLLoader(resource, bundle);
             Parent root = loader.load();

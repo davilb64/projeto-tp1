@@ -4,6 +4,7 @@ import app.humanize.model.ContraCheque;
 import app.humanize.model.Funcionario;
 import app.humanize.repository.ContrachequeRepository;
 import app.humanize.repository.UsuarioRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class ContraChequeController {
 
@@ -27,9 +29,11 @@ public class ContraChequeController {
 
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final ContrachequeRepository contraChequeRepository = ContrachequeRepository.getInstance();
+    private ResourceBundle bundle;
 
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
         configurarColunasTabela();
     }
 
@@ -47,7 +51,11 @@ public class ContraChequeController {
         String departamento = txtDepartamento.getText().trim();
 
         if (nome.isEmpty() && cargo.isEmpty() && departamento.isEmpty()) {
-            mostrarAlerta("Campos Vazios", "Preencha pelo menos um campo para buscar.");
+            mostrarAlerta(
+                    bundle.getString("payslip.alert.emptyFields.title"),
+                    bundle.getString("payslip.alert.emptyFields.content"),
+                    Alert.AlertType.WARNING
+            );
             return;
         }
 
@@ -66,8 +74,11 @@ public class ContraChequeController {
             carregarContraCheques(funcionario.getNome());
         } else {
             tabelaContracheque.setItems(FXCollections.observableArrayList());
-            mostrarAlerta("Funcionário não encontrado",
-                    "Nenhum funcionário encontrado com os filtros informados.");
+            mostrarAlerta(
+                    bundle.getString("payslip.alert.notFound.title"),
+                    bundle.getString("payslip.alert.notFound.content"),
+                    Alert.AlertType.WARNING
+            );
         }
     }
 
@@ -77,7 +88,11 @@ public class ContraChequeController {
         tabelaContracheque.setItems(dados);
 
         if (contraChequesDoFuncionario.isEmpty()) {
-            mostrarAlerta("ContraCheques", "Nenhum contracheque encontrado para: " + nomeFuncionario);
+            mostrarAlerta(
+                    bundle.getString("payslip.alert.noPayslips.title"),
+                    bundle.getString("payslip.alert.noPayslips.content") + nomeFuncionario,
+                    Alert.AlertType.INFORMATION
+            );
         }
     }
 
@@ -86,8 +101,8 @@ public class ContraChequeController {
         // vazio por enquanto
     }
 
-    private void mostrarAlerta(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType type) {
+        Alert alert = new Alert(type);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensagem);

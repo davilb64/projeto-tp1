@@ -47,10 +47,10 @@ public class MenuFinanceiroAdmController {
         try {
             String fxmlPath = "/view/" + fxml + ".fxml";
             URL resource = getClass().getResource(fxmlPath);
-            System.out.println(">> Tentando carregar: " + resource);
+            System.out.println(bundle.getString("log.info.fxmlLoading") + resource);
 
             if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxmlPath);
+                throw new IllegalStateException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
             }
 
             FXMLLoader loader = new FXMLLoader(resource, bundle);

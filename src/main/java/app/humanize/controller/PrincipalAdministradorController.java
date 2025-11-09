@@ -83,11 +83,11 @@ public class PrincipalAdministradorController {
                 fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Arquivo de foto não encontrado: " + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+            System.err.println(bundle.getString("log.error.photoNotFound") + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
             try {
                 fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
             } catch (FileNotFoundException ex) {
-                System.err.println("Foto padrão também não encontrada em: " + FOTO_PADRAO);
+                System.err.println(bundle.getString("log.error.photoDefaultNotFound") + FOTO_PADRAO);
             }
         }
     }
@@ -99,10 +99,10 @@ public class PrincipalAdministradorController {
 
             String fxmlPath = "/view/" + fxml + ".fxml";
             URL resource = getClass().getResource(fxmlPath);
-            System.out.println(">> Tentando carregar: " + resource);
+            System.out.println(bundle.getString("log.info.fxmlLoading") + resource);
 
             if (resource == null) {
-                throw new IllegalStateException("FXML não encontrado: " + fxmlPath);
+                throw new IllegalStateException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
             }
 
             FXMLLoader loader = new FXMLLoader(resource, bundle);
@@ -122,10 +122,10 @@ public class PrincipalAdministradorController {
             contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
-            System.err.println("Erro de IO ao carregar FXML: " + fxml);
+            System.err.println(bundle.getString("log.error.fxmlLoad.io") + fxml);
             e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar UI: " + e.getMessage());
+            System.err.println(bundle.getString("log.error.uiLoad.unexpected") + e.getMessage());
             e.printStackTrace();
         }
     }

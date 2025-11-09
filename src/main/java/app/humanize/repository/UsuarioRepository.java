@@ -16,7 +16,7 @@ public class UsuarioRepository {
     private final String arquivoCsv = "./src/main/resources/usuarios.csv";
     private final List<Usuario> usuariosEmMemoria;
 
-    private UsuarioRepository() {
+    UsuarioRepository() {
         this.usuariosEmMemoria = new ArrayList<>();
         this.carregarUsuariosDoCSV();
     }

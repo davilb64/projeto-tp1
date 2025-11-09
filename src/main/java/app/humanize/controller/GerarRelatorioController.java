@@ -9,11 +9,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter; // For better date formatting
+import java.util.ResourceBundle;
 
 public class GerarRelatorioController {
     @FXML private Label lblId;
@@ -23,15 +25,17 @@ public class GerarRelatorioController {
 
     private Usuario usuarioLogado;
     private final RelatorioRepository relatorioRepository = RelatorioRepository.getInstance();
+    private ResourceBundle bundle;
 
     @FXML public void initialize(){
+        this.bundle = UserSession.getInstance().getBundle();
         usuarioLogado = UserSession.getInstance().getUsuarioLogado();
 
         if (relatorioRepository != null) {
             lblId.setText(String.valueOf(relatorioRepository.getProximoId()));
         } else {
-            lblId.setText("Erro");
-            System.err.println("Erro: RelatorioRepository não foi inicializado!");
+            lblId.setText(bundle.getString("report.label.error"));
+            System.err.println(bundle.getString("log.error.repoNotInitialized.report"));
         }
 
         lblData.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -39,17 +43,44 @@ public class GerarRelatorioController {
         if (usuarioLogado != null) {
             lblUser.setText(usuarioLogado.getNome());
         } else {
-            lblUser.setText("Usuário Desconhecido");
-            System.err.println("Erro: Nenhum usuário logado na sessão ao abrir GerarRelatorioController!");
-            mostrarAlerta("Erro Crítico", "Nenhum usuário logado.", "Não é possível gerar relatórios sem um usuário logado.");
+            lblUser.setText(bundle.getString("report.label.unknownUser"));
+            System.err.println(bundle.getString("log.error.sessionUserNull.report"));
+            mostrarAlerta(
+                    bundle.getString("report.alert.criticalError.title"),
+                    bundle.getString("report.alert.criticalError.header"),
+                    bundle.getString("report.alert.criticalError.content")
+            );
             return;
         }
 
         if (tipoCombo != null) {
             tipoCombo.getItems().setAll(TipoRelatorio.values());
+            // Configura a Célula para exibir o nome traduzido
+            tipoCombo.setCellFactory(lv -> new ListCell<TipoRelatorio>() {
+                @Override
+                protected void updateItem(TipoRelatorio item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : getTraducaoTipoRelatorio(item));
+                }
+            });
+            // Configura o Botão (o que aparece quando está selecionado)
+            tipoCombo.setButtonCell(new ListCell<TipoRelatorio>() {
+                @Override
+                protected void updateItem(TipoRelatorio item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(empty ? null : getTraducaoTipoRelatorio(item));
+                }
+            });
         } else {
-            System.err.println("Erro: ComboBox tipoCombo não foi injetado pelo FXML!");
+            System.err.println(bundle.getString("log.error.fxmlInject.tipoCombo"));
         }
+    }
+
+    private String getTraducaoTipoRelatorio(TipoRelatorio tipo) {
+        if (tipo == null) return null;
+        String key = "report.type." + tipo.name();
+        // Retorna a tradução se existir, senão o nome do enum
+        return bundle.containsKey(key) ? bundle.getString(key) : tipo.name();
     }
 
     @FXML public void cancelar(){
@@ -60,11 +91,19 @@ public class GerarRelatorioController {
         TipoRelatorio tipoSelecionado = tipoCombo.getValue();
 
         if (tipoSelecionado == null) {
-            mostrarAlerta("Seleção Inválida", "Por favor, selecione um Tipo de Relatório.", null);
+            mostrarAlerta(
+                    bundle.getString("report.alert.invalidSelection.title"),
+                    bundle.getString("report.alert.invalidSelection.header"),
+                    null
+            );
             return;
         }
         if (usuarioLogado == null) {
-            mostrarAlerta("Erro Crítico", "Nenhum usuário logado.", "Não é possível salvar o registro.");
+            mostrarAlerta(
+                    bundle.getString("report.alert.criticalError.title"),
+                    bundle.getString("report.alert.criticalError.header"),
+                    bundle.getString("report.alert.criticalError.contentSave")
+            );
             return;
         }
 
@@ -80,21 +119,33 @@ public class GerarRelatorioController {
                 case LISTA_USUARIOS:
                     break;
                 default:
-                    System.out.println("Parâmetros para " + tipoSelecionado + " ainda não implementados.");
+                    System.out.println(bundle.getString("log.info.paramsNotImplemented") + tipoSelecionado);
                     break;
             }
 
             relatorioRepository.escreverRelatorioNovo(novoRegistro);
-            System.out.println("Registro de relatório salvo com sucesso.");
+            System.out.println(bundle.getString("log.info.reportSaved"));
             fecharJanela();
 
         } catch (IOException e) {
-            mostrarAlerta("Erro de Salvamento", "Não foi possível salvar o registro do relatório.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("report.alert.saveError.title"),
+                    bundle.getString("report.alert.saveError.header"),
+                    e.getMessage()
+            );
             e.printStackTrace();
         } catch (NumberFormatException e){
-            mostrarAlerta("Erro Interno", "ID do relatório inválido.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("report.alert.internalError.title"),
+                    bundle.getString("report.alert.internalError.header"),
+                    e.getMessage()
+            );
         } catch (Exception e) {
-            mostrarAlerta("Erro Inesperado", "Ocorreu um erro ao salvar o registro.", e.getMessage());
+            mostrarAlerta(
+                    bundle.getString("report.alert.unexpectedError.title"),
+                    bundle.getString("report.alert.unexpectedError.header"),
+                    e.getMessage()
+            );
             e.printStackTrace();
         }
     }
@@ -105,7 +156,7 @@ public class GerarRelatorioController {
             Stage stage = (Stage) lblId.getScene().getWindow();
             stage.close();
         } else {
-            System.err.println("Erro ao fechar janela: Componente FXML não inicializado corretamente.");
+            System.err.println(bundle.getString("log.error.closeWindowError.report"));
         }
     }
 

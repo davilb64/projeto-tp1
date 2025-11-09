@@ -75,7 +75,7 @@ public class VagasController {
     private void cadastrarVaga() throws IOException {
         URL resource = getClass().getResource("/view/CriarVaga.fxml");
         if (resource == null) {
-            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.header"));
+            mostrarAlerta(bundle.getString("vacancyManagement.alert.fxmlCreateNotFound"));
             return;
         }
 
@@ -99,7 +99,7 @@ public class VagasController {
 
         URL resource = getClass().getResource("/view/CriarVaga.fxml");
         if (resource == null) {
-            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.header"));
+            mostrarAlerta(bundle.getString("vacancyManagement.alert.fxmlCreateNotFound"));
             return;
         }
 
@@ -176,7 +176,7 @@ public class VagasController {
                 int id = Integer.parseInt(idFiltro);
                 stream = stream.filter(vaga -> vaga.getId() == id);
             } catch (NumberFormatException e) {
-                System.err.println("Filtro de ID inválido, ignorado.");
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
             }
         }
 

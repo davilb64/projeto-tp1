@@ -75,7 +75,7 @@ public class FuncionarioController {
     private void contratarFuncionario() throws IOException {
         URL resource = getClass().getResource("/view/ContratacaoDeFuncionario.fxml");
         if (resource == null) {
-            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.header"));
+            mostrarAlerta(bundle.getString("employeeManagement.alert.fxmlHireNotFound"));
             return;
         }
 
@@ -100,7 +100,7 @@ public class FuncionarioController {
         // Assume que a edição de funcionário usa a mesma tela de cadastro de usuário
         URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
         if (resource == null) {
-            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.header"));
+            mostrarAlerta(bundle.getString("employeeManagement.alert.fxmlEditNotFound"));
             return;
         }
 
@@ -170,7 +170,7 @@ public class FuncionarioController {
                 int id = Integer.parseInt(idFiltro);
                 stream = stream.filter(func -> func.getId() == id);
             } catch (NumberFormatException e) {
-                System.err.println("Filtro de ID inválido, ignorado.");
+                System.err.println(bundle.getString("log.error.invalidIdFilter"));
             }
         }
 

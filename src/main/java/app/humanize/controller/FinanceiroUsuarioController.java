@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ResourceBundle;
 
 public class FinanceiroUsuarioController {
 
@@ -38,10 +39,13 @@ public class FinanceiroUsuarioController {
 
     Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
     private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
+    private ResourceBundle bundle;
 
     public void initialize(){
+        this.bundle = UserSession.getInstance().getBundle();
+
         carregarFotoPerfil();
-        lblTitulo.setText("Informações - "+usuarioLogado.getNome());
+        lblTitulo.setText(bundle.getString("userFinancial.title") + " " + usuarioLogado.getNome());
         lblNome.setText(usuarioLogado.getNome());
         Funcionario funcionarioLogado = (Funcionario)usuarioLogado;
         lblMatricula.setText(String.valueOf(funcionarioLogado.getMatricula()));
@@ -63,11 +67,11 @@ public class FinanceiroUsuarioController {
                 fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Arquivo de foto não encontrado: " + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+            System.err.println(bundle.getString("log.error.photoNotFound") + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
             try {
                 fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
             } catch (FileNotFoundException ex) {
-                System.err.println("Foto padrão também não encontrada em: " + FOTO_PADRAO);
+                System.err.println(bundle.getString("log.error.photoDefaultNotFound") + FOTO_PADRAO);
             }
         }
     }

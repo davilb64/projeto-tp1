@@ -4,7 +4,9 @@ import app.humanize.model.factories.RelatorioFinanceiro;
 import app.humanize.model.FolhaPag;
 import app.humanize.repository.FolhaPagRepository;
 import app.humanize.repository.RelatorioFinanceiroRepository;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
+import java.util.List;
 import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
@@ -12,6 +14,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 public class RelatorioFinanceiroController {
@@ -31,19 +34,26 @@ public class RelatorioFinanceiroController {
     @FXML private TableColumn<RelatorioFinanceiro, String> colDescricao;
     @FXML private TableColumn<RelatorioFinanceiro, String> colreceita;
     @FXML private TableColumn<RelatorioFinanceiro, String> coldespesa;
-    @FXML private TableColumn<RelatorioFinanceiro, String> colData3;
+    @FXML private TableColumn<RelatorioFinanceiro, String> colData3; // Categoria
     @FXML private TableColumn<RelatorioFinanceiro, String> colSaldoFinal;
 
     private ObservableList<RelatorioFinanceiro> transacoes = FXCollections.observableArrayList();
     private FolhaPagRepository folhaRepository = FolhaPagRepository.getInstance();
     private RelatorioFinanceiroRepository relatorioRepository = RelatorioFinanceiroRepository.getInstance();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private ResourceBundle bundle;
 
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
         ToggleGroup grupoTipo = new ToggleGroup();
         radioReceita.setToggleGroup(grupoTipo);
         radioDespesa.setToggleGroup(grupoTipo);
+
+        // Atualiza os textos dos RadioButtons
+        radioReceita.setText(bundle.getString("financialReport.type.revenue"));
+        radioDespesa.setText(bundle.getString("financialReport.type.expense"));
 
         tabelaRelatorio.setItems(transacoes);
         configurarColunas();
@@ -62,7 +72,8 @@ public class RelatorioFinanceiroController {
             calcularEAdicionarSaldoFinal();
             salvarTransacoesNoRepository();
         } catch (IOException e) {
-            mostrarAlerta("Erro", "Erro ao inicializar relatório: " + e.getMessage());
+            mostrarAlerta(bundle.getString("alert.error.title"),
+                    bundle.getString("financialReport.alert.initError") + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -71,7 +82,7 @@ public class RelatorioFinanceiroController {
         colDescricao.setCellValueFactory(cellData -> cellData.getValue().descricaoProperty());
         colreceita.setCellValueFactory(cellData -> cellData.getValue().receitaProperty());
         coldespesa.setCellValueFactory(cellData -> cellData.getValue().despesasProperty());
-        colData3.setCellValueFactory(cellData -> cellData.getValue().categoriaProperty());
+        colData3.setCellValueFactory(cellData -> cellData.getValue().categoriaProperty()); // Categoria
         colSaldoFinal.setCellValueFactory(cellData -> cellData.getValue().saldoProperty());
     }
 
@@ -89,7 +100,10 @@ public class RelatorioFinanceiroController {
         }
 
         for (FolhaPag folha : folhas) {
-            String descricaoFolha = "Folha - " + folha.getNome() + " (" + folha.getCargo() + " - " + folha.getNivel() + ")";
+            String descricaoFolha = String.format(
+                    bundle.getString("financialReport.payroll.descriptionFormat"),
+                    folha.getNome(), folha.getCargo(), folha.getNivel()
+            );
 
             if (!descricoesExistentes.contains(descricaoFolha)) {
                 String dataFolha = folha.getData() != null ?
@@ -100,9 +114,9 @@ public class RelatorioFinanceiroController {
                         dataFolha,
                         descricaoFolha,
                         "",
-                        String.format("R$ %.2f", folha.getSalarioLiquido()),
+                        String.format(bundle.getString("financialReport.currencyFormat"), folha.getSalarioLiquido()),
                         "",
-                        "Folha de Pagamento"
+                        bundle.getString("financialReport.payroll.category")
                 );
                 transacoes.add(folhaTransacao);
             }
@@ -117,10 +131,13 @@ public class RelatorioFinanceiroController {
 
             String valor = txtValor.getText();
             String descricao = txtDescricao.getText();
-            String tipo = radioReceita.isSelected() ? "Receita" : "Despesa";
+            String tipo = radioReceita.isSelected() ?
+                    bundle.getString("financialReport.type.revenue") :
+                    bundle.getString("financialReport.type.expense");
 
-            String receita = tipo.equals("Receita") ? String.format("R$ %s", valor) : "";
-            String despesas = tipo.equals("Despesa") ? String.format("R$ %s", valor) : "";
+            String currencyFormat = bundle.getString("financialReport.currencyFormat");
+            String receita = radioReceita.isSelected() ? String.format(currencyFormat, Double.parseDouble(valor)) : "";
+            String despesas = radioDespesa.isSelected() ? String.format(currencyFormat, Double.parseDouble(valor)) : "";
 
             RelatorioFinanceiro transacao = new RelatorioFinanceiro(
                     data,
@@ -136,31 +153,37 @@ public class RelatorioFinanceiroController {
             salvarTransacoesNoRepository();
             limparCampos();
 
-            mostrarAlerta("Sucesso", "Transação salva com sucesso!");
+            mostrarAlerta(bundle.getString("alert.success.title"),
+                    bundle.getString("financialReport.alert.saveSuccess"), Alert.AlertType.INFORMATION);
         }
     }
 
     private void calcularEAdicionarSaldoFinal() {
         double saldoAcumulado = 0.0;
+        String currencyFormat = bundle.getString("financialReport.currencyFormat");
+        final String saldoFinalDesc = bundle.getString("financialReport.finalBalance.description");
 
-        transacoes.removeIf(t -> "SALDO FINAL".equals(t.getDescricao()));
+        transacoes.removeIf(t -> saldoFinalDesc.equals(t.getDescricao()));
 
         for (RelatorioFinanceiro transacao : transacoes) {
             double receita = extrairValorNumerico(transacao.getReceita());
             double despesa = extrairValorNumerico(transacao.getDespesas());
             saldoAcumulado += (receita - despesa);
 
-            transacao.setSaldo(String.format("R$ %.2f", saldoAcumulado));
+            transacao.setSaldo(String.format(currencyFormat, saldoAcumulado));
         }
 
+        String categoriaSaldo = saldoAcumulado >= 0 ?
+                bundle.getString("financialReport.finalBalance.profit") :
+                bundle.getString("financialReport.finalBalance.loss");
 
         RelatorioFinanceiro saldoFinalTransacao = new RelatorioFinanceiro(
                 "",
-                "SALDO FINAL",
+                saldoFinalDesc,
                 "",
                 "",
-                String.format("R$ %.2f", saldoAcumulado),
-                saldoAcumulado >= 0 ? "Lucro" : "Prejuízo"
+                String.format(currencyFormat, saldoAcumulado),
+                categoriaSaldo
         );
         transacoes.add(saldoFinalTransacao);
     }
@@ -170,7 +193,8 @@ public class RelatorioFinanceiroController {
             return 0.0;
         }
         try {
-            String valorLimpo = valorComRS.replace("R$", "").replace(",", ".").trim();
+            String currencySymbol = bundle.getString("financialReport.currencySymbol");
+            String valorLimpo = valorComRS.replace(currencySymbol, "").replace(",", ".").trim();
             return Double.parseDouble(valorLimpo);
         } catch (NumberFormatException e) {
             return 0.0;
@@ -179,11 +203,13 @@ public class RelatorioFinanceiroController {
 
     private boolean validarCampos() {
         if (txtValor.getText().isEmpty()) {
-            mostrarAlerta("Erro", "Valor é obrigatório");
+            mostrarAlerta(bundle.getString("alert.error.title"),
+                    bundle.getString("financialReport.alert.validation.valueRequired"), Alert.AlertType.WARNING);
             return false;
         }
         if (txtDescricao.getText().isEmpty()) {
-            mostrarAlerta("Erro", "Descrição é obrigatória");
+            mostrarAlerta(bundle.getString("alert.error.title"),
+                    bundle.getString("financialReport.alert.validation.descriptionRequired"), Alert.AlertType.WARNING);
             return false;
         }
         return true;
@@ -198,9 +224,14 @@ public class RelatorioFinanceiroController {
 
     private void salvarTransacoesNoRepository() {
         try {
-            relatorioRepository.salvarTransacoes(transacoes);
+            // Salva todas as transações, exceto a linha "SALDO FINAL"
+            List<RelatorioFinanceiro> paraSalvar = transacoes.stream()
+                    .filter(t -> !t.getDescricao().equals(bundle.getString("financialReport.finalBalance.description")))
+                    .toList();
+            relatorioRepository.salvarTransacoes(paraSalvar);
         } catch (IOException e) {
-            mostrarAlerta("Erro", "Erro ao salvar transações: " + e.getMessage());
+            mostrarAlerta(bundle.getString("alert.error.title"),
+                    bundle.getString("financialReport.alert.saveRepoError") + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -212,16 +243,18 @@ public class RelatorioFinanceiroController {
             calcularEAdicionarSaldoFinal();
             salvarTransacoesNoRepository();
 
-            mostrarAlerta("Sucesso", "Relatório recarregado e salvo com sucesso!\n" +
-                    "Total de " + (transacoes.size() - 1) + " transações.");
+            mostrarAlerta(bundle.getString("alert.success.title"),
+                    String.format(bundle.getString("financialReport.alert.reloadSuccess"), (transacoes.size() - 1)),
+                    Alert.AlertType.INFORMATION);
 
         } catch (Exception e) {
-            mostrarAlerta("Erro", "Erro ao carregar relatório: " + e.getMessage());
+            mostrarAlerta(bundle.getString("alert.error.title"),
+                    bundle.getString("financialReport.alert.reloadError") + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    private void mostrarAlerta(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType type) {
+        Alert alert = new Alert(type);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensagem);

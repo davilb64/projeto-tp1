@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.util.HashMap; // Usaremos um Map para facilitar a tradução
+import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -152,7 +152,7 @@ public class ConfiguracoesAdmController {
 
     @FXML
     private void restaurarPadroes() {
-        idiomaCombo.setValue("profile.language.portuguese");
+        idiomaCombo.setValue(bundle.getString("profile.language.portuguese"));
         salvarAlteracoes();
     }
 
@@ -175,10 +175,10 @@ public class ConfiguracoesAdmController {
             } else if (mainControllerFuncionario != null) {
                 mainControllerFuncionario.showConfiguracoes();
             } else {
-                System.err.println("Erro: MainController não foi injetado.");
+                System.err.println(bundle.getString("log.error.mainControllerNull"));
                 mostrarAlerta(
                         bundle.getString("alert.error.reload.title"),
-                        "MainController é nulo.",
+                        bundle.getString("alert.error.mainControllerNull.header"),
                         null
                 );
             }

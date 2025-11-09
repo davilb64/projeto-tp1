@@ -4,14 +4,20 @@ import app.humanize.exceptions.CpfInvalidoException;
 import app.humanize.model.Candidato;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.service.validacoes.ValidaCpf;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
+import java.io.File;
 
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 
 public class CadastroDeCandidatoController {
 
@@ -26,17 +32,21 @@ public class CadastroDeCandidatoController {
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
     @FXML private Button btnCancel;
-
     @FXML private Button btnVisualizar;
-    private final ValidaCpf validaCpf = new ValidaCpf();
-
     @FXML private javafx.scene.control.Label lblArquivo;
 
-
+    private final ValidaCpf validaCpf = new ValidaCpf();
     private String caminhoDocumentoAtual = null;
-    private Candidato candidatoEmEdicao = null; // 🔹 usado quando estiver editando
+    private Candidato candidatoEmEdicao = null;
+    private ResourceBundle bundle;
 
-    // 🔹 chamado quando clicamos em "Editar" na tabela
+    @FXML
+    private void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
+
+        lblArquivo.setText(bundle.getString("candidateRegistration.label.noFileSelected"));
+    }
+
     public void prepararParaEdicao(Candidato candidato) {
         this.candidatoEmEdicao = candidato;
         txtNome.setText(candidato.getNome());
@@ -47,6 +57,9 @@ public class CadastroDeCandidatoController {
         txtDisponibilidade.setText(candidato.getDisponibilidade());
         txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
         txtExperiencia.setText(candidato.getExperiencia());
+
+        this.caminhoDocumentoAtual = candidato.getCaminhoDocumento();
+        atualizarLabelArquivo();
 
         txtCpf.setDisable(true);
     }
@@ -62,6 +75,9 @@ public class CadastroDeCandidatoController {
         txtPretencao.setText(String.valueOf(candidato.getPretencaoSalarial()));
         txtExperiencia.setText(candidato.getExperiencia());
 
+        this.caminhoDocumentoAtual = candidato.getCaminhoDocumento();
+        atualizarLabelArquivo();
+
         txtCpf.setEditable(false);
         txtNome.setEditable(false);
         txtEmail.setEditable(false);
@@ -70,6 +86,19 @@ public class CadastroDeCandidatoController {
         txtDisponibilidade.setEditable(false);
         txtPretencao.setEditable(false);
         txtExperiencia.setEditable(false);
+    }
+
+    private void atualizarLabelArquivo() {
+        if (caminhoDocumentoAtual != null && !caminhoDocumentoAtual.isEmpty()) {
+            File arquivo = new File(caminhoDocumentoAtual);
+            lblArquivo.setText(bundle.getString("candidateRegistration.label.filePrefix") + " " + arquivo.getName());
+            btnUpload.setVisible(false); btnUpload.setManaged(false);
+            btnVisualizar.setVisible(true); btnVisualizar.setManaged(true);
+        } else {
+            lblArquivo.setText(bundle.getString("candidateRegistration.label.noFileSelected"));
+            btnUpload.setVisible(true); btnUpload.setManaged(true);
+            btnVisualizar.setVisible(false); btnVisualizar.setManaged(false);
+        }
     }
 
     @FXML
@@ -85,7 +114,7 @@ public class CadastroDeCandidatoController {
                     txtPretencao.getText().trim().isEmpty() ||
                     txtExperiencia.getText().trim().isEmpty()) {
 
-                mostrarErro("Por favor, preencha todos os campos antes de salvar.");
+                mostrarErro("candidateRegistration.alert.fillError");
                 return;
             }
 
@@ -94,7 +123,6 @@ public class CadastroDeCandidatoController {
             if (candidatoEmEdicao == null) {
                 String cpf = txtCpf.getText();
                 validaCpf.validaCpf(cpf);
-                // ➕ novo candidato
                 Candidato novo = new Candidato.CandidatoBuilder()
                         .nome(txtNome.getText())
                         .cpf(cpf)
@@ -110,13 +138,12 @@ public class CadastroDeCandidatoController {
                 novo.setCaminhoDocumento(caminhoDocumentoAtual);
                 CandidatoRepository.getInstance().adicionar(novo);
 
-                mostrarAlerta("Cadastro realizado com sucesso!");
+                mostrarAlerta("candidateRegistration.alert.registerComplete");
                 fecharJanela();
 
             } else {
                 String cpf = txtCpf.getText();
                 validaCpf.validaCpf(cpf);
-                // ✏️ edição de candidato existente
                 candidatoEmEdicao.setNome(txtNome.getText());
                 candidatoEmEdicao.setCpf(cpf);
                 candidatoEmEdicao.setEmail(txtEmail.getText());
@@ -128,135 +155,123 @@ public class CadastroDeCandidatoController {
 
                 CandidatoRepository.getInstance().atualizar();
 
-                mostrarAlerta("Alterações salvas com sucesso!");
+                mostrarAlerta("candidateRegistration.alert.changesSaved");
                 fecharJanela();
-
             }
-
-
 
         }
         catch (CpfInvalidoException e) {
-            mostrarErro("CPF Inválido" + e.getMessage());
+            mostrarErro("candidateRegistration.alert.invalidCPF", e.getMessage());
         }
         catch (IOException e) {
-            mostrarErro("Erro ao salvar candidato: " + e.getMessage());
+            mostrarErro("candidateRegistration.alert.saveError", e.getMessage());
         } catch (Exception e) {
-            mostrarErro("Erro inesperado: " + e.getMessage());
+            mostrarErro("alert.error.unexpected.header", e.getMessage());
         }
     }
 
     public void esconderBotaoEditar() {
         btnSalvar.setVisible(false);
         btnCancel.setVisible(false);
-
     }
 
 
     @FXML
     private void uploadDocumentos() {
+        java.io.File arquivoSelecionado = null;
         try {
-            javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
-            fileChooser.setTitle("Selecionar Documento");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle(bundle.getString("candidateRegistration.fileChooser.title"));
 
             fileChooser.getExtensionFilters().addAll(
-                    new javafx.stage.FileChooser.ExtensionFilter("Documentos PDF", "*.pdf"),
-                    new javafx.stage.FileChooser.ExtensionFilter("Documentos Word", "*.docx"),
-                    new javafx.stage.FileChooser.ExtensionFilter("Imagens", "*.png", "*.jpg", "*.jpeg"),
-                    new javafx.stage.FileChooser.ExtensionFilter("Todos os arquivos", "*.*")
+                    new FileChooser.ExtensionFilter(bundle.getString("candidateRegistration.fileChooser.pdf"), "*.pdf"),
+                    new FileChooser.ExtensionFilter(bundle.getString("candidateRegistration.fileChooser.doc"), "*.docx"),
+                    new FileChooser.ExtensionFilter(bundle.getString("candidateRegistration.fileChooser.img"), "*.png", "*.jpg", "*.jpeg"),
+                    new FileChooser.ExtensionFilter(bundle.getString("candidateRegistration.fileChooser.all"), "*.*")
             );
 
-            java.io.File arquivoSelecionado = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
+            arquivoSelecionado = fileChooser.showOpenDialog(btnUpload.getScene().getWindow());
             if (arquivoSelecionado != null) {
-                // Salva em pasta externa (fora do JAR) para garantir que exista sempre como arquivo
                 java.io.File pastaDestino = new java.io.File(System.getProperty("user.home"), "humanize_uploads");
                 if (!pastaDestino.exists()) pastaDestino.mkdirs();
 
                 java.nio.file.Path destino = java.nio.file.Paths.get(pastaDestino.getAbsolutePath(), arquivoSelecionado.getName());
                 java.nio.file.Files.copy(arquivoSelecionado.toPath(), destino, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
-                // guarda em memória/controller e também no candidato em edição (se houver)
                 caminhoDocumentoAtual = destino.toString();
 
                 if (candidatoEmEdicao != null) {
                     candidatoEmEdicao.setCaminhoDocumento(caminhoDocumentoAtual);
-                    CandidatoRepository.getInstance().atualizar(); // 🔹 grava o novo caminho no CSV
+                    CandidatoRepository.getInstance().atualizar();
                 }
 
+                String successMsg = bundle.getString("candidateRegistration.alert.uploadSuccess1") + " '" +
+                        arquivoSelecionado.getName() + "' " +
+                        bundle.getString("candidateRegistration.alert.uploadSuccess2") + "\n" + destino.toString();
 
-                lblArquivo.setText("Arquivo: " + arquivoSelecionado.getName());
-                btnUpload.setVisible(false); btnUpload.setManaged(false);
-                btnVisualizar.setVisible(true); btnVisualizar.setManaged(true);
+                mostrarAlerta(successMsg, true);
+                atualizarLabelArquivo();
 
-                mostrarAlerta("Arquivo '" + arquivoSelecionado.getName() + "' salvo com sucesso em:\n" + destino.toString());
             } else {
-                mostrarErro("Nenhum arquivo foi selecionado.");
+                mostrarErro("candidateRegistration.alert.noFileSelected");
             }
         } catch (java.nio.file.FileAlreadyExistsException e) {
-            mostrarErro("Já existe um arquivo com esse nome na pasta de uploads.");
+            mostrarErro("candidateRegistration.alert.fileExists");
         } catch (IOException e) {
             e.printStackTrace();
-            mostrarErro("Erro ao salvar arquivo: " + e.getMessage());
+            mostrarErro("candidateRegistration.alert.saveError", e.getMessage());
         }
     }
-
-
 
     @FXML
     private void visualizarDocumento() {
         try {
             if (caminhoDocumentoAtual == null) {
-                mostrarErro("Nenhum documento anexado para este candidato.");
+                mostrarErro("candidateRegistration.alert.noDocAttached");
                 return;
             }
 
             java.io.File arquivo = new java.io.File(caminhoDocumentoAtual);
             if (!arquivo.exists() || !arquivo.canRead()) {
-                mostrarErro("Arquivo não encontrado ou inacessível: " + caminhoDocumentoAtual);
+                mostrarErro("candidateRegistration.alert.fileNotFound", caminhoDocumentoAtual);
                 return;
             }
 
-            // Tenta usar java.awt.Desktop primeiro (Windows/Mac/Linux com GUI)
             if (java.awt.Desktop.isDesktopSupported()) {
                 try {
                     java.awt.Desktop.getDesktop().open(arquivo);
                     return;
                 } catch (UnsupportedOperationException | IOException | SecurityException ex) {
-                    // segue para fallback
                     ex.printStackTrace();
                 }
             }
 
-            // Fallback multiplataforma para abrir o arquivo
             String os = System.getProperty("os.name").toLowerCase();
             ProcessBuilder pb = null;
 
             if (os.contains("win")) {
-                // Windows: 'cmd /c start "" "file"'
                 pb = new ProcessBuilder("cmd", "/c", "start", "\"\"", arquivo.getAbsolutePath());
             } else if (os.contains("mac")) {
                 pb = new ProcessBuilder("open", arquivo.getAbsolutePath());
             } else {
-                // Linux / others: tenta xdg-open
                 pb = new ProcessBuilder("xdg-open", arquivo.getAbsolutePath());
             }
 
             Process p = pb.start();
-            // opcional: não bloquear; se o comando falhar, avisar
             int exit = p.waitFor();
             if (exit != 0) {
-                mostrarErro("Não foi possível abrir o arquivo com o comando do sistema (exit=" + exit + ").");
+                mostrarErro("candidateRegistration.alert.openError", String.valueOf(exit));
             }
 
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
-            mostrarErro("A ação foi interrompida.");
+            mostrarErro("candidateRegistration.alert.interrupted");
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            mostrarErro("Erro ao tentar abrir o arquivo: " + ioe.getMessage());
+            mostrarErro("candidateRegistration.alert.openIOError", ioe.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarErro("Erro inesperado ao abrir o arquivo: " + e.getMessage());
+            mostrarErro("candidateRegistration.alert.openErrorUnexpected", e.getMessage());
         }
     }
 
@@ -267,35 +282,55 @@ public class CadastroDeCandidatoController {
         stage.close();
     }
 
+    private void mostrarAlerta(String bundleKey) {
+        mostrarAlerta(bundleKey, true);
+    }
 
-    private void mostrarAlerta(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sucesso");
+    private void mostrarAlerta(String bundleKey, boolean isInfo) {
+        Alert.AlertType type = isInfo ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING;
+        Alert alert = new Alert(type);
+        alert.setTitle(isInfo ? bundle.getString("alert.success.title") : bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
-        alert.setContentText(msg);
+        alert.setContentText(bundle.getString(bundleKey));
         alert.showAndWait();
     }
 
-    private void mostrarErro(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erro");
+    private void mostrarAlerta(String rawMessage, String context, boolean isInfo) {
+        Alert.AlertType type = isInfo ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING;
+        Alert alert = new Alert(type);
+        alert.setTitle(isInfo ? bundle.getString("alert.success.title") : bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
-        alert.setContentText(msg);
+        alert.setContentText(rawMessage);
+        alert.showAndWait();
+    }
+
+    private void mostrarErro(String bundleKey) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(bundle.getString("alert.error.reload.title"));
+        alert.setHeaderText(null);
+        alert.setContentText(bundle.getString(bundleKey));
+        alert.showAndWait();
+    }
+
+    private void mostrarErro(String bundleKey, String context) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(bundle.getString("alert.error.reload.title"));
+        alert.setHeaderText(null);
+        alert.setContentText(bundle.getString(bundleKey) + " " + context);
         alert.showAndWait();
     }
 
     private void irParaTelaStatusCandidato() {
         try {
-            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/view/StatusDaCandidatura.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StatusDaCandidatura.fxml"), bundle);
             javafx.scene.Parent root = loader.load();
             javafx.stage.Stage stage = (javafx.stage.Stage) btnSalvar.getScene().getWindow();
             stage.setScene(new javafx.scene.Scene(root));
-            stage.setTitle("Status das Candidaturas");
+            stage.setTitle(bundle.getString("candidatesMain.nav.status"));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarErro("Erro ao abrir tela de status: " + e.getMessage());
+            mostrarErro("candidateRegistration.alert.loadStatusError", e.getMessage());
         }
     }
-
 }

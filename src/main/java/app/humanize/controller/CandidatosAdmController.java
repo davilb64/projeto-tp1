@@ -40,7 +40,7 @@ public class CandidatosAdmController {
         try {
             URL resource = getClass().getResource(fxmlPath);
             if (resource == null) {
-                throw new NullPointerException("Recurso FXML não encontrado: " + fxmlPath);
+                throw new NullPointerException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
             }
 
             FXMLLoader loader = new FXMLLoader(resource, bundle);
@@ -49,7 +49,7 @@ public class CandidatosAdmController {
             contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
-            System.err.println("Erro de IO ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.io") + fxmlPath);
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.reload.title"),
@@ -57,15 +57,15 @@ public class CandidatosAdmController {
                     e.getMessage()
             );
         } catch (NullPointerException e) {
-            System.err.println("Erro: Recurso FXML não encontrado: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlNotFound") + fxmlPath);
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.reload.title"),
                     bundle.getString("alert.error.fxmlNotFound.header"),
-                    "Caminho: " + fxmlPath
+                    bundle.getString("alert.error.fxmlNotFound.content.path") + fxmlPath
             );
         } catch (Exception e) {
-            System.err.println("Erro inesperado ao carregar FXML: " + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.unexpected") + fxmlPath);
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.unexpected.title"),
@@ -113,7 +113,7 @@ public class CandidatosAdmController {
         try {
             URL resource = getClass().getResource("/view/CadastroDeCandidato.fxml");
             if (resource == null) {
-                throw new NullPointerException("Recurso FXML não encontrado: /view/CadastroDeCandidato.fxml");
+                throw new NullPointerException(bundle.getString("exception.fxmlNotFound.cadastroCandidato"));
             }
 
             FXMLLoader loader = new FXMLLoader(resource, bundle);

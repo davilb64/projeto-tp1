@@ -8,6 +8,7 @@ import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.CandidaturaRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.VagaRepository;
+import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,6 +26,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class DashboardAdministradorController {
@@ -45,13 +47,27 @@ public class DashboardAdministradorController {
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final CandidatoRepository  candidatoRepository = CandidatoRepository.getInstance();
     private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
+    private ResourceBundle bundle;
 
     public void initialize(){
+        this.bundle = UserSession.getInstance().getBundle();
         lblVagasAbertas.setText(Integer.toString(vagaRepository.getQtdVaga()));
         lblTotalUsuarios.setText(Integer.toString(usuarioRepository.getQtdUsuarios()));
         lblTotalCandidatos.setText(Integer.toString(candidatoRepository.getQtdCandidatos()));
         carregarGraficoUsuariosPorPerfil();
         carregarGraficoCandidaturas();
+    }
+
+    // Método auxiliar para traduzir StatusCandidatura
+    private String getTraducaoStatus(StatusCandidatura status) {
+        String key = "statusCandidatura." + status.name();
+        return bundle.containsKey(key) ? bundle.getString(key) : status.name();
+    }
+
+    // Método auxiliar para traduzir Perfil
+    private String getTraducaoPerfil(Perfil perfil) {
+        String key = "perfil." + perfil.name();
+        return bundle.containsKey(key) ? bundle.getString(key) : perfil.name();
     }
 
     private void carregarGraficoCandidaturas(){
@@ -67,8 +83,8 @@ public class DashboardAdministradorController {
 
         //popula gráfico
         for(Map.Entry<StatusCandidatura, Long> entry : contagemStatus.entrySet()){
-            //fatia nova
-            pieChartData.add(new PieChart.Data(entry.getKey().toString(), entry.getValue()));
+            //fatia nova com nome traduzido
+            pieChartData.add(new PieChart.Data(getTraducaoStatus(entry.getKey()), entry.getValue()));
         }
 
         // define os dados no gráfico
@@ -77,9 +93,8 @@ public class DashboardAdministradorController {
         //ver os valores
         pieChartData.forEach(data -> {
             String percentual = String.format("%.1f%%", (data.getPieValue() / todasCandidaturas.size()) * 100);
-            Tooltip.install(data.getNode(), new Tooltip(
-                    data.getName() + ": " + (int)data.getPieValue() + " (" + percentual + ")"
-            ));
+            String tooltipText = data.getName() + ": " + (int)data.getPieValue() + " (" + percentual + ")";
+            Tooltip.install(data.getNode(), new Tooltip(tooltipText));
         });
     }
 
@@ -90,10 +105,10 @@ public class DashboardAdministradorController {
                 .collect(Collectors.groupingBy(Usuario::getPerfil, Collectors.counting()));
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Quantidade de Usuários");
+        series.setName(bundle.getString("dashboard.chart.users.seriesName"));
 
         for (Map.Entry<Perfil, Long> entry : contagemPorPerfil.entrySet()) {
-            series.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
+            series.getData().add(new XYChart.Data<>(getTraducaoPerfil(entry.getKey()), entry.getValue()));
         }
 
         chartUsuarios.getData().clear();
@@ -102,9 +117,10 @@ public class DashboardAdministradorController {
 
     @FXML public void criarUsuarios() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroUsuarioAdm.fxml"));
+        loader.setResources(bundle); // Passa o bundle para a próxima tela
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle("Cadastrar Usuário");
+        stage.setTitle(bundle.getString("dashboard.window.createUser.title"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();

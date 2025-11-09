@@ -8,6 +8,7 @@ import app.humanize.repository.ContratacaoRepository;
 import app.humanize.repository.EntrevistaRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.VagaRepository;
+import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 
 public class ContratacaoDeFuncionarioController {
@@ -39,9 +41,11 @@ public class ContratacaoDeFuncionarioController {
     private final EntrevistaRepository entrevistaRepository = EntrevistaRepository.getInstance();
 
     private Funcionario funcionarioParaEditar;
+    private ResourceBundle bundle;
 
     @FXML
     public void initialize() {
+        this.bundle = UserSession.getInstance().getBundle();
         cbNome.getItems().clear();
         cbNome.getItems().addAll(entrevistaRepository.buscarCandidatosAprovados());
 
@@ -96,7 +100,11 @@ public class ContratacaoDeFuncionarioController {
 
     private boolean validarCampos() {
         if (cbNome.getValue() == null || txtCargoFunc.getText().isBlank() || txtDepartamentoFunc.getText().isBlank()) {
-            mostrarAlerta("Campos Obrigatórios", "Nome, CPF, E-mail e Login devem ser preenchidos.", null);
+            mostrarAlerta(
+                    bundle.getString("hire.alert.requiredFields.title"),
+                    bundle.getString("hire.alert.requiredFields.header"),
+                    null
+            );
             return false;
         }
         return true;
@@ -104,7 +112,7 @@ public class ContratacaoDeFuncionarioController {
 
     // 🔹 Mostra alerta genérico
     private void mostrarAlerta(String titulo, String mensagem, String detalhe) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(Alert.AlertType.WARNING); // Alterado para WARNING para erros de validação
         alert.setTitle(titulo);
         alert.setHeaderText(mensagem);
         if (detalhe != null && !detalhe.isEmpty()) {

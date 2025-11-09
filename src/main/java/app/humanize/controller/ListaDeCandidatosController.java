@@ -20,7 +20,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,9 @@ public class ListaDeCandidatosController {
     private final ObservableList<Candidato> listaCandidatos = FXCollections.observableArrayList();
 
     private ResourceBundle bundle;
+    // Mapa para tradução do filtro de salário
+    private final Map<String, String> salarioKeyMap = new HashMap<>();
+
 
     @FXML
     private void initialize() {
@@ -68,14 +73,22 @@ public class ListaDeCandidatosController {
     }
 
     private void configurarComboSalario() {
-        comboSalario.setItems(FXCollections.observableArrayList(
-                "Todos",
-                "Até 2.000",
-                "2.000 - 4.000",
-                "4.000 - 6.000",
-                "Acima de 6.000"
-        ));
-        comboSalario.getSelectionModel().select("Todos");
+        // Pega os valores traduzidos
+        String all = bundle.getString("salary.range.all");
+        String upto2k = bundle.getString("salary.range.upto2k");
+        String k2to4k = bundle.getString("salary.range.2kto4k");
+        String k4to6k = bundle.getString("salary.range.4kto6k");
+        String over6k = bundle.getString("salary.range.over6k");
+
+        // Mapeia o valor traduzido para uma chave interna estável
+        salarioKeyMap.put(all, "ALL");
+        salarioKeyMap.put(upto2k, "UP_TO_2K");
+        salarioKeyMap.put(k2to4k, "2K_TO_4K");
+        salarioKeyMap.put(k4to6k, "4K_TO_6K");
+        salarioKeyMap.put(over6k, "OVER_6K");
+
+        comboSalario.setItems(FXCollections.observableArrayList(all, upto2k, k2to4k, k4to6k, over6k));
+        comboSalario.getSelectionModel().select(all); // Seleciona "Todos" por padrão
     }
 
     @FXML
@@ -83,14 +96,16 @@ public class ListaDeCandidatosController {
         String nomeFiltro = txtNome.getText().toLowerCase();
         String formacaoFiltro = txtFormacao.getText().toLowerCase();
         String experienciaFiltro = txtExperiencia.getText().toLowerCase();
-        String faixaSalario = comboSalario.getValue();
+        String faixaSalarioTraduzida = comboSalario.getValue();
+        String faixaSalarioKey = salarioKeyMap.getOrDefault(faixaSalarioTraduzida, "ALL");
+
 
         List<Candidato> filtrados = candidatoRepository.getTodos().stream()
                 .filter(c ->
                         (safeString(c.getNome()).toLowerCase().contains(nomeFiltro) || safeString(c.getEmail()).toLowerCase().contains(nomeFiltro)) &&
                                 safeString(c.getFormacao()).toLowerCase().contains(formacaoFiltro) &&
                                 safeString(c.getExperiencia()).toLowerCase().contains(experienciaFiltro) &&
-                                dentroDaFaixaSalarial(c.getPretencaoSalarial(), faixaSalario)
+                                dentroDaFaixaSalarial(c.getPretencaoSalarial(), faixaSalarioKey)
                 )
                 .collect(Collectors.toList());
 
@@ -102,13 +117,13 @@ public class ListaDeCandidatosController {
     }
 
 
-    private boolean dentroDaFaixaSalarial(double salario, String faixa) {
-        return switch (faixa) {
-            case "Até 2.000" -> salario <= 2000;
-            case "2.000 - 4.000" -> salario > 2000 && salario <= 4000;
-            case "4.000 - 6.000" -> salario > 4000 && salario <= 6000;
-            case "Acima de 6.000" -> salario > 6000;
-            default -> true;
+    private boolean dentroDaFaixaSalarial(double salario, String faixaKey) {
+        return switch (faixaKey) {
+            case "UP_TO_2K" -> salario <= 2000;
+            case "2K_TO_4K" -> salario > 2000 && salario <= 4000;
+            case "4K_TO_6K" -> salario > 4000 && salario <= 6000;
+            case "OVER_6K" -> salario > 6000;
+            default -> true; // "ALL"
         };
     }
 

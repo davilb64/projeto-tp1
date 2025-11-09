@@ -3,6 +3,7 @@ package app.humanize.controller;
 import app.humanize.model.Endereco;
 import app.humanize.util.EnderecoViaCep;
 import app.humanize.util.EstadosBrasileiros;
+import app.humanize.util.UserSession;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -17,6 +18,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ResourceBundle;
 
 public class CadastroEnderecoController {
     @FXML
@@ -38,8 +40,12 @@ public class CadastroEnderecoController {
 
     Endereco enderecoSalvo;
 
+    private ResourceBundle bundle;
+
     @FXML
     private void initialize(){
+        this.bundle = UserSession.getInstance().getBundle();
+
         if (progressIndicator != null) {
             progressIndicator.setVisible(false);
         }
@@ -94,7 +100,7 @@ public class CadastroEnderecoController {
             if (endereco != null && !endereco.isErro()) {
                 preencherCamposEndereco(endereco);
             } else {
-                mostrarAlerta("CEP não encontrado", "O CEP digitado não foi encontrado na base de dados.", null);
+                mostrarAlerta("addressRegistration.alert.cepNotFound.title", "addressRegistration.alert.cepNotFound.header", null);
             }
             if (progressIndicator != null) {
                 progressIndicator.setVisible(false);
@@ -103,7 +109,7 @@ public class CadastroEnderecoController {
 
         task.setOnFailed(event -> {
             Throwable ex = task.getException();
-            mostrarAlerta("Erro de Rede", "Não foi possível conectar à API de CEP.", ex.getMessage());
+            mostrarAlerta("addressRegistration.alert.networkError.title", "addressRegistration.alert.networkError.header", ex.getMessage());
             ex.printStackTrace();
             if (progressIndicator != null) {
                 progressIndicator.setVisible(false);
@@ -143,7 +149,7 @@ public class CadastroEnderecoController {
         txtNumero.getText();
 
         if (txtLogradouro.getText().isBlank() || estadoCombo.getSelectionModel().isEmpty()){
-            new Alert(Alert.AlertType.WARNING, "Preencha todos os campos.").showAndWait();
+            mostrarAlerta("addressRegistration.alert.fillAllFields.title", "addressRegistration.alert.fillAllFields.header", null);
             return;
         }
 
@@ -158,11 +164,11 @@ public class CadastroEnderecoController {
         return enderecoSalvo;
     }
 
-    private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
+    private void mostrarAlerta(String tituloKey, String cabecalhoKey, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo != null ? conteudo : ""); // Trata conteúdo nulo
+        alert.setTitle(bundle.getString(tituloKey));
+        alert.setHeaderText(bundle.getString(cabecalhoKey));
+        alert.setContentText(conteudo != null ? conteudo : "");
         alert.showAndWait();
     }
 }
