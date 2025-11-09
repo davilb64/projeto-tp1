@@ -323,7 +323,4 @@ public class RegrasSalariaisController {
         alert.showAndWait();
     }
 
-    public void atualizarCargos() {
-        carregarCargosDoRepository();
-    }
 }
