@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
+import javafx.scene.control.cell.PropertyValueFactory;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,11 +21,21 @@ public class RegrasSalariaisController {
     @FXML private Button btnSalvar;
     @FXML private Button btnCancelar;
 
+    @FXML private TableView<RegraSalarial> tableViewRegras;
+    @FXML private TableColumn<RegraSalarial, String> colCargo;
+    @FXML private TableColumn<RegraSalarial, String> colNivel;
+    @FXML private TableColumn<RegraSalarial, Double> colSalarioBase;
+    @FXML private TableColumn<RegraSalarial, Double> colAdicionalNivel;
+    @FXML private TableColumn<RegraSalarial, Double> colBeneficios;
+    @FXML private TableColumn<RegraSalarial, Double> colSalarioTotal;
+
     private final SalarioRepository salarioRepository = SalarioRepository.getInstance();
     private final UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
     private final ObservableList<String> cargosValidos = FXCollections.observableArrayList();
     private final ObservableList<String> niveisValidos = FXCollections.observableArrayList();
     private final ObservableList<String> beneficiosValidos = FXCollections.observableArrayList();
+
+    private final ObservableList<RegraSalarial> regrasList = FXCollections.observableArrayList();
 
     public enum NivelExperiencia {
         JUNIOR("Júnior", 0.0),
@@ -63,8 +74,54 @@ public class RegrasSalariaisController {
         carregarCargosDoRepository();
         carregarNiveis();
         carregarBeneficios();
+        configurarTabela();
+        carregarRegrasExistentes();
         configurarBotoes();
         configurarValidacoes();
+    }
+
+    private void configurarTabela() {
+        colCargo.setCellValueFactory(new PropertyValueFactory<>("cargo"));
+        colNivel.setCellValueFactory(new PropertyValueFactory<>("nivel"));
+        colSalarioBase.setCellValueFactory(new PropertyValueFactory<>("salarioBase"));
+        colAdicionalNivel.setCellValueFactory(new PropertyValueFactory<>("adicionalNivel"));
+        colBeneficios.setCellValueFactory(new PropertyValueFactory<>("beneficios"));
+        colSalarioTotal.setCellValueFactory(new PropertyValueFactory<>("salarioTotal"));
+
+        configurarFormatacaoNumerica(colSalarioBase);
+        configurarFormatacaoNumerica(colAdicionalNivel);
+        configurarFormatacaoNumerica(colBeneficios);
+        configurarFormatacaoNumerica(colSalarioTotal);
+
+        tableViewRegras.setItems(regrasList);
+    }
+
+    private void configurarFormatacaoNumerica(TableColumn<RegraSalarial, Double> coluna) {
+        coluna.setCellFactory(tc -> new TableCell<RegraSalarial, Double>() {
+            @Override
+            protected void updateItem(Double valor, boolean vazio) {
+                super.updateItem(valor, vazio);
+                if (vazio || valor == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("R$ %.2f", valor));
+                }
+            }
+        });
+    }
+
+    private void carregarRegrasExistentes() {
+        try {
+            regrasList.clear();
+
+            List<RegraSalarial> regras = salarioRepository.carregarTodasRegras();
+            regrasList.addAll(regras);
+
+            System.out.println("Regras carregadas na tabela: " + regrasList.size());
+
+        } catch (Exception e) {
+            mostrarAlerta("Erro", "Erro ao carregar regras existentes: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     private void carregarCargosDoRepository() {
@@ -125,7 +182,6 @@ public class RegrasSalariaisController {
     }
 
     private void configurarValidacoes() {
-        // Validação do salário base (apenas números)
         txtSalarioBase.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*(\\.\\d*)?")) {
                 txtSalarioBase.setText(newValue.replaceAll("[^\\d.]", ""));
@@ -183,7 +239,11 @@ public class RegrasSalariaisController {
             RegraSalarial novaRegra = new RegraSalarial(cargo, nivel.getDescricao(), salarioBase, adicionalNivel, valorBeneficios, salarioTotal);
 
             try {
+
                 salarioRepository.salvarRegra(novaRegra);
+
+                regrasList.add(novaRegra);
+
                 mostrarMensagemSucesso(novaRegra);
                 limparCampos();
 
