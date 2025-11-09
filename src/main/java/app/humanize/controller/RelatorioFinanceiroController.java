@@ -19,16 +19,18 @@ public class RelatorioFinanceiroController {
     @FXML private DatePicker dateTransacao;
     @FXML private TextField txtValor;
     @FXML private TextField txtDescricao;
+
     @FXML private RadioButton radioReceita;
     @FXML private RadioButton radioDespesa;
+
     @FXML private Button btnSalvar;
     @FXML private Button btnSalvarRelatorio;
+
     @FXML private TableView<RelatorioFinanceiro> tabelaRelatorio;
     @FXML private TableColumn<RelatorioFinanceiro, String> colData;
     @FXML private TableColumn<RelatorioFinanceiro, String> colDescricao;
-    @FXML private TableColumn<RelatorioFinanceiro, String> colValor;
-    @FXML private TableColumn<RelatorioFinanceiro, String> colTipo;
-    @FXML private TableColumn<RelatorioFinanceiro, String> colData1;
+    @FXML private TableColumn<RelatorioFinanceiro, String> colreceita;
+    @FXML private TableColumn<RelatorioFinanceiro, String> coldespesa;
     @FXML private TableColumn<RelatorioFinanceiro, String> colData3;
     @FXML private TableColumn<RelatorioFinanceiro, String> colSaldoFinal;
 
@@ -67,9 +69,8 @@ public class RelatorioFinanceiroController {
     private void configurarColunas() {
         colData.setCellValueFactory(cellData -> cellData.getValue().dataProperty());
         colDescricao.setCellValueFactory(cellData -> cellData.getValue().descricaoProperty());
-        colValor.setCellValueFactory(cellData -> cellData.getValue().receitaProperty());
-        colTipo.setCellValueFactory(cellData -> cellData.getValue().despesasProperty());
-        colData1.setCellValueFactory(cellData -> cellData.getValue().valorProperty());
+        colreceita.setCellValueFactory(cellData -> cellData.getValue().receitaProperty());
+        coldespesa.setCellValueFactory(cellData -> cellData.getValue().despesasProperty());
         colData3.setCellValueFactory(cellData -> cellData.getValue().categoriaProperty());
         colSaldoFinal.setCellValueFactory(cellData -> cellData.getValue().saldoProperty());
     }
@@ -88,7 +89,7 @@ public class RelatorioFinanceiroController {
         }
 
         for (FolhaPag folha : folhas) {
-            String descricaoFolha = "Folha de Pagamento - " + folha.getNome();
+            String descricaoFolha = "Folha - " + folha.getNome() + " (" + folha.getCargo() + " - " + folha.getNivel() + ")";
 
             if (!descricoesExistentes.contains(descricaoFolha)) {
                 String dataFolha = folha.getData() != null ?
@@ -99,7 +100,6 @@ public class RelatorioFinanceiroController {
                         dataFolha,
                         descricaoFolha,
                         "",
-                        String.format("R$ %.2f", folha.getSalarioLiquido()),
                         String.format("R$ %.2f", folha.getSalarioLiquido()),
                         "",
                         "Folha de Pagamento"
@@ -123,8 +123,12 @@ public class RelatorioFinanceiroController {
             String despesas = tipo.equals("Despesa") ? String.format("R$ %s", valor) : "";
 
             RelatorioFinanceiro transacao = new RelatorioFinanceiro(
-                    data, descricao, receita, despesas,
-                    String.format("R$ %s", valor), "", tipo
+                    data,
+                    descricao,
+                    receita,
+                    despesas,
+                    "", // saldo e calculado depois
+                    tipo
             );
 
             transacoes.add(transacao);
@@ -152,7 +156,6 @@ public class RelatorioFinanceiroController {
                 "SALDO FINAL",
                 "",
                 "",
-                String.format("R$ %.2f", saldoFinal),
                 String.format("R$ %.2f", saldoFinal),
                 saldoFinal >= 0 ? "Lucro" : "Prejuízo"
         );

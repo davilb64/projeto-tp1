@@ -70,12 +70,11 @@
         <TableView fx:id="tabelaRelatorio" prefHeight="408.0" prefWidth="678.0" VBox.vgrow="ALWAYS">
             <columns>
                 <TableColumn fx:id="colData" prefWidth="61.59997487068176" text="data" />
-                <TableColumn fx:id="colDescricao" prefWidth="91.20001602172852" text="descrição" />
-                <TableColumn fx:id="colValor" prefWidth="91.19996643066406" text="receita" />
-                <TableColumn fx:id="colTipo" minWidth="0.0" prefWidth="95.19999694824219" text="despesas" />
-                <TableColumn fx:id="colData1" prefWidth="95.199951171875" text="valor" />
-                <TableColumn fx:id="colData3" prefWidth="84.800048828125" text="categoria" />
-                <TableColumn fx:id="colSaldoFinal" prefWidth="107.19999694824219" text="Saldo final" />
+                <TableColumn fx:id="colDescricao" prefWidth="152.00000381469727" text="descrição" />
+                <TableColumn fx:id="colreceita" prefWidth="81.5999755859375" text="receita" />
+                <TableColumn fx:id="coldespesa" minWidth="0.0" prefWidth="131.199951171875" text="despesas" />
+                <TableColumn fx:id="colData3" prefWidth="103.99993896484375" text="categoria" />
+                <TableColumn fx:id="colSaldoFinal" prefWidth="99.20001220703125" text="Saldo final" />
             </columns>
         </TableView>
     </VBox>
