@@ -17,11 +17,13 @@ import app.humanize.util.ScreenController;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PrincipalFuncionarioController {
     public BorderPane root;
+    private Image avatarPadrao;
 
     @FXML private Button btnFinanceiro;
     @FXML private Button btnConfig;
@@ -49,28 +51,37 @@ public class PrincipalFuncionarioController {
         btnConfig.setText(bundle.getString("sidebar.settings"));
     }
 
+
+
     private void carregarFotoPerfil() {
         Usuario usuario = UserSession.getInstance().getUsuarioLogado();
         String caminhoFoto = null;
+        Image imagemParaCarregar = null;
 
         if (usuario instanceof Funcionario) {
             caminhoFoto = ((Funcionario) usuario).getCaminhoFoto();
         }
 
-        try {
-            if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
-                fotoPerfil.setImage(new Image(new FileInputStream(caminhoFoto)));
-            } else {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println(bundle.getString("log.error.photoNotFound") + (caminhoFoto != null ? caminhoFoto : FOTO_PADRAO));
+        try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
+            if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
+            this.avatarPadrao = new Image(is);
+        } catch (Exception e) {
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
+        }
+
+        if (caminhoFoto != null && !caminhoFoto.isEmpty()) {
             try {
-                fotoPerfil.setImage(new Image(new FileInputStream(FOTO_PADRAO)));
-            } catch (FileNotFoundException ex) {
-                System.err.println(bundle.getString("log.error.photoDefaultNotFound") + FOTO_PADRAO);
+                imagemParaCarregar = new Image(new FileInputStream(caminhoFoto));
+            } catch (FileNotFoundException e) {
+                System.err.println(bundle.getString("log.error.photoNotFound") + caminhoFoto);
             }
         }
+
+        if (imagemParaCarregar == null) {
+            imagemParaCarregar = avatarPadrao;
+        }
+
+        fotoPerfil.setImage(imagemParaCarregar);
     }
 
     private void loadUI(String fxmlPath) {

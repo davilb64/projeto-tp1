@@ -14,8 +14,15 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.File; // Importar File
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException; // Importar IOException
+import java.io.InputStream; // Importar InputStream
+import java.nio.file.Files; // Importar Files
+import java.nio.file.Path; // Importar Path
+import java.nio.file.Paths; // Importar Paths
+import java.util.List; // Importar List
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -33,71 +40,115 @@ public class LoginController {
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
     private Image avatarPadrao;
-    private static final String DIRETORIO_FOTOS = "src/main/resources/fotos_perfil/";
     private ResourceBundle bundle;
 
+    /**
+     * Retorna o caminho absoluto para a pasta de fotos do aplicativo (fora do JAR).
+     */
+    private Path getPathParaFotos() {
+        String userHome = System.getProperty("user.home");
+        return Paths.get(userHome, ".humanize-app-data", "fotos_perfil");
+    }
+
+    /**
+     * Copia as fotos padrão do JAR para a pasta externa (semeadura).
+     */
+    private void seedDefaultPhotos() {
+        Path externalPhotoDir = getPathParaFotos();
+        if (!Files.exists(externalPhotoDir)) {
+            try {
+                Files.createDirectories(externalPhotoDir);
+            } catch (IOException e) {
+                System.err.println("Falha ao criar diretório de fotos no Login: " + e.getMessage());
+                return; // Não pode semear se a pasta falhar
+            }
+        }
+
+        // Lista de fotos padrão do seu screenshot
+        List<String> defaultPhotos = List.of(
+                "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png",
+                "9.png", "10.png", "12.png", "04935825170.png",
+                "08650999107.png", "default_avatar.png"
+        );
+
+        for (String photoName : defaultPhotos) {
+            File externalFile = externalPhotoDir.resolve(photoName).toFile();
+            if (!externalFile.exists()) {
+                String resourcePath = "/fotos_perfil/" + photoName;
+                try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+                    if (is == null) {
+                        System.err.println("Foto de semeadura não encontrada no JAR: " + resourcePath);
+                        continue;
+                    }
+                    Files.copy(is, externalFile.toPath());
+                } catch (IOException e) {
+                    System.err.println("Falha ao semear foto: " + photoName + " - " + e.getMessage());
+                }
+            }
+        }
+    }
 
     @FXML
     public void initialize() {
-        // Inicializa o bundle
         this.bundle = UserSession.getInstance().getBundle();
 
-        // senha
+        // Senha
         txtSenhaAberta.textProperty().bindBidirectional(txtSenhaOculta.textProperty());
         txtSenhaAberta.visibleProperty().bind(btnMostrarSenha.selectedProperty());
         txtSenhaOculta.visibleProperty().bind(btnMostrarSenha.selectedProperty().not());
         UserSession.getInstance().logout();
 
-        // foto
-        try {
-            avatarPadrao = new Image(new FileInputStream(DIRETORIO_FOTOS + "default_avatar.png"));
-        } catch (FileNotFoundException e) {
-            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
-            avatarPadrao = null;
-        }
-        imgFotoPerfil.setImage(avatarPadrao); // imagem inicial
+        // Garante que a pasta de fotos e as fotos padrão existam
+        seedDefaultPhotos();
 
-        // listener para atualizar a foto
+        // Foto Padrão (lida de dentro do JAR)
+        try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
+            if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
+            avatarPadrao = new Image(is);
+        } catch (Exception e) {
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
+        }
+        imgFotoPerfil.setImage(avatarPadrao);
+
+        // Listener para atualizar a foto
         txtUsuario.textProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal == null || newVal.trim().isEmpty()) {
-                // = vazio, reseta para o padrão
                 imgFotoPerfil.setImage(avatarPadrao);
             } else {
-                // busca pelo login (novoVal)
                 Optional<Usuario> usuarioOpt = usuarioRepository.buscaUsuarioPorLogin(newVal.trim());
-
                 Image foto = usuarioOpt.map(usuario -> {
                     String caminho = null;
                     if (usuario instanceof Funcionario) {
-                        // cast
                         caminho = ((Funcionario) usuario).getCaminhoFoto();
                     }
                     return carregarImagem(caminho);
                 }).orElse(avatarPadrao);
-
                 imgFotoPerfil.setImage(foto);
             }
         });
     }
 
     /**
-     * Tenta carregar uma imagem do caminho. Se falhar, retorna o avatar padrão.
+     * Tenta carregar uma imagem do caminho EXTERNO.
+     * Se falhar ou o caminho for vazio, retorna o avatar padrão.
      */
     private Image carregarImagem(String caminho) {
         if (caminho == null || caminho.isEmpty()) {
-            return avatarPadrao;
+            return avatarPadrao; // Caminho vazio, usa padrão
         }
         try {
+            // Tenta carregar do caminho absoluto externo
             return new Image(new FileInputStream(caminho));
         } catch (FileNotFoundException e) {
             System.err.println(bundle.getString("log.error.loginPhotoNotFound") + caminho);
-            return avatarPadrao;
+            return avatarPadrao; // Arquivo não encontrado, usa padrão
         }
     }
 
 
     @FXML
     private void entrar(){
+        // ... (método não muda) ...
         String usuario = txtUsuario.getText();
         String senha = txtSenhaOculta.getText();
         try {
@@ -151,6 +202,7 @@ public class LoginController {
     }
 
     private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
+        // ... (método não muda) ...
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
         alert.setHeaderText(cabecalho);
@@ -158,6 +210,7 @@ public class LoginController {
         alert.showAndWait();
     }
 
+    // ... (métodos entrarAdm, entrarGestor, etc. não mudam) ...
     @FXML
     private void entrarAdm() {
         ScreenController.changeScene("/view/telaPrincipalAdministrador.fxml");
@@ -174,5 +227,4 @@ public class LoginController {
     private void entrarFuncionario() {
         ScreenController.changeScene("/view/TelaPrincipalFuncionario.fxml");
     }
-
 }

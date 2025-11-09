@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RelatorioRepository {
+public class RelatorioRepository extends BaseRepository {
     private static final RelatorioRepository instance = new RelatorioRepository();
-    private final String arquivoCsv = "./src/main/resources/relatorios.csv";
+    private static final String NOME_ARQUIVO = "relatorios.csv";
     private final List<Relatorio> relatoriosEmMemoria;
 
     private RelatorioRepository() {
@@ -43,17 +43,18 @@ public class RelatorioRepository {
     }
 
     private void carregarRelatoriosDoCSV() {
-        File file = new File(arquivoCsv);
+        File file = getArquivoDePersistencia(NOME_ARQUIVO);
         if (!file.exists()) {
-            System.out.println("Arquivo " + arquivoCsv + " não encontrado, será criado ao salvar.");
-            try (FileWriter writer = new FileWriter(arquivoCsv)) {
-                writer.write("ID;TipoRelatorio;DataGeracao;ResponsavelID\n");
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, file);
             } catch (IOException e) {
-                System.err.println("Erro ao criar arquivo CSV de relatórios: " + e.getMessage());
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
             }
-            return;
         }
-        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivoCsv))){
+        try (BufferedReader leitor = new BufferedReader(new FileReader(file))){
             String header = leitor.readLine();
             if (header == null || !header.equals("ID;TipoRelatorio;DataGeracao;ResponsavelID")) {
                 System.err.println("Cabeçalho inválido no arquivo CSV de relatórios.");
@@ -111,7 +112,8 @@ public class RelatorioRepository {
     }
 
     private void persistirAlteracoesNoCSV() throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("ID;TipoRelatorio;DataGeracao;ResponsavelID\n");
             for (Relatorio relatorio : this.relatoriosEmMemoria) {
                 escritor.write(formatarRelatorioParaCSV(relatorio));

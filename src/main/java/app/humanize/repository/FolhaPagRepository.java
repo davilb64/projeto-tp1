@@ -7,10 +7,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FolhaPagRepository {
+public class FolhaPagRepository extends BaseRepository {
 
     public static final FolhaPagRepository instance = new FolhaPagRepository();
-    private final String arquivoCsv = "./src/main/resources/folha_pagamento.csv";
+    private static final String NOME_ARQUIVO = "folha_pagamento.csv";
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private FolhaPagRepository() {}
@@ -27,10 +27,17 @@ public class FolhaPagRepository {
 
     public List<FolhaPag> carregarTodasFolhas() {
         List<FolhaPag> folhas = new ArrayList<>();
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
 
         if (!arquivo.exists()) {
-            return folhas;
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return folhas;
+            }
         }
 
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
@@ -89,7 +96,8 @@ public class FolhaPagRepository {
     }
 
     private void salvarTodasFolhas(List<FolhaPag> folhas) throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("Nome;Cargo;Nivel;SalarioBase;AdicionalNivel;Beneficios;Adicionais;Descontos;SalarioLiquido;Data\n");
 
             for (FolhaPag folha : folhas) {

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="524.0" prefWidth="714.0" spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.RegrasSalariaisController">
+<VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.RegrasSalariaisController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
@@ -25,7 +25,7 @@
         </VBox.margin>
     </Label>
 
-    <GridPane hgap="20.0" prefHeight="261.0" prefWidth="694.0" vgap="15.0" VBox.vgrow="ALWAYS">
+    <GridPane hgap="20.0" vgap="15.0">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="100.0" />
             <ColumnConstraints hgrow="ALWAYS" minWidth="100.0" />
@@ -38,24 +38,23 @@
         </rowConstraints>
 
         <Label styleClass="filter-label" text="%employeeManagement.filter.label.position" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-        <ChoiceBox fx:id="CBcargo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <ChoiceBox fx:id="CBcargo" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
         <Label styleClass="filter-label" text="%payroll.filter.label.level" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
-        <ChoiceBox fx:id="CBnivel" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+        <ChoiceBox fx:id="CBnivel" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
 
         <Label styleClass="filter-label" text="%salaryRules.label.baseSalary" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <TextField fx:id="txtSalarioBase" promptText="%salaryRules.prompt.baseSalary" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <TextField fx:id="txtSalarioBase" maxWidth="1.7976931348623157E308" promptText="%salaryRules.prompt.baseSalary" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
         <Label styleClass="filter-label" text="%salaryRules.label.benefits" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <ChoiceBox fx:id="CBbeneficios" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+        <ChoiceBox fx:id="CBbeneficios" maxWidth="1.7976931348623157E308" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
     </GridPane>
 
-
-    <HBox prefHeight="302.0" prefWidth="694.0">
+    <HBox VBox.vgrow="ALWAYS">
         <children>
-            <TableView fx:id="tableViewRegras" prefHeight="200.0" prefWidth="694.0">
+            <TableView fx:id="tableViewRegras" HBox.hgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colCargo" prefWidth="180.0" text="%employeeManagement.table.col.position" />
                     <TableColumn fx:id="colNivel" prefWidth="120.0" text="%salaryRules.table.col.level" />
@@ -64,6 +63,9 @@
                     <TableColumn fx:id="colBeneficios" prefWidth="130.0" text="%salaryRules.table.col.benefits" />
                     <TableColumn fx:id="colSalarioTotal" prefWidth="130.0" text="%salaryRules.table.col.totalSalary" />
                 </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
             </TableView>
         </children>
     </HBox>

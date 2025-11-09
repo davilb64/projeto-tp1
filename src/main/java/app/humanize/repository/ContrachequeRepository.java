@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ContrachequeRepository {
+public class ContrachequeRepository extends BaseRepository {
 
     private static final ContrachequeRepository instance = new ContrachequeRepository();
-    private final String arquivoCsv = "./src/main/resources/contracheques.csv";
+    private static final String NOME_ARQUIVO = "contracheques.csv";
 
     private ContrachequeRepository() {}
 
@@ -29,10 +29,17 @@ public class ContrachequeRepository {
 
     private List<ContraCheque> carregarTodosContraCheques() {
         List<ContraCheque> contraCheques = new ArrayList<>();
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
 
         if (!arquivo.exists()) {
-            return contraCheques;
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return contraCheques;
+            }
         }
 
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
@@ -65,7 +72,8 @@ public class ContrachequeRepository {
     }
 
     private void salvarTodosContraCheques(List<ContraCheque> contraCheques) throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("NomeFuncionario;DataEmissao;TotalProventos;TotalDescontos;Saldo\n");
 
             for (ContraCheque contraCheque : contraCheques) {

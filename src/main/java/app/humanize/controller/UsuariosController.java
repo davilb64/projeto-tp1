@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream; // Importar
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -54,10 +55,19 @@ public class UsuariosController {
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
     private ResourceBundle bundle;
+    private Image avatarPadrao; // Variável para guardar o avatar
 
     @FXML
     public void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
+
+        // Carrega o avatar padrão UMA VEZ de dentro do JAR
+        try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
+            if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
+            this.avatarPadrao = new Image(is);
+        } catch (Exception e) {
+            System.err.println(bundle.getString("log.error.avatarDefaultNotFound"));
+        }
 
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -66,8 +76,8 @@ public class UsuariosController {
 
         colFoto.setCellValueFactory(new PropertyValueFactory<>("caminhoFoto"));
 
+        // LÓGICA DE CARREGAMENTO DA FOTO CORRIGIDA
         colFoto.setCellFactory(col -> new TableCell<Usuario, String>() {
-
             private final ImageView imageView = new ImageView();
             {
                 imageView.setFitHeight(50);
@@ -80,18 +90,24 @@ public class UsuariosController {
             protected void updateItem(String caminho, boolean empty) {
                 super.updateItem(caminho, empty);
 
-                if (empty || caminho == null || caminho.isEmpty()) {
+                if (empty) {
                     setGraphic(null);
-                    setText(null);
+                } else if (caminho == null || caminho.isEmpty()) {
+                    // Caminho vazio: Usa o avatar padrão
+                    imageView.setImage(avatarPadrao);
+                    setGraphic(imageView);
                 } else {
+                    // Caminho existe: Tenta carregar do disco
                     try {
                         File file = new File(caminho);
                         Image img = new Image(file.toURI().toString());
                         imageView.setImage(img);
                         setGraphic(imageView);
                     } catch (Exception e) {
+                        // Erro ao carregar (ex: arquivo não encontrado): Usa o avatar padrão
                         System.err.println(bundle.getString("log.error.photoNotFound") + caminho);
-                        setGraphic(null);
+                        imageView.setImage(avatarPadrao);
+                        setGraphic(imageView);
                     }
                 }
             }
@@ -107,6 +123,7 @@ public class UsuariosController {
     }
 
     private void carregarFiltro() {
+        // ... (lógica de filtro não muda) ...
         List<Usuario> usuarios = usuarioRepository.getTodosUsuarios();
         Stream<Usuario> stream = usuarios.stream();
 
@@ -151,6 +168,7 @@ public class UsuariosController {
 
     @FXML
     private void cadastrarUsuario() throws IOException {
+        // ... (método não muda) ...
         URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
         FXMLLoader loader = new FXMLLoader(resource, bundle);
 
@@ -168,6 +186,7 @@ public class UsuariosController {
 
     @FXML
     private void editarUsuario() throws IOException {
+        // ... (método não muda) ...
         Usuario usuarioSelecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (usuarioSelecionado == null) {
             mostrarAlerta(bundle.getString("userManagement.alert.noUserSelectedEdit"));
@@ -194,6 +213,7 @@ public class UsuariosController {
 
     @FXML
     private void excluirUsuario() {
+        // ... (método não muda) ...
         Usuario usuarioSelecionado = tblUsuarios.getSelectionModel().getSelectedItem();
 
         if (usuarioSelecionado != null) {

@@ -4,16 +4,17 @@ import app.humanize.model.*;
 import app.humanize.util.EstadosBrasileiros;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class UsuarioRepository {
+public class UsuarioRepository extends BaseRepository {
 
     private static final UsuarioRepository instance = new UsuarioRepository();
-    private final String arquivoCsv = "./src/main/resources/usuarios.csv";
+    private static final String NOME_ARQUIVO = "usuarios.csv";
     private final List<Usuario> usuariosEmMemoria;
 
     UsuarioRepository() {
@@ -25,7 +26,6 @@ public class UsuarioRepository {
         return instance;
     }
 
-    // ... (getTodosUsuarios, getRecrutadores, etc. não mudam) ...
     public List<Usuario> getTodosUsuarios() {
         return new ArrayList<>(this.usuariosEmMemoria);
     }
@@ -100,11 +100,20 @@ public class UsuarioRepository {
     }
 
     private void carregarUsuariosDoCSV() {
-        File arquivo = new File(arquivoCsv);
-        if (!arquivo.exists()) {
-            return;
+        File arquivoDeDestino = getArquivoDePersistencia(NOME_ARQUIVO);
+
+        if (!arquivoDeDestino.exists()) {
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivoDeDestino);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
+            }
         }
-        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
+
+        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivoDeDestino))) {
             leitor.readLine();
             String linha;
             while ((linha = leitor.readLine()) != null) {
@@ -119,7 +128,8 @@ public class UsuarioRepository {
     }
 
     private void persistirAlteracoesNoCSV() throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             // CABEÇALHO ATUALIZADO (19 COLUNAS)
             escritor.write("ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;IdiomaPreferencial;Matricula;DataAdmissao;Periodo;Receita;Despesas;Salario;Cargo;Regime;Departamento;CaminhoFoto;\n");
             for (Usuario usuario : this.usuariosEmMemoria) {

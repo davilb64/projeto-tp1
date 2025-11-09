@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class EntrevistaRepository {
+public class EntrevistaRepository extends BaseRepository {
     private static final EntrevistaRepository instance = new EntrevistaRepository();
-    private final String arquivoCsv = "./src/main/resources/entrevistas.csv";
+    private static final String NOME_ARQUIVO = "entrevistas.csv";
     private final List<Entrevista> entrevistaEmMemoria;
 
     private EntrevistaRepository() {
@@ -39,7 +39,7 @@ public class EntrevistaRepository {
     }
 
     public List<Entrevista> buscarCandidatosAprovados() {
-         return this.entrevistaEmMemoria.stream()
+        return this.entrevistaEmMemoria.stream()
                 .filter(e -> e.getStatus().equals(StatusEntrevista.Aprovado))
                 .toList();
     }
@@ -71,7 +71,8 @@ public class EntrevistaRepository {
                 + 1;
     }
     private void persistirAlteracoesNoCSV() throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("idEntrevista;DataEntrevista;StatusEntrevista;Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;idVaga;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdPessoa;NomePessoa;CpfPessoa;PerfilPessoa\n");
             for (Entrevista entrevista : this.entrevistaEmMemoria) {
                 escritor.write(formatarEntrevistaParaCSV(entrevista));
@@ -115,9 +116,16 @@ public class EntrevistaRepository {
 
     //recuperar dados do arquivo csv
     public void carregarEntrevistaDoCSV() {
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
         if (!arquivo.exists()) {
-            return;
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
+            }
         }
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
             leitor.readLine(); // Pula o cabeçalho

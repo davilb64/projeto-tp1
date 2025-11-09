@@ -5,10 +5,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelatorioFinanceiroRepository {
+public class RelatorioFinanceiroRepository extends BaseRepository {
 
     public static final RelatorioFinanceiroRepository instance = new RelatorioFinanceiroRepository();
-    private final String arquivoCsv = "./src/main/resources/relatorio_financeiro.csv";
+    private static final String NOME_ARQUIVO = "relatorio_financeiro.csv";
 
     private RelatorioFinanceiroRepository() {}
 
@@ -17,16 +17,17 @@ public class RelatorioFinanceiroRepository {
     }
 
     public void criarArquivoSeNaoExiste() throws IOException {
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
         if (!arquivo.exists()) {
-            try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+            try (FileWriter escritor = new FileWriter(arquivo, false)) {
                 escritor.write("Data;Descricao;Receita;Despesas;Saldo;Categoria\n");
             }
         }
     }
 
     public void salvarTransacoes(List<RelatorioFinanceiro> transacoes) throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        try (FileWriter escritor = new FileWriter(arquivo, false)) {
             escritor.write("Data;Descricao;Receita;Despesas;Saldo;Categoria\n");
 
             for (RelatorioFinanceiro transacao : transacoes) {
@@ -43,10 +44,17 @@ public class RelatorioFinanceiroRepository {
 
     public List<RelatorioFinanceiro> carregarTransacoes() {
         List<RelatorioFinanceiro> transacoes = new ArrayList<>();
-        File arquivo = new File(arquivoCsv);
+        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
 
         if (!arquivo.exists()) {
-            return transacoes;
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return transacoes;
+            }
         }
 
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
