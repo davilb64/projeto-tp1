@@ -68,19 +68,19 @@
             <font>
                <Font size="23.0" />
             </font></Label>
-            <Button fx:id="btnSalvarRelatorio" style="-fx-background-color: #2E8B57; -fx-text-fill: white;" text="Salvar Relatório" />
+            <Button fx:id="btnSalvarRelatorio" style="-fx-background-color: #2E8B57; -fx-text-fill: white;" text="Carregar Relatório" />
         </HBox>
 
 
         <TableView fx:id="tabelaRelatorio" prefHeight="408.0" prefWidth="678.0" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colData" prefWidth="80" text="data" />
-                <TableColumn fx:id="colDescricao" prefWidth="100.800048828125" text="descrição" />
-                <TableColumn fx:id="colValor" prefWidth="107.19999694824219" text="receita" />
-                <TableColumn fx:id="colTipo" minWidth="0.0" prefWidth="84.0" text="despesas" />
-                <TableColumn fx:id="colData1" prefWidth="80" text="valor" />
-                <TableColumn fx:id="colData2" prefWidth="80" text="saldo" />
+                <TableColumn fx:id="colData" prefWidth="61.59997487068176" text="data" />
+                <TableColumn fx:id="colDescricao" prefWidth="91.20001602172852" text="descrição" />
+                <TableColumn fx:id="colValor" prefWidth="91.19996643066406" text="receita" />
+                <TableColumn fx:id="colTipo" minWidth="0.0" prefWidth="95.19999694824219" text="despesas" />
+                <TableColumn fx:id="colData1" prefWidth="95.199951171875" text="valor" />
                 <TableColumn fx:id="colData3" prefWidth="84.800048828125" text="categoria" />
+            <TableColumn fx:id="Colsaldofinal" prefWidth="107.19999694824219" text="Saldo final" />
             </columns>
         </TableView>
     </VBox>

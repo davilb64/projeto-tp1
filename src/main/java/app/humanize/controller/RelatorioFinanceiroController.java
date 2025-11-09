@@ -11,6 +11,8 @@ import javafx.collections.FXCollections;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RelatorioFinanceiroController {
 
@@ -27,8 +29,8 @@ public class RelatorioFinanceiroController {
     @FXML private TableColumn<RelatorioFinanceiro, String> colValor;
     @FXML private TableColumn<RelatorioFinanceiro, String> colTipo;
     @FXML private TableColumn<RelatorioFinanceiro, String> colData1;
-    @FXML private TableColumn<RelatorioFinanceiro, String> colData2;
     @FXML private TableColumn<RelatorioFinanceiro, String> colData3;
+    @FXML private TableColumn<RelatorioFinanceiro, String> Colsaldofinal;
 
     private ObservableList<RelatorioFinanceiro> transacoes = FXCollections.observableArrayList();
     private FolhaPagRepository folhaRepository = FolhaPagRepository.getInstance();
@@ -48,8 +50,15 @@ public class RelatorioFinanceiroController {
         btnSalvar.setOnAction(event -> salvarTransacao());
         btnSalvarRelatorio.setOnAction(event -> carregarRelatorioCompleto());
 
+        try {
+            relatorioRepository.criarArquivoSeNaoExiste();
+        } catch (IOException e) {
+            mostrarAlerta("Erro", "Erro ao criar arquivo: " + e.getMessage());
+        }
+
         carregarRelatorioSalvo();
         carregarDespesasFolhaPagamento();
+        calcularEAdicionarSaldoFinal();
     }
 
     private void configurarColunas() {
@@ -58,8 +67,8 @@ public class RelatorioFinanceiroController {
         colValor.setCellValueFactory(cellData -> cellData.getValue().receitaProperty());
         colTipo.setCellValueFactory(cellData -> cellData.getValue().despesasProperty());
         colData1.setCellValueFactory(cellData -> cellData.getValue().valorProperty());
-        colData2.setCellValueFactory(cellData -> cellData.getValue().saldoProperty());
         colData3.setCellValueFactory(cellData -> cellData.getValue().categoriaProperty());
+        Colsaldofinal.setCellValueFactory(cellData -> cellData.getValue().saldoProperty());
     }
 
     private void carregarRelatorioSalvo() {
@@ -70,21 +79,30 @@ public class RelatorioFinanceiroController {
     private void carregarDespesasFolhaPagamento() {
         var folhas = folhaRepository.carregarTodasFolhas();
 
-        for (FolhaPag folha : folhas) {
-            String dataFolha = folha.getData() != null ?
-                    folha.getData().format(dateFormatter) :
-                    LocalDate.now().format(dateFormatter);
+        Set<String> descricoesExistentes = new HashSet<>();
+        for (RelatorioFinanceiro transacao : transacoes) {
+            descricoesExistentes.add(transacao.getDescricao());
+        }
 
-            RelatorioFinanceiro folhaTransacao = new RelatorioFinanceiro(
-                    dataFolha,
-                    "Folha de Pagamento - " + folha.getNome(),
-                    "",
-                    String.format("R$ %.2f", folha.getSalarioLiquido()),
-                    String.format("R$ %.2f", folha.getSalarioLiquido()),
-                    "",
-                    "Folha de Pagamento"
-            );
-            transacoes.add(folhaTransacao);
+        for (FolhaPag folha : folhas) {
+            String descricaoFolha = "Folha de Pagamento - " + folha.getNome();
+
+            if (!descricoesExistentes.contains(descricaoFolha)) {
+                String dataFolha = folha.getData() != null ?
+                        folha.getData().format(dateFormatter) :
+                        LocalDate.now().format(dateFormatter);
+
+                RelatorioFinanceiro folhaTransacao = new RelatorioFinanceiro(
+                        dataFolha,
+                        descricaoFolha,
+                        "",
+                        String.format("R$ %.2f", folha.getSalarioLiquido()),
+                        String.format("R$ %.2f", folha.getSalarioLiquido()),
+                        "",
+                        "Folha de Pagamento"
+                );
+                transacoes.add(folhaTransacao);
+            }
         }
     }
 
@@ -107,8 +125,44 @@ public class RelatorioFinanceiroController {
             );
 
             transacoes.add(transacao);
+            calcularEAdicionarSaldoFinal();
             salvarTransacoesNoRepository();
             limparCampos();
+        }
+    }
+
+    private void calcularEAdicionarSaldoFinal() {
+        double saldoFinal = 0.0;
+
+        transacoes.removeIf(t -> "SALDO FINAL".equals(t.getDescricao()));
+
+        for (RelatorioFinanceiro transacao : transacoes) {
+            double receita = extrairValorNumerico(transacao.getReceita());
+            double despesa = extrairValorNumerico(transacao.getDespesas());
+            saldoFinal += (receita - despesa);
+        }
+
+        RelatorioFinanceiro saldoFinalTransacao = new RelatorioFinanceiro(
+                "",
+                "SALDO FINAL",
+                "",
+                "",
+                String.format("R$ %.2f", saldoFinal),
+                String.format("R$ %.2f", saldoFinal),
+                saldoFinal >= 0 ? "Lucro" : "Prejuízo"
+        );
+        transacoes.add(saldoFinalTransacao);
+    }
+
+    private double extrairValorNumerico(String valorComRS) {
+        if (valorComRS == null || valorComRS.trim().isEmpty()) {
+            return 0.0;
+        }
+        try {
+            String valorLimpo = valorComRS.replace("R$", "").replace(",", ".").trim();
+            return Double.parseDouble(valorLimpo);
+        } catch (NumberFormatException e) {
+            return 0.0;
         }
     }
 
@@ -142,16 +196,13 @@ public class RelatorioFinanceiroController {
     private void carregarRelatorioCompleto() {
         try {
             transacoes.clear();
-
             carregarRelatorioSalvo();
-
             carregarDespesasFolhaPagamento();
-
-
+            calcularEAdicionarSaldoFinal();
             salvarTransacoesNoRepository();
 
-            mostrarAlerta("Sucesso", "Relatório recarregado com sucesso!\n" +
-                    "Total de " + transacoes.size() + " transações carregadas.");
+            mostrarAlerta("Sucesso", "Relatório atualizado com sucesso!\n" +
+                    "Total de " + (transacoes.size() - 1) + " transações.");
 
         } catch (Exception e) {
             mostrarAlerta("Erro", "Erro ao carregar relatório: " + e.getMessage());

@@ -16,6 +16,15 @@ public class RelatorioFinanceiroRepository {
         return instance;
     }
 
+    public void criarArquivoSeNaoExiste() throws IOException {
+        File arquivo = new File(arquivoCsv);
+        if (!arquivo.exists()) {
+            try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+                escritor.write("Data;Descricao;Receita;Despesas;Valor;Saldo;Categoria\n");
+            }
+        }
+    }
+
     public void salvarTransacoes(List<RelatorioFinanceiro> transacoes) throws IOException {
         try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
             escritor.write("Data;Descricao;Receita;Despesas;Valor;Saldo;Categoria\n");
@@ -42,7 +51,7 @@ public class RelatorioFinanceiroRepository {
         }
 
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
-            leitor.readLine(); // pla header
+            leitor.readLine(); //pla header
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 String[] campos = linha.split(";", -1);
@@ -60,7 +69,6 @@ public class RelatorioFinanceiroRepository {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Erro ao carregar relatório do CSV: " + e.getMessage());
         }
 
         return transacoes;
