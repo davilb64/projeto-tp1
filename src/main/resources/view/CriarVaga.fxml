@@ -14,7 +14,7 @@
 
 <VBox maxWidth="450.0" minWidth="400.0" spacing="15.0" style="-fx-padding: 24;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.CriarVagaController">
 
-    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 10;" styleClass="screen-title" text="%createVacancy.title">
+    <Label alignment="CENTER" maxWidth="1.7976931348623157E308" style="-fx-background-radius: 10;" styleClass="screen-title" text="Cadastro de Vaga">
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>
@@ -34,6 +34,7 @@
             <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
@@ -59,12 +60,12 @@
         <padding>
             <Insets top="10.0" />
         </padding>
-        <Button cancelButton="true" onAction="#fecharJanela" text="%createVacancy.button.cancel">
+        <Button cancelButton="true" onAction="#fecharJanela" text="Cancelar">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Button>
-        <Button defaultButton="true" onAction="#salvarVaga" styleClass="primary-action-button" text="%createVacancy.button.save">
+        <Button defaultButton="true" onAction="#salvarVaga" styleClass="primary-action-button" text="Salvar">
             <cursor>
                 <Cursor fx:constant="HAND" />
             </cursor>
