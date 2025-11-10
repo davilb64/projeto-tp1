@@ -67,6 +67,7 @@
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
+      <Button fx:id="btnRelatarEntrevista" mnemonicParsing="false" onAction="#RelatarEntrevista" text="Relatar entrevista" />
         <Button fx:id="btnMarcarEntrevista" onAction="#cadastrarEntrevista" styleClass="primary-action-button" text="Marcar Nova entrevista">
             <cursor>
                 <Cursor fx:constant="HAND" />

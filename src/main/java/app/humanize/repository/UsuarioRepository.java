@@ -32,7 +32,7 @@ public class UsuarioRepository {
     public List<Usuario> getRecrutadores() {
         List<Usuario> recrutadores = new ArrayList<>();
         for(Usuario usuario : this.usuariosEmMemoria) {
-            if (usuario instanceof Recrutador) {
+            if (usuario instanceof Recrutador &&  usuario.getPerfil() == Perfil.RECRUTADOR) {
                 recrutadores.add(usuario);
             }
         }

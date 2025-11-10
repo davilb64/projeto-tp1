@@ -86,7 +86,7 @@ public class VagaRepository {
 
     private void persistirAlteracoesNoCSV() throws IOException {
         try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
-            escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;\n");
+            escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdRecrutador;NomeRecrutador;CPFRecrutador;\n");
             for (Vaga vaga : this.vagaEmMemoria) {
                 escritor.write(formatarVagaParaCSV(vaga));
             }
@@ -95,11 +95,10 @@ public class VagaRepository {
 
     private Vaga parseVagaDaLinhaCsv(String linha) {
         String[] campos = linha.split(";", -1);
-        if (campos.length < 6) return null;
+        if (campos.length < 9) return null;
 
         try {
             int id = Integer.parseInt(campos[0]);
-
 
             Vaga vaga = new Vaga();
 
@@ -111,6 +110,19 @@ public class VagaRepository {
             vaga.setDepartamento(campos[5]);
             vaga.setDataVaga(campos[6] != null && !campos[6].isEmpty() ? LocalDate.parse(campos[6]) : null);
 
+            if(campos[7] != null && !campos[7].isEmpty())
+            {
+                int idRecrutador = Integer.parseInt(campos[7]);
+                String nomeRecrutador = campos[8];
+                String cpfRecrutador = campos[9];
+
+                Usuario usuario =  new Recrutador.RecrutadorBuilder()
+                        .nome(nomeRecrutador).cpf(cpfRecrutador)
+                        .build();
+                usuario.setId(idRecrutador);
+
+                vaga.setRecrutador(usuario);
+            }
             return vaga;
 
         } catch (Exception e) {
@@ -128,6 +140,9 @@ public class VagaRepository {
         sb.append(vaga.getRequisitos() == null ? "" : vaga.getRequisitos()).append(";");
         sb.append(vaga.getDepartamento() == null ? "" : vaga.getDepartamento()).append(";");
         sb.append(vaga.getDataVaga() == null ? "" : vaga.getDataVaga()).append(";");
+        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getId()).append(";");
+        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getNome()).append(";");
+        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getCpf()).append(";");
         sb.append("\n");
         return sb.toString();
     }

@@ -1,7 +1,10 @@
 package app.humanize.controller;
 
+import app.humanize.model.Recrutador;
 import app.humanize.model.StatusVaga;
+import app.humanize.model.Usuario;
 import app.humanize.model.Vaga;
+import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.VagaRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -15,8 +18,10 @@ public class CriarVagaController {
     @FXML private TextField txtRequisitos;
     @FXML private ChoiceBox<String> choiceStatus;
     @FXML private TextField txtDepartamento;
+    @FXML private ChoiceBox<Usuario> cbRecrutador;
 
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
+    private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
     private Vaga vagaParaEditar;
 
@@ -24,6 +29,7 @@ public class CriarVagaController {
     public void initialize() {
         // Configurar as opções do ChoiceBox
         choiceStatus.getItems().addAll("ABERTA", "FECHADA");
+        cbRecrutador.getItems().addAll(usuarioRepository.getRecrutadores());
 
         if (vagaParaEditar == null) {
             lblId.setText(String.valueOf(vagaRepository.getProximoId()));
@@ -39,6 +45,7 @@ public class CriarVagaController {
         txtSalario.setText(vaga.getSalario());
         txtRequisitos.setText(vaga.getRequisitos());
         txtDepartamento.setText(vaga.getDepartamento());
+        cbRecrutador.setValue(vaga.getRecrutador());
 
         // CORREÇÃO: Converter enum para String
         choiceStatus.setValue(vaga.getStatus().name());
@@ -62,7 +69,7 @@ public class CriarVagaController {
         if (vagaParaEditar == null) {
 
             try{
-                Vaga vaga = new Vaga(txtCargo.getText(),  StatusVaga.valueOf(choiceStatus.getValue()),  txtSalario.getText(), txtRequisitos.getText(), txtDepartamento.getText());
+                Vaga vaga = new Vaga(txtCargo.getText(),  StatusVaga.valueOf(choiceStatus.getValue()),  txtSalario.getText(), txtRequisitos.getText(), txtDepartamento.getText(), cbRecrutador.getValue());
                 vagaRepository.escreveVagaNova(vaga);
             }catch (Exception e){
                 mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
@@ -75,6 +82,7 @@ public class CriarVagaController {
                 vagaParaEditar.setSalario(txtSalario.getText());
                 vagaParaEditar.setStatus(StatusVaga.valueOf(choiceStatus.getValue()));
                 vagaParaEditar.setDepartamento(txtDepartamento.getText());
+                vagaParaEditar.setRecrutador(cbRecrutador.getValue());
 
                 vagaRepository.atualizarVaga();
             }catch (Exception e){
