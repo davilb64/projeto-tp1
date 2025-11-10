@@ -1,6 +1,6 @@
 package app.humanize.controller;
 
-import app.humanize.model.factories.RelatorioFinanceiro;
+import app.humanize.model.RelatorioFinanceiro;
 import app.humanize.model.FolhaPag;
 import app.humanize.repository.FolhaPagRepository;
 import app.humanize.repository.RelatorioFinanceiroRepository;

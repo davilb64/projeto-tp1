@@ -1,6 +1,6 @@
 package app.humanize.repository;
 
-import app.humanize.model.factories.RelatorioFinanceiro;
+import app.humanize.model.RelatorioFinanceiro;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
