@@ -40,3 +40,4 @@ build/
 .idea/
 *.class
 /dependency-reduced-pom.xml
+/commits.txt
