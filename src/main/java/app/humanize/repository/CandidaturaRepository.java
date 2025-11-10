@@ -64,9 +64,11 @@ public class CandidaturaRepository extends BaseRepository {
     public void remover(Candidatura candidatura) throws IOException {
         candidaturasEmMemoria.removeIf(c ->
                 c.getCandidato().getCpf().equals(candidatura.getCandidato().getCpf()) &&
-                        c.getVaga().getId() == candidatura.getVaga().getId());
+                        c.getVaga().getCargo().equalsIgnoreCase(candidatura.getVaga().getCargo())
+        );
         persistirAlteracoesNoCSV();
     }
+
 
 
     /** Persiste todas as candidaturas no CSV */
