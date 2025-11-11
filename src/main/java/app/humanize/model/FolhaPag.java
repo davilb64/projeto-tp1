@@ -75,4 +75,8 @@ public class FolhaPag {
 
     public LocalDate getData() { return data; }
     public void setData(LocalDate data) { this.data = data; }
+
+    public String getMesAno() {
+        return data.toString();
+    }
 }

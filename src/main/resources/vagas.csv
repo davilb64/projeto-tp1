@@ -1,7 +1,10 @@
 ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdPessoa;NomePessoa;CpfPessoa;PerfilPessoa
-1;Limpador de calha;2;ABERTA;ser lindo;Limpeza;;13;Rec do Ricardo;96403477013;RECRUTADOR;
-2;Jogador de LoL;10.000,00;ABERTA;Ser Nerd;e-sports;;13;Rec do Ricardo;96403477013;RECRUTADOR;
-3;treinador de ia;2567;ABERTA;falar ingles;T.I;;8;Recrutador Silva;33667770014;RECRUTADOR;
-4;Faxineiro;3000;ABERTA;Experiencia comprovada;Limpeza;;13;Rec do Ricardo;96403477013;RECRUTADOR;
-5;Advogado;10000;ABERTA;Ser prepotente;Jurídico;;;;;;
-6;lixo;100;ABERTA;lixo;lixo;;5;Rec Teste;18854388009;RECRUTADOR;
+1;Limpador de calha;2;ABERTA;ser lindo;Limpeza;2025-09-30;13;Rec do Ricardo;96403477013;RECRUTADOR;
+2;Jogador de LoL;10.000,00;ABERTA;Ser Nerd;e-sports;2025-10-10;13;Rec do Ricardo;96403477013;RECRUTADOR;
+3;treinador de ia;2567;ABERTA;falar ingles;T.I;2025-10-20;8;Recrutador Silva;33667770014;RECRUTADOR;
+4;Faxineiro;3000;ABERTA;Experiencia comprovada;Limpeza;2025-10-25;13;Rec do Ricardo;96403477013;RECRUTADOR;
+5;Advogado;10000;ABERTA;Ser prepotente;Jurídico;2025-11-01;8;Recrutador Silva;33667770014;RECRUTADOR;
+6;lixo;100;ABERTA;lixo;lixo;2025-11-05;5;Rec Teste;18854388009;RECRUTADOR;
+7;Designer UI/UX;6000;ABERTA;Portfolio sólido, Figma, Sketch;Design;2025-11-10;5;Rec Teste;18854388009;RECRUTADOR
+8;Analista de Marketing Digital;7500;FECHADA;Google Ads, SEO, RD Station;Marketing;2025-10-15;8;Recrutador Silva;33667770014;RECRUTADOR
+9;Gerente de Projetos;12000;ABERTA;PMP ou Scrum Master, 5+ anos exp;Projetos;2025-11-12;13;Rec do Ricardo;96403477013;RECRUTADOR

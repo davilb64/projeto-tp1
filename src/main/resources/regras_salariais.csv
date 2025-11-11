@@ -2,3 +2,12 @@ Cargo;Nivel;SalarioBase;AdicionalNivel;Beneficios;SalarioTotal
 limpador de calha;Pleno;500,00;100,00;200,00;800,00
 analista de RH;Pleno;5000,00;100,00;200,00;5300,00
 Jogador de LoL;Júnior;300,00;0,00;0,00;300,00
+Advogado;Pleno;8000,00;200,00;500,00;8700,00
+treinador de ia;Sênior;12000,00;500,00;1000,00;13500,00
+Técnico TI;Júnior;2500,00;50,00;300,00;2850,00
+Diretor;Diretoria;15000,00;1000,00;5000,00;21000,00
+Gerente de Contas;Pleno;7000,00;200,00;800,00;8000,00
+Analista de Sistemas;Sênior;9000,00;300,00;700,00;10000,00
+Analista de Marketing Digital;Pleno;6500,00;150,00;400,00;7050,00
+Designer UI/UX;Pleno;5500,00;100,00;400,00;6000,00
+Gerente de Projetos;Sênior;11000,00;400,00;1000,00;12400,00

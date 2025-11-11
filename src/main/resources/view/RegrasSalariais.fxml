@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.RegrasSalariaisController">
+<VBox spacing="15.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.RegrasSalariaisController">
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
@@ -25,7 +16,7 @@
         </VBox.margin>
     </Label>
 
-    <GridPane hgap="20.0" vgap="15.0">
+    <GridPane hgap="20.0" vgap="30.0">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="-Infinity" prefWidth="100.0" />
             <ColumnConstraints hgrow="ALWAYS" minWidth="100.0" />
@@ -52,6 +43,19 @@
 
     </GridPane>
 
+    <HBox alignment="CENTER_LEFT" spacing="20.0" styleClass="card-configuracao">
+        <padding>
+            <Insets bottom="8.0" left="15.0" right="15.0" top="8.0" />
+        </padding>
+        <Label styleClass="filter-label" text="%salaryRules.feedback.levelAdic" />
+        <Label fx:id="lblAdicionalValor" style="-fx-font-weight: bold; -fx-text-fill: #007bff;" text="R$ 0,00" />
+
+        <Label text="|" />
+
+        <Label styleClass="filter-label" text="%salaryRules.feedback.benefitsValue" />
+        <Label fx:id="lblBeneficiosValor" style="-fx-font-weight: bold; -fx-text-fill: #28a745;" text="R$ 0,00" />
+    </HBox>
+
     <HBox VBox.vgrow="ALWAYS">
         <children>
             <TableView fx:id="tableViewRegras" HBox.hgrow="ALWAYS">
@@ -69,6 +73,34 @@
             </TableView>
         </children>
     </HBox>
+
+
+    <GridPane hgap="10.0" styleClass="total-summary-panel">
+        <padding>
+            <Insets left="10.0" right="10.0" />
+        </padding>
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="NEVER" minWidth="130.0" prefWidth="130.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="130.0" prefWidth="130.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="130.0" prefWidth="130.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="130.0" prefWidth="130.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="130.0" prefWidth="130.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+        <Label style="-fx-font-weight: bold;" text="%salaryRules.totals.label" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0" />
+
+        <Label text="%salaryRules.totals.base" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="0" />
+        <Label text="%salaryRules.totals.level" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="0" />
+        <Label text="%salaryRules.totals.benefits" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="0" />
+
+        <Label fx:id="lblTotalBase" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="R$ 0,00" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+        <Label fx:id="lblTotalAdicional" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="R$ 0,00" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+        <Label fx:id="lblTotalBeneficios" style="-fx-font-weight: bold; -fx-text-fill: #333;" text="R$ 0,00" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+    </GridPane>
 
 
     <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="actions-panel">

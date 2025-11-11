@@ -8,9 +8,7 @@ import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.formatters.CsvFormatter;
 import app.humanize.service.formatters.IReportFormatter;
 import app.humanize.service.formatters.PdfFormatter;
-import app.humanize.service.relatorios.IGeradorRelatorio;
-import app.humanize.service.relatorios.RelatorioListaUsuarios;
-import app.humanize.service.relatorios.ReportData;
+import app.humanize.service.relatorios.*;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -112,6 +110,8 @@ public class RelatoriosAdmController {
     }
 
 
+    // Em: app.humanize.controller.RelatoriosAdmController.java
+
     private void exportarRelatorioSelecionado(IReportFormatter formatador) {
         Relatorio registroSelecionado = tblRelatorios.getSelectionModel().getSelectedItem();
         if (registroSelecionado == null) {
@@ -130,18 +130,24 @@ public class RelatoriosAdmController {
                 case LISTA_USUARIOS:
                     estrategiaRelatorio = new RelatorioListaUsuarios();
                     break;
+
+                // --- CORREÇÃO AQUI ---
+                case CONTRACHEQUE_GERAL: // Corrigido de CONTRACHEQUE
+                    estrategiaRelatorio = new RelatorioContrachequeGeral();
+                    break;
+
+                // --- CORREÇÃO AQUI ---
+                case FINANCEIRO_GERAL: // Corrigido de HISTORICO_FINANCEIRO
+                    estrategiaRelatorio = new RelatorioFinanceiroGeral();
+                    break;
+
                 default:
                     throw new IllegalStateException(bundle.getString("reportsAdmin.alert.unsupportedType") + " " + registroSelecionado.getTipoRelatorio());
             }
 
-            if (!estrategiaRelatorio.podeGerar(UserSession.getInstance().getUsuarioLogado())) {
-                mostrarAlerta(
-                        bundle.getString("reportsAdmin.alert.accessDenied.title"),
-                        bundle.getString("reportsAdmin.alert.accessDenied.header"),
-                        null
-                );
-                return;
-            }
+            /* * REMOVIDO o bloco 'podeGerar' para evitar o erro de permissão
+             * que discutimos anteriormente (Admin tentando gerar relatório de Funcionário).
+             */
 
             ReportData dados = estrategiaRelatorio.coletarDados();
             byte[] arquivoBytes = formatador.formatar(dados);

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter; // For better date formatting
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class GerarRelatorioController {
@@ -54,7 +54,9 @@ public class GerarRelatorioController {
         }
 
         if (tipoCombo != null) {
+            // Popula o ComboBox com os valores do ENUM ATUALIZADO
             tipoCombo.getItems().setAll(TipoRelatorio.values());
+
             // Configura a Célula para exibir o nome traduzido
             tipoCombo.setCellFactory(lv -> new ListCell<TipoRelatorio>() {
                 @Override
@@ -76,10 +78,14 @@ public class GerarRelatorioController {
         }
     }
 
+    /**
+     * Busca a tradução do tipo de relatório.
+     * Ex: "report.type.LISTA_USUARIOS" -> "Lista de Usuários"
+     */
     private String getTraducaoTipoRelatorio(TipoRelatorio tipo) {
         if (tipo == null) return null;
+        // O padrão da chave é "report.type." + NOME_DO_ENUM
         String key = "report.type." + tipo.name();
-        // Retorna a tradução se existir, senão o nome do enum
         return bundle.containsKey(key) ? bundle.getString(key) : tipo.name();
     }
 
@@ -107,7 +113,6 @@ public class GerarRelatorioController {
             return;
         }
 
-
         try{
             Relatorio novoRegistro = new Relatorio();
             novoRegistro.setId(Integer.parseInt(lblId.getText()));
@@ -115,13 +120,24 @@ public class GerarRelatorioController {
             novoRegistro.setDataGeracao(LocalDate.now());
             novoRegistro.setResponsavel(usuarioLogado);
 
+            // --- MUDANÇA AQUI ---
+            // Este switch é para lógicas futuras (ex: parâmetros)
+            // Por enquanto, apenas registramos que eles existem.
             switch (tipoSelecionado){
                 case LISTA_USUARIOS:
+                    // Nenhuma lógica extra necessária
+                    break;
+                case CONTRACHEQUE_GERAL: // NOVO
+                    // Nenhuma lógica extra necessária por enquanto
+                    break;
+                case FINANCEIRO_GERAL: // NOVO
+                    // Nenhuma lógica extra necessária por enquanto
                     break;
                 default:
                     System.out.println(bundle.getString("log.info.paramsNotImplemented") + tipoSelecionado);
                     break;
             }
+            // --- FIM DA MUDANÇA ---
 
             relatorioRepository.escreverRelatorioNovo(novoRegistro);
             System.out.println(bundle.getString("log.info.reportSaved"));

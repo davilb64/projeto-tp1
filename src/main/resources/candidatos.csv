@@ -1,4 +1,8 @@
 Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;Experiencia;DataCadastro;Documento
-Junior;54252842093;Junior@outlook.com;61991234567;Guaduação em Analise de desenvolvimento de sistemas na Estácio;Integral;45000.0;Jogador de LoL;
-Davizera;98790174046;davi@gmail.com;61999222222;economia;integral;10000.0;cocador;
-Vinicius Ruela;08854612073;ruela.unb@gmail.com;61999131313;Ciencia de Computaçao mineira;estou na alemanha;15001.0;Fui o pai de todos os calouros de eng comp nos ultimos semestres.;
+Junior;54252842093;Junior@outlook.com;61991234567;Guaduação em Analise de desenvolvimento de sistemas na Estácio;Integral;45000.0;Jogador de LoL;2025-10-20;doc_junior.pdf
+Davizera;98790174046;davi@gmail.com;61999222222;economia;integral;10000.0;cocador;2025-11-01;doc_davi.pdf
+Vinicius Ruela;08854612073;ruela.unb@gmail.com;61999131313;Ciencia de Computaçao mineira;estou na alemanha;15001.0;Fui o pai de todos os calouros de eng comp nos ultimos semestres.;2025-11-10;doc_ruela.pdf
+Ana Silva;12345678901;ana.silva@hotmail.com;61988776655;Marketing Digital na FGV;Tarde;8000.0;Analista de SEO Pleno;2025-11-11;doc_ana.pdf
+Lucas Mendes;98765432109;lucas.mendes@yahoo.com;21981234567;Engenharia de Produção UFRJ;Integral;12000.0;Gerente de Projetos;2025-11-12;doc_lucas.pdf
+Mariana Costa;45678912301;mari.costa@gmail.com;11977665544;Design Gráfico na Belas Artes;Manhã/Tarde;6500.0;Designer UI/UX;2025-11-13;doc_mariana.pdf
+Pedro Henrique;33322211100;pedro.h@gmail.com;61998887777;Ensino Médio Completo;Integral;2500.0;Atendente de fast-food;2025-11-14;doc_pedro.pdf
