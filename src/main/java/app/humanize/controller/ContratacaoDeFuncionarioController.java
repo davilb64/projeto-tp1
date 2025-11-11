@@ -72,7 +72,7 @@ public class ContratacaoDeFuncionarioController {
             return;
         }
 
-        String nome = cbNome.getValue().getCandidato().getNome();
+        String nome = cbNome.getValue().getCandidatura().getCandidato().getNome();
         String email = txtEmailFunc.getText();
         String cargo = txtCargoFunc.getText();
         String departamento = txtDepartamentoFunc.getText();

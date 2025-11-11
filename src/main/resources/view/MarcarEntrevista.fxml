@@ -41,14 +41,12 @@
         <Label styleClass="filter-label" text="ID:" GridPane.halignment="RIGHT" />
         <Label fx:id="lblId" text="Automático" GridPane.columnIndex="1" />
 
-        <Label styleClass="filter-label" text="Candidato:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="Candidatura:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
 
-        <Label styleClass="filter-label" text="Cargo:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-
-        <Label styleClass="filter-label" text="Recrutador:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <Label styleClass="filter-label" text="Vaga:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
-            <ChoiceBox fx:id="cbRecrutador" prefWidth="150.0" />
+            <ChoiceBox fx:id="cbCandidatura" prefWidth="150.0" />
          </children>
         </HBox>
 
@@ -56,12 +54,8 @@
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
             <StackPane HBox.hgrow="ALWAYS" />
         </HBox>
-      <ChoiceBox fx:id="cbCandidato" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <ChoiceBox fx:id="cbCargo" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
       <DatePicker fx:id="dtDataEntrevista" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label text="Label" />
-      <Label prefHeight="17.0" prefWidth="79.0" text="            Status:" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
-      <ChoiceBox fx:id="cbStatus" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <ChoiceBox fx:id="cbVaga" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
     </GridPane>
 
     <HBox alignment="CENTER_RIGHT" spacing="10.0">
