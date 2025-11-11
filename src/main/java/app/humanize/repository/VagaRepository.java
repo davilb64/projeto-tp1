@@ -96,7 +96,7 @@ public class VagaRepository {
 
     private void persistirAlteracoesNoCSV() throws IOException {
         try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
-            escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;\n");
+            escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdPessoa;NomePessoa;CpfPessoa;PerfilPessoa\n");
             for (Vaga vaga : this.vagaEmMemoria) {
                 escritor.write(formatarVagaParaCSV(vaga));
             }
@@ -121,6 +121,17 @@ public class VagaRepository {
             vaga.setDepartamento(campos[5]);
             vaga.setDataVaga(campos[6] != null && !campos[6].isEmpty() ? LocalDate.parse(campos[6]) : null);
 
+            if(campos.length >= 10){
+                if(campos[7] != null && !campos[7].isEmpty()){
+                    Usuario recrutador = new Recrutador.RecrutadorBuilder().build();
+                    int idPessoa = Integer.parseInt(campos[7]);
+                    recrutador.setId(idPessoa);
+                    recrutador.setNome(campos[8]);
+                    recrutador.setCpf(campos[9]);
+                    recrutador.setPerfil(Perfil.valueOf(campos[10]));
+                    vaga.setRecrutador(recrutador);
+                }
+            }
             return vaga;
 
         } catch (Exception e) {
@@ -138,6 +149,10 @@ public class VagaRepository {
         sb.append(vaga.getRequisitos() == null ? "" : vaga.getRequisitos()).append(";");
         sb.append(vaga.getDepartamento() == null ? "" : vaga.getDepartamento()).append(";");
         sb.append(vaga.getDataVaga() == null ? "" : vaga.getDataVaga()).append(";");
+        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getId()).append(";");
+        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getNome()).append(";");
+        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getCpf()).append(";");
+        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getPerfil()).append(";");
         sb.append("\n");
         return sb.toString();
     }
