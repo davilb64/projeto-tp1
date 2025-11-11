@@ -52,6 +52,8 @@ public class GestaoEntrevistaController {
     @FXML
     private Button btnMarcarEntrevista;
     @FXML
+    private Button btnRelatarEntrevista;
+    @FXML
     private Button btnEditar;
     @FXML
     private Button btnExcluir;
@@ -104,6 +106,24 @@ public class GestaoEntrevistaController {
     @FXML
     public void cadastrarEntrevista() throws IOException{
         URL resource = getClass().getResource("/view/MarcarEntrevista.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.scheduleInterview"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setTitle(bundle.getString("scheduleInterview.title"));
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        carregarTabela();
+    }
+
+    @FXML
+    public void relatarEntrevista() throws IOException{
+        URL resource = getClass().getResource("/view/RelatarEntrevista.fxml");
         if (resource == null) {
             mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.scheduleInterview"));
             return;

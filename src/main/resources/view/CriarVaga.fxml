@@ -38,22 +38,26 @@
             <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <Label styleClass="filter-label" text="%createVacancy.label.id" GridPane.halignment="RIGHT" />
-        <Label fx:id="lblId" text="%userRegistration.label.id.auto" GridPane.columnIndex="1" />
+        <Label styleClass="filter-label" text="ID: " GridPane.halignment="RIGHT" />
+        <Label fx:id="lblId" text="" GridPane.columnIndex="1" />
 
-        <Label styleClass="filter-label" text="%createVacancy.label.position" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-        <TextField fx:id="txtCargo" promptText="%createVacancy.prompt.position" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label styleClass="filter-label" text="Cargo: " GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+        <TextField fx:id="txtCargo" promptText="Nome cargo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-        <Label styleClass="filter-label" text="%createVacancy.label.salary" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-        <TextField fx:id="txtSalario" promptText="%createVacancy.prompt.salary" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label styleClass="filter-label" text="Salário: " GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+        <TextField fx:id="txtSalario" promptText="R$ 9.999,99" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-        <Label styleClass="filter-label" text="%createVacancy.label.requirements" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-        <TextField fx:id="txtRequisitos" promptText="%createVacancy.prompt.requirements" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label styleClass="filter-label" text="Requisitos: " GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+        <TextField fx:id="txtRequisitos" promptText="Requisitos da Vaga" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-        <Label styleClass="filter-label" text="%createVacancy.label.status" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+        <Label styleClass="filter-label" text="Status: " GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
         <ChoiceBox fx:id="choiceStatus" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <TextField fx:id="txtDepartamento" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-        <Label prefHeight="38.0" prefWidth="80.0" text="%createVacancy.label.department" GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+
+        <Label prefHeight="30.0" prefWidth="117.0" styleClass="filter-label" text="Departamento: " GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
+        <TextField fx:id="txtDepartamento" text="Nome do departamento" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+        
+        <Label styleClass="filter-label" text="Recrutador: " GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
+        <ChoiceBox fx:id="cbRecrutador" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
     </GridPane>
 
     <HBox alignment="CENTER_RIGHT" spacing="10.0">
