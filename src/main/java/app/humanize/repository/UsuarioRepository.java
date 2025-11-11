@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,16 @@ public class UsuarioRepository extends BaseRepository {
 
     public static UsuarioRepository getInstance() {
         return instance;
+    }
+
+    public List<LocalDate> getDatasContratacao(){
+        List<LocalDate> datasContratacao = new ArrayList<>();
+        List<Usuario> funcionarios = this.getFuncionarios();
+        for(Usuario usuario : funcionarios){
+            Funcionario funcionario =  (Funcionario) usuario;
+            datasContratacao.add(funcionario.getDataAdmissao());
+        }
+        return datasContratacao;
     }
 
     public List<Usuario> getTodosUsuarios() {
