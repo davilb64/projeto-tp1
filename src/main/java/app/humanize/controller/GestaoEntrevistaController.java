@@ -200,7 +200,7 @@ public class GestaoEntrevistaController {
         Candidato candidatoFiltro = cbCandidato.getValue();
         if (candidatoFiltro != null) {
             stream = stream.filter(entrevista ->
-                    entrevista.getCandidato().getId() == candidatoFiltro.getId()
+                    entrevista.getCandidatura().getCandidato().getId() == candidatoFiltro.getId()
             );
         }
 

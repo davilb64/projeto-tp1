@@ -36,6 +36,16 @@ public class CandidaturaRepository extends BaseRepository {
         return candidaturas;
     }
 
+    public List<Candidatura> getCandidaturasPendentePorVaga(Vaga vaga) {
+        List<Candidatura> candidaturas = new ArrayList<>();
+        for(Candidatura candidatura : candidaturasEmMemoria) {
+            if (candidatura.getStatus() == StatusCandidatura.PENDENTE && candidatura.getVaga().getId() == vaga.getId()) {
+                candidaturas.add(candidatura);
+            }
+        }
+        return candidaturas;
+    }
+
     /** Verifica se já existe uma candidatura do mesmo candidato para a mesma vaga */
     public boolean existeCandidatura(Candidato candidato, Vaga vaga) {
         return candidaturasEmMemoria.stream()

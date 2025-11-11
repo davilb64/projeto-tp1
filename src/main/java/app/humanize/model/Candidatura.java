@@ -55,4 +55,9 @@ public class Candidatura {
     public void setDataCandidatura(LocalDate dataCandidatura) {
         this.dataCandidatura = dataCandidatura;
     }
+
+    @Override
+    public String toString() {
+        return this.candidato.getNome();
+    }
 }
