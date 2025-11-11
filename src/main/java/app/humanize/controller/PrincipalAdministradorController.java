@@ -33,12 +33,10 @@ public class PrincipalAdministradorController {
     @FXML private Button btnRelatorios;
     @FXML private Button btnConfig;
     @FXML private Button btnFinanceiro;
-    @FXML private Button btnRecrutadores;
     @FXML private Button btnCandidatos;
     @FXML private Button btnVagas;
     @FXML private Button btnEntrevistas;
     @FXML private Button btnFuncionarios;
-    @FXML private Button btnContratacoes;
     @FXML private Button btnPerfil;
     private Image avatarPadrao;
 
@@ -61,12 +59,10 @@ public class PrincipalAdministradorController {
         btnRelatorios.setText(bundle.getString("sidebar.reports"));
         btnConfig.setText(bundle.getString("sidebar.settings"));
         btnFinanceiro.setText(bundle.getString("sidebar.finance"));
-        btnRecrutadores.setText(bundle.getString("sidebar.recruiters"));
         btnCandidatos.setText(bundle.getString("sidebar.candidates"));
         btnVagas.setText(bundle.getString("sidebar.vacancies"));
         btnEntrevistas.setText(bundle.getString("sidebar.interviews"));
         btnFuncionarios.setText(bundle.getString("sidebar.employees"));
-        btnContratacoes.setText(bundle.getString("sidebar.hires"));
         btnPerfil.setText(bundle.getString("sidebar.profile"));
     }
 
@@ -194,18 +190,6 @@ public class PrincipalAdministradorController {
     private void showFinanceiro() {
         loadUI("MenuFinanceiroAdm");
         setActiveButton(btnFinanceiro);
-    }
-
-    @FXML
-    private void showContratacoes() {
-        loadUI("ContratacoesRecrutador");
-        setActiveButton(btnContratacoes);
-    }
-
-    @FXML
-    private void showRecrutadores() {
-        loadUI("AtribuirRecrutadorAVaga");
-        setActiveButton(btnRecrutadores);
     }
 
     @FXML

@@ -4,6 +4,8 @@ import app.humanize.exceptions.CpfInvalidoException;
 import app.humanize.exceptions.EmailInvalidoException;
 import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.*;
+import app.humanize.repository.CandidatoRepository;
+import app.humanize.repository.CandidaturaRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.validacoes.ValidaCpf;
 import app.humanize.service.validacoes.ValidaEmail;
@@ -22,29 +24,24 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.List; // Importar List
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.io.ByteArrayInputStream;
 
-public class CadastroUsuarioAdmController {
+public class ContratarFuncionarioController {
 
     @FXML private ImageView imgFotoPerfil;
     @FXML private Button btnEscolherFoto;
     @FXML private Button btnGerarPokemon;
-    // ... (outros FXML)
+    @FXML private ComboBox<Candidato> candidatoCombo;
     @FXML private Label lblId;
     @FXML private TextField txtNome;
     @FXML private TextField txtEmail;
@@ -68,6 +65,7 @@ public class CadastroUsuarioAdmController {
 
     private Endereco enderecoDoOutroController;
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
+    private final CandidaturaRepository canditaturaRepository = CandidaturaRepository.getInstance();
     private final ValidaCpf validaCpf = new ValidaCpf();
     private final ValidaSenha validaSenha = new ValidaSenha();
     private final ValidaEmail validaEmail = new ValidaEmail();
@@ -77,7 +75,8 @@ public class CadastroUsuarioAdmController {
     private File arquivoFotoSelecionado = null;
     private byte[] bytesFotoPokemon = null;
 
-    // REMOVIDO: DIRETORIO_FOTOS
+
+
     private ResourceBundle bundle;
 
     /**
@@ -146,8 +145,11 @@ public class CadastroUsuarioAdmController {
             imgFotoPerfil.setImage(carregarAvatarLocal()); // Carrega o fallback do JAR
             dpDataAdmissao.setValue(LocalDate.now());
         }
+
+
         perfilCombo.getItems().setAll(Perfil.values());
         regimeCombo.getItems().setAll(Regime.values());
+        candidatoCombo.getItems().setAll(canditaturaRepository.getCandidatosAprovados());
 
         txtSenhaVisivel.textProperty().bindBidirectional(txtSenhaOculta.textProperty());
         txtSenhaVisivel.visibleProperty().bind(btnMostrarSenha.selectedProperty());
@@ -517,7 +519,8 @@ public class CadastroUsuarioAdmController {
 
                 usuarioRepository.atualizarUsuario(func);
             }
-
+            Candidato candidato = candidatoCombo.getSelectionModel().getSelectedItem();
+            canditaturaRepository.removerPorCandidato(candidato);
             fecharJanela();
 
         } catch (CpfInvalidoException | SenhaInvalidaException | EmailInvalidoException | NumberFormatException e) {
@@ -548,6 +551,15 @@ public class CadastroUsuarioAdmController {
         alert.setHeaderText(mensagem);
         alert.setContentText(conteudo);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void carregaCandidato(){
+        Candidato candidatoSelecionado = candidatoCombo.getSelectionModel().getSelectedItem();
+        txtNome.setText(candidatoSelecionado.getNome());
+        txtEmail.setText(candidatoSelecionado.getEmail());
+        txtCpf.setText(candidatoSelecionado.getCpf());
+        txtPeriodo.setText(candidatoSelecionado.getDisponibilidade());
     }
 
     @FXML

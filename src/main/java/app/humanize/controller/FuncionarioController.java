@@ -73,7 +73,7 @@ public class FuncionarioController {
 
     @FXML
     private void contratarFuncionario() throws IOException {
-        URL resource = getClass().getResource("/view/ContratacaoDeFuncionario.fxml");
+        URL resource = getClass().getResource("/view/ContratarFuncionario.fxml");
         if (resource == null) {
             mostrarAlerta(bundle.getString("employeeManagement.alert.fxmlHireNotFound"));
             return;

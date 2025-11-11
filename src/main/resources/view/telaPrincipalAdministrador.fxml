@@ -8,13 +8,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Priority?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalAdministradorController">
+<BorderPane fx:id="root" prefHeight="600.0" prefWidth="800.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.humanize.controller.PrincipalAdministradorController">
 
     <left>
         <VBox alignment="TOP_CENTER" prefWidth="180.0" spacing="1.0" style="-fx-padding: 10;" BorderPane.alignment="CENTER">
@@ -31,16 +29,14 @@
                     <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" onAction="#showDashboard" styleClass="buttonLateral" text="%sidebar.dashboard">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
-                    <Button fx:id="btnUsuarios" maxWidth="1.7976931348623157E308" onAction="#showUsuarios" styleClass="buttonLateral" text="%sidebar.users"/>
-                    <Button fx:id="btnContratacoes" maxWidth="1.7976931348623157E308" onAction="#showContratacoes" styleClass="buttonLateral" text="%sidebar.hires"/>
-                    <Button fx:id="btnCandidatos" maxWidth="1.7976931348623157E308" onAction="#showCandidatos" styleClass="buttonLateral" text="%sidebar.candidates"/>
-                    <Button fx:id="btnEntrevistas" maxWidth="1.7976931348623157E308" onAction="#showEntrevistas" styleClass="buttonLateral" text="%sidebar.interviews"/>
-                    <Button fx:id="btnRelatorios" maxWidth="1.7976931348623157E308" onAction="#showRelatorios" styleClass="buttonLateral" text="%sidebar.reports"/>
-                    <Button fx:id="btnRecrutadores" maxWidth="1.7976931348623157E308" onAction="#showRecrutadores" styleClass="buttonLateral" text="%sidebar.recruiters"/>
-                    <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="%sidebar.vacancies"/>
-                    <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="%sidebar.finance"/>
-                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="%sidebar.employees"/>
-                    <Button fx:id="btnPerfil" maxWidth="1.7976931348623157E308" onAction="#showPerfil" styleClass="buttonLateral" text="%sidebar.profile"/>
+                    <Button fx:id="btnUsuarios" maxWidth="1.7976931348623157E308" onAction="#showUsuarios" styleClass="buttonLateral" text="%sidebar.users" />
+                    <Button fx:id="btnCandidatos" maxWidth="1.7976931348623157E308" onAction="#showCandidatos" styleClass="buttonLateral" text="%sidebar.candidates" />
+                    <Button fx:id="btnEntrevistas" maxWidth="1.7976931348623157E308" onAction="#showEntrevistas" styleClass="buttonLateral" text="%sidebar.interviews" />
+                    <Button fx:id="btnRelatorios" maxWidth="1.7976931348623157E308" onAction="#showRelatorios" styleClass="buttonLateral" text="%sidebar.reports" />
+                    <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="%sidebar.vacancies" />
+                    <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="%sidebar.finance" />
+                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="%sidebar.employees" />
+                    <Button fx:id="btnPerfil" maxWidth="1.7976931348623157E308" onAction="#showPerfil" styleClass="buttonLateral" text="%sidebar.profile" />
 
                     <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="%sidebar.settings">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
