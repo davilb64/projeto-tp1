@@ -117,9 +117,6 @@ public class DashboardGestorController {
         mainController.showVagas();
     }
 
-    @FXML public void atribuirRecrutador() throws IOException {
-        mainController.showRecrutadores();
-    }
 
     @FXML public void autorizarContratacao() throws IOException {
         mainController.showFuncionarios();

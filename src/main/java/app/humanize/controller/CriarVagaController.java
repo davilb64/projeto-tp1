@@ -46,7 +46,9 @@ public class CriarVagaController {
         txtDepartamento.setText(vaga.getDepartamento());
 
         // CORREÇÃO: Converter enum para String
-        choiceStatus.setValue(vaga.getStatus().name());
+        if(vaga.getStatus() != null){
+            choiceStatus.setValue(vaga.getStatus().name());
+        }
         cbRecrutador.setValue(vaga.getRecrutador());
     }
 
@@ -68,9 +70,7 @@ public class CriarVagaController {
         if (vagaParaEditar == null) {
 
             try{
-                Vaga vaga = new Vaga(txtCargo.getText(),  StatusVaga.valueOf(choiceStatus.getValue()),  txtSalario.getText(), txtRequisitos.getText(), txtDepartamento.getText());
-                vaga.setRecrutador(cbRecrutador.getValue());
-
+                Vaga vaga = new Vaga(txtCargo.getText(),  StatusVaga.valueOf(choiceStatus.getValue()),  txtSalario.getText(), txtRequisitos.getText(), txtDepartamento.getText(), cbRecrutador.getValue());
                 vagaRepository.escreveVagaNova(vaga);
             }catch (Exception e){
                 mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());

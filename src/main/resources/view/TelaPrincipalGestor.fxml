@@ -27,16 +27,10 @@
                     <Button fx:id="btnDashboard" maxWidth="1.7976931348623157E308" onAction="#showDashboard" styleClass="buttonLateral" text="%sidebar.dashboard">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
-                    <Button fx:id="btnRecrutadores" maxWidth="1.7976931348623157E308" onAction="#showRecrutadores" styleClass="buttonLateral" text="%sidebar.recruiters">
-                        <cursor><Cursor fx:constant="HAND" /></cursor>
-                    </Button>
                     <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="%sidebar.vacancies">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
                     <Button fx:id="btnEntrevistas" maxWidth="1.7976931348623157E308" onAction="#showEntrevistas" styleClass="buttonLateral" text="%sidebar.interviews">
-                        <cursor><Cursor fx:constant="HAND" /></cursor>
-                    </Button>
-                    <Button fx:id="btnContratacoes" maxWidth="1.7976931348623157E308" onAction="#showContratacoes" styleClass="buttonLateral" text="%sidebar.hires">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
                     <Button fx:id="btnCandidatos" maxWidth="1.7976931348623157E308" onAction="#showCandidatos" styleClass="buttonLateral" text="%sidebar.candidates">

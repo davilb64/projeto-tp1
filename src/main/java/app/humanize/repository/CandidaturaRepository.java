@@ -36,6 +36,16 @@ public class CandidaturaRepository extends BaseRepository {
         return candidaturas;
     }
 
+    public List<Candidato> getCandidatosAprovados() {
+        List<Candidato> candidatos = new ArrayList<>();
+        for (Candidatura candidatura: candidaturasEmMemoria) {
+            if (candidatura.getStatus() == StatusCandidatura.APROVADO){
+                candidatos.add(candidatura.getCandidato());
+            }
+        }
+        return candidatos;
+    }
+
     public List<Candidatura> getCandidaturasPendentePorVaga(Vaga vaga) {
         List<Candidatura> candidaturas = new ArrayList<>();
         for(Candidatura candidatura : candidaturasEmMemoria) {
@@ -68,6 +78,18 @@ public class CandidaturaRepository extends BaseRepository {
         }
 
         candidaturasEmMemoria.add(candidatura);
+        persistirAlteracoesNoCSV();
+    }
+
+    public void removerPorCandidato(Candidato candidato) throws IOException {
+        if (candidato == null || candidato.getCpf() == null) {
+            return;
+        }
+
+        candidaturasEmMemoria.removeIf(c ->
+                c.getCandidato().getCpf().equals(candidato.getCpf())
+        );
+
         persistirAlteracoesNoCSV();
     }
 
