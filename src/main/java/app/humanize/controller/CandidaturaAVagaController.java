@@ -144,9 +144,6 @@ public class CandidaturaAVagaController {
             );
             limparSelecoes();
 
-           /* if (controllerPai != null) {
-                controllerPai.showStatus(); // ✅ vai pra tela StatusDaCandidatura
-            }*/
 
         } catch (Exception e) {
             mostrarErro(
@@ -163,7 +160,7 @@ public class CandidaturaAVagaController {
         listVagas.getSelectionModel().clearSelection();
     }
 
-    // Métodos auxiliares para mostrar alertas
+
     private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
