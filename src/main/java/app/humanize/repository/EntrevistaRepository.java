@@ -27,6 +27,30 @@ public class EntrevistaRepository extends BaseRepository {
         return new ArrayList<>(this.entrevistaEmMemoria);
     }
 
+    public List<Candidato> getCandidatosAprovadosEntrevistas() {
+        List<Candidato> candidatos = new ArrayList<>();
+        for (Entrevista entrevista : this.entrevistaEmMemoria) {
+            if (entrevista.getStatus() == StatusEntrevista.Aprovado) {
+                candidatos.add(entrevista.getCandidatura().getCandidato());
+            }
+        }
+        return candidatos;
+    }
+
+    public List<Vaga> getVagaPorCandidato(Candidato candidato) {
+        List<Vaga> vagas = new ArrayList<>();
+        for (Entrevista entrevista : this.entrevistaEmMemoria) {
+            if (entrevista.getStatus() == StatusEntrevista.Aprovado &&
+                    entrevista.getCandidatura() != null &&
+                    entrevista.getCandidatura().getCandidato() != null &&
+                    entrevista.getCandidatura().getCandidato().getNome().equals(candidato.getNome())
+            ) {
+                vagas.add(entrevista.getVaga());
+            }
+        }
+        return vagas;
+    }
+
     public List<Entrevista> getEntrevistasHoje(){
         LocalDate  hoje = LocalDate.now();
         List<Entrevista> entrevistas = new ArrayList<>();

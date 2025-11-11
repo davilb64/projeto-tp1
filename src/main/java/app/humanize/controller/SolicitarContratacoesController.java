@@ -5,8 +5,10 @@ import app.humanize.model.Contratacao;
 import app.humanize.model.Vaga;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.ContratacaoRepository;
+import app.humanize.repository.EntrevistaRepository;
 import app.humanize.repository.VagaRepository;
 import app.humanize.util.UserSession;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -34,6 +36,7 @@ public class SolicitarContratacoesController
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final ContratacaoRepository contratacaoRepository = ContratacaoRepository.getInstance();
+    private final EntrevistaRepository entrevistaRepository = EntrevistaRepository.getInstance();
 
     private ResourceBundle bundle;
 
@@ -42,19 +45,25 @@ public class SolicitarContratacoesController
         this.bundle = UserSession.getInstance().getBundle();
         //chamar os metodos no initialize
         carregarCandidatos();
-        carregarVagas();
+
+        // Quando o usuário muda a vaga selecionada:
+        cbCandidato.getSelectionModel().selectedItemProperty().addListener((obs, cbCandidatoOld, cbCandidatoNew) -> {
+            if (cbCandidatoNew != null) {
+                carregarVagas(cbCandidatoNew);
+            }
+        });
 
         btnContratar.setOnAction(event -> contratar());
     }
 
     private void carregarCandidatos() {
         cbCandidato.getItems().clear();
-        cbCandidato.getItems().addAll(candidatoRepository.getTodos());
+        cbCandidato.getItems().addAll(entrevistaRepository.getCandidatosAprovadosEntrevistas());
     }
 
-    private void carregarVagas() {
+    private void carregarVagas(Candidato candidato) {
         cbVaga.getItems().clear(); //pegar o nome do fx:id do choice box e limpar os itens
-        cbVaga.getItems().addAll(vagaRepository.getTodasVagas()); // //adicionar todas as vagas no choice box
+        cbVaga.getItems().addAll(entrevistaRepository.getVagaPorCandidato(candidato)); // //adicionar todas as vagas no choice box
         //note que estou usando o metodo getTodasVagas da classe  VagaRepository
     }
     private void contratar() {
