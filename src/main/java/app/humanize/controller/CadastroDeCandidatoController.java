@@ -89,16 +89,7 @@ public class CadastroDeCandidatoController {
     }
 
     private void atualizarLabelArquivo() {
-        if (caminhoDocumentoAtual != null && !caminhoDocumentoAtual.isEmpty()) {
-            File arquivo = new File(caminhoDocumentoAtual);
-            lblArquivo.setText(bundle.getString("candidateRegistration.label.filePrefix") + " " + arquivo.getName());
-            btnUpload.setVisible(false); btnUpload.setManaged(false);
-            btnVisualizar.setVisible(true); btnVisualizar.setManaged(true);
-        } else {
-            lblArquivo.setText(bundle.getString("candidateRegistration.label.noFileSelected"));
-            btnUpload.setVisible(true); btnUpload.setManaged(true);
-            btnVisualizar.setVisible(false); btnVisualizar.setManaged(false);
-        }
+
     }
 
     @FXML
