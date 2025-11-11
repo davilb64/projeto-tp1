@@ -72,8 +72,8 @@
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
-            <Label styleClass="filter-label" text="%candidateRegistration.label.resume" />
-            <Button fx:id="btnUpload" mnemonicParsing="false" onAction="#uploadDocumentos" text="%candidateRegistration.button.upload">
+            <Label styleClass="filter-label" text="%candidateRegistration.label.resume" visible="false" managed="false"/>
+            <Button fx:id="btnUpload" mnemonicParsing="false" onAction="#uploadDocumentos" visible="false" managed="false" text="%candidateRegistration.button.upload">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
@@ -84,7 +84,7 @@
                 </cursor>
             </Button>
 
-            <Label fx:id="lblArquivo" text="%candidateRegistration.label.noFileSelected" HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblArquivo" text="%candidateRegistration.label.noFileSelected" visible="false" managed="false" HBox.hgrow="ALWAYS" />
         </HBox>
 
         <HBox alignment="CENTER_RIGHT" spacing="10.0" styleClass="actions-panel">
@@ -94,7 +94,7 @@
             <VBox.margin>
                 <Insets top="15.0" />
             </VBox.margin>
-            <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" text="%candidateRegistration.button.cancel">
+            <Button fx:id="btnCancel" cancelButton="true" mnemonicParsing="false" visible="false" managed="false" text="%candidateRegistration.button.cancel">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor>
