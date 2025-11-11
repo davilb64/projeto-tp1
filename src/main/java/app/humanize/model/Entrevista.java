@@ -10,6 +10,7 @@ public class Entrevista {
     private Candidatura candidatura;
     private StatusEntrevista status;
     private LocalDate dataEntrevista;
+    private String relatorioEntrevista;
 
     public Entrevista() {}
 
@@ -68,6 +69,14 @@ public class Entrevista {
 
     public void setDataEntrevista(LocalDate dataEntrevista) {
         this.dataEntrevista = dataEntrevista;
+    }
+
+    public String getRelatorioEntrevista () {
+        return this.relatorioEntrevista;
+    }
+
+    public void setRelatorioEntrevista(String relatorioEntrevista) {
+        this.relatorioEntrevista = relatorioEntrevista;
     }
 
     @Override
