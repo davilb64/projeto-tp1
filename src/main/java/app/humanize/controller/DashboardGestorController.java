@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -27,9 +28,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DashboardGestorController {
@@ -67,9 +69,53 @@ public class DashboardGestorController {
         lblTotalCandidatos.setText(String.valueOf(candidaturaRepository.getCandidaturasEmAnalise().size()));
         lblSolicitacoes.setText(String.valueOf(entrevistaRepository.buscarCandidatosAprovados().size()));
         carregarGraficoRegime();
+        carregarGraficoEvolucao();
     }
 
-    // Método auxiliar para traduzir Regime
+    private List<LocalDate> getDatasContratacao() {
+        return this.usuarioRepository.getTodosUsuarios().stream()
+                .filter(u -> u instanceof Funcionario)
+                .map(u -> (Funcionario) u)
+                .map(Funcionario::getDataAdmissao)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private void carregarGraficoEvolucao() {
+        List<LocalDate> datasContratacao = getDatasContratacao();
+
+        Map<YearMonth, Long> contratacoesPorMes = datasContratacao.stream()
+                .collect(Collectors.groupingBy(
+                        YearMonth::from,      // Agrupa por Mês/Ano
+                        TreeMap::new,         // Usa um TreeMap para ordenar
+                        Collectors.counting() // Conta as ocorrências
+                ));
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        series.setName(bundle.getString("dashboard.gestor.chart.hires.legend"));
+
+        long totalAcumulado = 0;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM/yy");
+
+        for (Map.Entry<YearMonth, Long> entry : contratacoesPorMes.entrySet()) {
+            totalAcumulado += entry.getValue();
+            String labelMes = entry.getKey().format(formatter);
+            XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(labelMes, totalAcumulado);
+            series.getData().add(dataPoint);
+
+            String tooltipText = String.format(
+                    bundle.getString("dashboard.gestor.chart.hires.tooltip"),
+                    labelMes,
+                    totalAcumulado
+            );
+            Tooltip.install(dataPoint.getNode(), new Tooltip(tooltipText));
+        }
+
+        chartEvolucao.getData().add(series);
+        chartEvolucao.setLegendVisible(false);
+    }
+
     private String getTraducaoRegime(Regime regime) {
         if (regime == null) return "";
         String key = "regime." + regime.name();

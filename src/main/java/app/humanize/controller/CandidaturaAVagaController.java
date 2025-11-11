@@ -1,10 +1,6 @@
 package app.humanize.controller;
 
-import app.humanize.model.Candidato;
-import app.humanize.model.Vaga;
-import app.humanize.model.Candidatura;
-import app.humanize.model.StatusVaga;
-import app.humanize.model.StatusCandidatura;
+import app.humanize.model.*;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.VagaRepository;
 import app.humanize.repository.CandidaturaRepository;
@@ -48,14 +44,18 @@ public class CandidaturaAVagaController {
 
 
     private void carregarDados() {
-        // Carregar vagas disponíveis (status = ABERTA)
-        List<Vaga> todasVagas = vagaRepository.getTodasVagas();
-        List<Vaga> vagasAbertas = todasVagas.stream()
-                .filter(vaga -> vaga.getStatus() == StatusVaga.ABERTA)
-                .collect(Collectors.toList());
-        listVagas.getItems().setAll(vagasAbertas);
+        Usuario recrutadorLogado = UserSession.getInstance().getUsuarioLogado();
+        if (recrutadorLogado instanceof Administrador) {
+            List<Vaga> vagas = vagaRepository.getTodasVagas();
+            listVagas.getItems().setAll(vagas);
+        } else if (recrutadorLogado == null) {
+            listVagas.getItems().clear();
+            System.err.println("Erro: Nenhum recrutador está logado.");
+        } else {
+            List<Vaga> vagasDoRecrutador = vagaRepository.getVagasAbertasPorRecrutador(recrutadorLogado);
+            listVagas.getItems().setAll(vagasDoRecrutador);
+        }
 
-        // Carregar todos os candidatos
         List<Candidato> candidatos = candidatoRepository.getTodos();
         listCandidatos.getItems().setAll(candidatos);
     }
