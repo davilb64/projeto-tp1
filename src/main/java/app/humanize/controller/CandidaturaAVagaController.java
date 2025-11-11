@@ -132,7 +132,7 @@ public class CandidaturaAVagaController {
             Candidatura novaCandidatura = new Candidatura();
             novaCandidatura.setCandidato(candidatoSelecionado);
             novaCandidatura.setVaga(vagaSelecionada);
-            novaCandidatura.setStatus(StatusCandidatura.EM_ANALISE);
+            novaCandidatura.setStatus(StatusCandidatura.PENDENTE);
             novaCandidatura.setDataCandidatura(LocalDate.now());
 
             candidaturaRepository.salvar(novaCandidatura);

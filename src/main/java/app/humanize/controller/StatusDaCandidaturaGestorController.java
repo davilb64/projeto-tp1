@@ -11,10 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -29,6 +26,8 @@ public class StatusDaCandidaturaGestorController {
     @FXML private TableColumn<Candidatura, String> colCandidato;
     @FXML private TableColumn<Candidatura, String> colCargo;
     @FXML private TableColumn<Candidatura, String> colStatus;
+    @FXML private TextField txtFiltro;
+    @FXML private Button btnFiltrar;
 
     private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
     private final ObservableList<Candidatura> listaCandidaturas = FXCollections.observableArrayList();
@@ -68,6 +67,37 @@ public class StatusDaCandidaturaGestorController {
         );
 
         tableCandidaturas.setItems(listaCandidaturas);
+
+        // Chama o filtro ao clicar no botão
+        btnFiltrar.setOnAction(e -> filtrarCandidaturas());
+    }
+
+    private void filtrarCandidaturas() {
+        String filtro = txtFiltro.getText().toLowerCase().trim();
+
+        // 🔹 sempre parte apenas das candidaturas EM_ANALISE ou APROVADAS
+        var baseFiltrada = candidaturaRepository.getTodas().stream()
+                .filter(c -> c.getStatus() == StatusCandidatura.EM_ANALISE
+                        || c.getStatus() == StatusCandidatura.APROVADO)
+                .toList();
+
+        if (filtro.isEmpty()) {
+            tableCandidaturas.setItems(FXCollections.observableArrayList(baseFiltrada));
+            return;
+        }
+
+        ObservableList<Candidatura> filtradas = FXCollections.observableArrayList(
+                baseFiltrada.stream()
+                        .filter(c -> {
+                            String nome = c.getCandidato().getNome().toLowerCase();
+                            String cargo = c.getVaga().getCargo().toLowerCase();
+                            String status = getTraducaoStatus(c.getStatus()).toLowerCase();
+                            return nome.contains(filtro) || cargo.contains(filtro) || status.contains(filtro);
+                        })
+                        .toList()
+        );
+
+        tableCandidaturas.setItems(filtradas);
     }
 
     private void mostrarAlerta(String msg) {
