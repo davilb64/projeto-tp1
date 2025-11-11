@@ -40,7 +40,7 @@ public class VagaRepository {
     public List<Vaga> getVagasAbertasPorRecrutador(Usuario recrutador) {
         List<Vaga> vagasAbertas = new ArrayList<>();
         for (Vaga vaga : this.vagaEmMemoria) {
-            if (vaga.getStatus() == StatusVaga.ABERTA &&  vaga.getRecrutador().getId() == recrutador.getId()) {
+            if (vaga.getStatus() == StatusVaga.ABERTA && vaga.getRecrutador() != null && vaga.getRecrutador().getId() == recrutador.getId()) {
                 vagasAbertas.add(vaga);
             }
         }
