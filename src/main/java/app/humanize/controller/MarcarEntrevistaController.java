@@ -165,6 +165,9 @@ public class MarcarEntrevistaController {
                         null,
                         Alert.AlertType.INFORMATION
                 );
+                //muda o status da candidatura
+                candidatura.setStatus(StatusCandidatura.EM_ANALISE);
+                candidaturaRepository.salvarOuAtualizar(candidatura);
                 limparCampos();
 
             } catch (IOException e) {
@@ -189,12 +192,16 @@ public class MarcarEntrevistaController {
                     mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.recrutador.title"), bundle.getString("scheduleInterview.alert.validation.recrutador.job"), null, Alert.AlertType.WARNING);
                     return;
                 }
+                Candidatura candidatura = cbCandidatura.getValue();
                 entrevistaParaEditar.setVaga(cbVaga.getValue());
-                entrevistaParaEditar.setCandidatura(cbCandidatura.getValue());
+                entrevistaParaEditar.setCandidatura(candidatura);
                 entrevistaParaEditar.setRecrutador(usuarioLogado);
                 entrevistaParaEditar.setDataEntrevista(dtDataEntrevista.getValue());
                 entrevistaParaEditar.setStatus(StatusEntrevista.Pendente);
                 entrevistaRepository.atualizarEntrevista();
+                //muda o status da candidatura
+                candidatura.setStatus(StatusCandidatura.EM_ANALISE);
+                candidaturaRepository.salvarOuAtualizar(candidatura);
             }catch (Exception e){
                 mostrarAlerta(
                         bundle.getString("scheduleInterview.alert.unexpectedError.title"),
