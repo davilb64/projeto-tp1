@@ -120,9 +120,9 @@ public class ListaDeCandidatosController {
     private boolean dentroDaFaixaSalarial(double salario, String faixaKey) {
         return switch (faixaKey) {
             case "UP_TO_2K" -> salario <= 2000;
-            case "2K_TO_4K" -> salario > 2000 && salario <= 4000;
-            case "4K_TO_6K" -> salario > 4000 && salario <= 6000;
-            case "OVER_6K" -> salario > 6000;
+            case "2K_TO_4K" -> salario > 2000 && salario <= 8000;
+            case "4K_TO_6K" -> salario > 8000 && salario <= 15000;
+            case "OVER_6K" -> salario > 15000;
             default -> true; // "ALL"
         };
     }
