@@ -198,7 +198,7 @@ public class EntrevistaRepository extends BaseRepository {
             candidatura.setCandidato(candidato);
             candidatura.setVaga(vaga);
             candidatura.setDataCandidatura(campos[21] != null && !campos[21].isEmpty() ? LocalDate.parse(campos[21]) : null);
-            candidatura.setStatus(StatusCandidatura.valueOf(campos[22]));
+            candidatura.setStatus(campos[22] != null && campos[22].isEmpty() ? StatusCandidatura.valueOf(campos[22]) : null);
             entrevista.setCandidatura(candidatura);
 
             return entrevista;

@@ -151,6 +151,7 @@ public class MarcarEntrevistaController {
                 Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
                 if(usuarioLogado != null && !usuarioLogado.getPerfil().equals(Perfil.RECRUTADOR)) {
                     mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.recrutador.title"), bundle.getString("scheduleInterview.alert.validation.recrutador.job"), null, Alert.AlertType.WARNING);
+                    return;
                 }
                 Usuario recrutador = usuarioLogado;
                 LocalDate data = dtDataEntrevista.getValue();
@@ -186,6 +187,7 @@ public class MarcarEntrevistaController {
                 Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
                 if(usuarioLogado != null && !usuarioLogado.getPerfil().equals(Perfil.RECRUTADOR)) {
                     mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.recrutador.title"), bundle.getString("scheduleInterview.alert.validation.recrutador.job"), null, Alert.AlertType.WARNING);
+                    return;
                 }
                 entrevistaParaEditar.setVaga(cbVaga.getValue());
                 entrevistaParaEditar.setCandidatura(cbCandidatura.getValue());
