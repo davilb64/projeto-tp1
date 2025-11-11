@@ -54,7 +54,7 @@
         <ChoiceBox fx:id="choiceStatus" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
         <Label prefHeight="30.0" prefWidth="117.0" styleClass="filter-label" text="Departamento: " GridPane.halignment="RIGHT" GridPane.rowIndex="8" />
-        <TextField fx:id="txtDepartamento" text="Nome do departamento" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+        <TextField fx:id="txtDepartamento" promptText="Nome do departamento" GridPane.columnIndex="1" GridPane.rowIndex="8" />
         
         <Label styleClass="filter-label" text="Recrutador: " GridPane.halignment="RIGHT" GridPane.rowIndex="9" />
         <ChoiceBox fx:id="cbRecrutador" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />

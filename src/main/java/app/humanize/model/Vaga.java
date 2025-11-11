@@ -27,9 +27,6 @@ public class Vaga {
         this.recrutador = recrutador;
     }
 
-    public Vaga(String text, StatusVaga statusVaga, String text1, String text2, String text3) {
-    }
-
     public void criar(String cargo, String salario){
         this.id = ++idCounter;
         this.cargo = cargo;
