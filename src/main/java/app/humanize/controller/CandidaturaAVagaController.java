@@ -40,19 +40,25 @@ public class CandidaturaAVagaController {
         configurarSelecoes();
     }
 
-
-
     private void carregarDados() {
         Usuario recrutadorLogado = UserSession.getInstance().getUsuarioLogado();
-        if (recrutadorLogado instanceof Administrador) {
-            List<Vaga> vagas = vagaRepository.getTodasVagas();
-            listVagas.getItems().setAll(vagas);
-        } else if (recrutadorLogado == null) {
+
+        if (recrutadorLogado == null) {
             listVagas.getItems().clear();
             System.err.println("Erro: Nenhum recrutador está logado.");
         } else {
-            List<Vaga> vagasDoRecrutador = vagaRepository.getVagasAbertasPorRecrutador(recrutadorLogado);
-            listVagas.getItems().setAll(vagasDoRecrutador);
+            String perfil = String.valueOf(recrutadorLogado.getPerfil());
+
+            if ("ADMINISTRADOR".equals(perfil)) {
+                List<Vaga> vagas = vagaRepository.getTodasVagas();
+                listVagas.getItems().setAll(vagas);
+            } else if ("RECRUTADOR".equals(perfil)) {
+                List<Vaga> vagasDoRecrutador = vagaRepository.getVagasAbertasPorRecrutador(recrutadorLogado);
+                listVagas.getItems().setAll(vagasDoRecrutador);
+            } else {
+                listVagas.getItems().clear();
+                System.err.println("Usuário logado não tem permissão para ver vagas.");
+            }
         }
 
         List<Candidato> candidatos = candidatoRepository.getTodos();
@@ -60,7 +66,6 @@ public class CandidaturaAVagaController {
     }
 
     private void configurarListViews() {
-        // Configurar como exibir as vagas
         listVagas.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Vaga vaga, boolean empty) {
@@ -76,7 +81,6 @@ public class CandidaturaAVagaController {
             }
         });
 
-        // Configurar como exibir os candidatos
         listCandidatos.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Candidato candidato, boolean empty) {
@@ -93,7 +97,6 @@ public class CandidaturaAVagaController {
     }
 
     private void configurarSelecoes() {
-        // Habilitar botão apenas quando ambos estiverem selecionados
         btnSalvar.disableProperty().bind(
                 listCandidatos.getSelectionModel().selectedItemProperty().isNull()
                         .or(listVagas.getSelectionModel().selectedItemProperty().isNull())

@@ -20,12 +20,12 @@ O projeto utiliza **Maven** e segue uma **arquitetura MVC** com camadas organiza
 
 projeto-tp1/
 <br>├── documentação/          # Armazena relatórios do projeto
+<br>├── empacotados/          # Armazena executáveis do projeto
 <br>├── src/main/java/
 <br>│   └── app/humanize/
 <br>│       ├── controller/    # Controladores JavaFX (lógica da UI)
 <br>│       ├── exceptions/    # Exceções customizadas (ex: CpfInvalidoException)
 <br>│       ├── model/         # Classes de Domínio (Usuario, Funcionario, Vaga, etc.)
-<br>│       │   └── factories/ 
 <br>│       ├── repository/    # Camada de Persistência (Leitura/Escrita de CSV)
 <br>│       ├── service/       # Camada de Aplicação (Lógica de Negócio)
 <br>│       │   ├── formatters/  # Padrão Strategy: Formatadores (PdfFormatter, CsvFormatter)
@@ -36,6 +36,7 @@ projeto-tp1/
 <br>│       └── Main.java      # Classe principal da aplicação JavaFX
 <br>│
 <br>├── src/main/resources/
+<br>│   ├── bundles/         # Arquivos de tradução
 <br>│   ├── css/             # StyleSheets do css
 <br>│   ├── fotos_perfil/    # Fotos de perfil dos usuários
 <br>│   ├── uploads/         # (Reservado para uploads de documentos/currículos)
@@ -62,7 +63,6 @@ projeto-tp1/
 - **Java 22** → Linguagem principal
 - **JavaFX** → Interface gráfica
 - **Maven** → Gerenciamento de dependências
-- **JUnit 5** → Testes unitários
 - **Git Flow** → Gerenciamento de branches
 
 ---
