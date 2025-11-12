@@ -47,17 +47,6 @@ public class GestaoEntrevistaController {
     @FXML
     private TableColumn<Entrevista, StatusEntrevista> colStatus;
 
-    @FXML
-    private Button btnFiltrar;
-    @FXML
-    private Button btnMarcarEntrevista;
-    @FXML
-    private Button btnRelatarEntrevista;
-    @FXML
-    private Button btnEditar;
-    @FXML
-    private Button btnExcluir;
-
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
@@ -144,7 +133,7 @@ public class GestaoEntrevistaController {
         stage.setTitle(bundle.getString("interviewManagement.alert.editTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner((Stage) tblEntrevista.getScene().getWindow());
+        stage.initOwner(tblEntrevista.getScene().getWindow());
         stage.showAndWait();
 
         carregarTabela();
@@ -174,7 +163,7 @@ public class GestaoEntrevistaController {
         stage.setTitle(bundle.getString("interviewManagement.alert.editTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner((Stage) tblEntrevista.getScene().getWindow());
+        stage.initOwner(tblEntrevista.getScene().getWindow());
         stage.showAndWait();
 
         carregarTabela();

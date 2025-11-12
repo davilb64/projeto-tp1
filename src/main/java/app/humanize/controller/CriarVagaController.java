@@ -26,26 +26,25 @@ public class CriarVagaController {
 
     @FXML
     public void initialize() {
-        // Configurar as opções do ChoiceBox
+        // opções do ChoiceBox
         choiceStatus.getItems().addAll("ABERTA", "FECHADA");
 
         cbRecrutador.getItems().addAll(usuarioRepository.getRecrutadores());
         if (vagaParaEditar == null) {
             lblId.setText(String.valueOf(vagaRepository.getProximoId()));
-            choiceStatus.setValue("ABERTA"); // Valor padrão para novas vagas
+            choiceStatus.setValue("ABERTA"); // valor padrão
         }
     }
 
     public void prepararParaEdicao(Vaga vaga) {
         this.vagaParaEditar = vaga;
 
-        lblId.setText(String.valueOf(vaga.getId())); // Define o ID existente
+        lblId.setText(String.valueOf(vaga.getId()));
         txtCargo.setText(vaga.getCargo());
         txtSalario.setText(vaga.getSalario());
         txtRequisitos.setText(vaga.getRequisitos());
         txtDepartamento.setText(vaga.getDepartamento());
 
-        // CORREÇÃO: Converter enum para String
         if(vaga.getStatus() != null){
             choiceStatus.setValue(vaga.getStatus().name());
         }

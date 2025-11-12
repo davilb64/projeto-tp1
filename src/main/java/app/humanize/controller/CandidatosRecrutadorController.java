@@ -31,7 +31,7 @@ public class CandidatosRecrutadorController {
     @FXML
     public void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
-        showCadastro(); // Carrega a tela de cadastro por padrão
+        showCadastro(); // carrega a tela de cadastro por padrão
     }
 
     private void loadUI(String fxml) {

@@ -4,23 +4,20 @@ import app.humanize.model.FolhaPag;
 import app.humanize.model.RelatorioFinanceiro;
 import app.humanize.repository.FolhaPagRepository;
 import app.humanize.repository.RelatorioFinanceiroRepository;
-// --- IMPORTS PARA EXPORTAÇÃO ---
 import app.humanize.service.formatters.IReportFormatter;
 import app.humanize.service.formatters.PdfFormatter;
 import app.humanize.service.relatorios.IGeradorRelatorio;
 import app.humanize.service.relatorios.RelatorioFinanceiroGeral;
 import app.humanize.service.relatorios.ReportData;
-// --- FIM DOS IMPORTS ---
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser; // Para salvar
-import javafx.stage.Stage; // Para salvar
-
-import java.io.File; // Para salvar
-import java.io.FileOutputStream; // Para salvar
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -37,12 +34,11 @@ public class RelatorioFinanceiroController {
 
     @FXML private RadioButton radioReceita;
     @FXML private RadioButton radioDespesa;
-    @FXML private ToggleGroup tipoTransacaoGroup;
 
     @FXML private Button btnSalvar;
     @FXML private Button btnLimpar;
-    @FXML private Button btnSalvarRelatorio; // (Botão Recarregar)
-    @FXML private Button btnExportarPDF; // Botão de Exportar
+    @FXML private Button btnSalvarRelatorio;
+    @FXML private Button btnExportarPDF;
 
     @FXML private TableView<RelatorioFinanceiro> tabelaRelatorio;
     @FXML private TableColumn<RelatorioFinanceiro, String> colData;
@@ -52,15 +48,14 @@ public class RelatorioFinanceiroController {
     @FXML private TableColumn<RelatorioFinanceiro, String> colCategoria;
     @FXML private TableColumn<RelatorioFinanceiro, String> colSaldoFinal;
 
-    private ObservableList<RelatorioFinanceiro> transacoes = FXCollections.observableArrayList();
-    private FolhaPagRepository folhaRepository = FolhaPagRepository.getInstance();
-    private RelatorioFinanceiroRepository relatorioRepository = RelatorioFinanceiroRepository.getInstance();
-    private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final ObservableList<RelatorioFinanceiro> transacoes = FXCollections.observableArrayList();
+    private final FolhaPagRepository folhaRepository = FolhaPagRepository.getInstance();
+    private final RelatorioFinanceiroRepository relatorioRepository = RelatorioFinanceiroRepository.getInstance();
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private ResourceBundle bundle;
     private String currencySymbol;
     private String currencyFormat;
 
-    // Formatador de PDF
     private final IReportFormatter formatadorPdf = new PdfFormatter();
 
     @FXML
@@ -79,7 +74,7 @@ public class RelatorioFinanceiroController {
         btnSalvar.setOnAction(event -> salvarTransacao());
         btnLimpar.setOnAction(event -> limparFormulario());
         btnSalvarRelatorio.setOnAction(event -> carregarRelatorioCompleto());
-        btnExportarPDF.setOnAction(event -> exportarRelatorioPDF()); // Lógica do botão
+        btnExportarPDF.setOnAction(event -> exportarRelatorioPDF());
 
         inicializarRelatorio();
     }
@@ -108,7 +103,6 @@ public class RelatorioFinanceiroController {
 
     private void configurarListeners() {
         txtValor.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Permite apenas dígitos, uma vírgula e um ponto
             if (!newValue.matches("[\\d,.]*")) {
                 txtValor.setText(newValue.replaceAll("[^\\d,.]", ""));
             }
@@ -136,7 +130,6 @@ public class RelatorioFinanceiroController {
 
             if (!descricoesExistentes.contains(descricaoFolha)) {
                 String dataFolha = folha.getData() != null ?
-                        // Converte a data da FolhaPag (yyyy-MM-dd) para o formato do relatório (dd/MM/yyyy)
                         folha.getData().format(dateFormatter) :
                         LocalDate.now().format(dateFormatter);
 
@@ -229,8 +222,8 @@ public class RelatorioFinanceiroController {
         try {
             String valorLimpo = valorString
                     .replace(currencySymbol, "")
-                    .replace(".", "") // Remove milhar
-                    .replace(",", ".") // Converte decimal
+                    .replace(".", "")
+                    .replace(",", ".")
                     .trim();
 
             if (!valorLimpo.contains(".") && valorString.contains(".")) {
@@ -294,10 +287,6 @@ public class RelatorioFinanceiroController {
         }
     }
 
-    // -----------------------------------------------------------------
-    // --- MÉTODOS DE EXPORTAÇÃO ADICIONADOS ---
-    // -----------------------------------------------------------------
-
     @FXML
     private void exportarRelatorioPDF() {
         IGeradorRelatorio gerador = new RelatorioFinanceiroGeral();
@@ -322,7 +311,7 @@ public class RelatorioFinanceiroController {
         }
     }
 
-    private File salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) throws IOException {
+    private void salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("reportsAdmin.saveDialog.title"));
         fileChooser.setInitialFileName(nomeBase + formatador.getExtensao());
@@ -342,16 +331,12 @@ public class RelatorioFinanceiroController {
                         bundle.getString("payroll.alert.exportSuccess.header"),
                          Alert.AlertType.INFORMATION
                 );
-                return file;
             } catch (IOException e) {
                 throw new IOException(bundle.getString("reportsAdmin.alert.saveError.header") + e.getMessage(), e);
             }
         } else {
-            return null;
         }
     }
-
-    // --- Helper de Alerta ---
 
     private void mostrarAlerta(String titulo, String mensagem, Alert.AlertType type) {
         Alert alert = new Alert(type);

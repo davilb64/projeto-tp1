@@ -2,7 +2,6 @@ package app.humanize.controller;
 
 import app.humanize.model.Funcionario;
 import app.humanize.model.Perfil;
-import app.humanize.model.Usuario;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
@@ -82,7 +81,7 @@ public class FuncionarioController {
         FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle(bundle.getString("employeeHire.title")); // Chave reutilizada
+        stage.setTitle(bundle.getString("employeeHire.title"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -97,7 +96,6 @@ public class FuncionarioController {
             return;
         }
 
-        // Assume que a edição de funcionário usa a mesma tela de cadastro de usuário
         URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
         if (resource == null) {
             mostrarAlerta(bundle.getString("employeeManagement.alert.fxmlEditNotFound"));
@@ -111,7 +109,7 @@ public class FuncionarioController {
         controllerDoCadastro.prepararParaEdicao(funcionarioSelecionado);
 
         Stage stage = new Stage();
-        stage.setTitle(bundle.getString("userManagement.alert.editUserTitle")); // Chave reutilizada
+        stage.setTitle(bundle.getString("userManagement.alert.editUserTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(tblFuncionarios.getScene().getWindow());
@@ -129,9 +127,9 @@ public class FuncionarioController {
         }
 
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle")); // Chave reutilizada
+        confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle"));
         confirmacao.setHeaderText(bundle.getString("employeeManagement.alert.confirmDeleteHeader") + " " + funcionarioSelecionado.getNome());
-        confirmacao.setContentText(bundle.getString("userManagement.alert.confirmDeleteContent")); // Chave reutilizada
+        confirmacao.setContentText(bundle.getString("userManagement.alert.confirmDeleteContent"));
 
         confirmacao.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
@@ -148,7 +146,7 @@ public class FuncionarioController {
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(bundle.getString("userManagement.alert.attention")); // Chave reutilizada
+        alert.setTitle(bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();

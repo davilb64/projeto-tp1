@@ -35,7 +35,6 @@ public class PrincipalRecrutadorController {
     private Image avatarPadrao;
 
     private Button activeButton;
-    private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
     private ResourceBundle bundle;
 
@@ -48,7 +47,6 @@ public class PrincipalRecrutadorController {
     }
 
     private void atualizarTextosSidebar() {
-        // Reutiliza as chaves que já definimos
         btnCandidatos.setText(bundle.getString("sidebar.candidates"));
         btnEntrevistas.setText(bundle.getString("sidebar.interviews"));
         btnPerfil.setText(bundle.getString("sidebar.profile"));

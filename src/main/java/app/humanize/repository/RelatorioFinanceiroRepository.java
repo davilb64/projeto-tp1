@@ -74,7 +74,7 @@ public class RelatorioFinanceiroRepository extends BaseRepository {
                     transacoes.add(transacao);
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
 
         return transacoes;

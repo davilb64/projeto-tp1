@@ -6,7 +6,6 @@ import app.humanize.repository.CandidatoRepository;
 import app.humanize.service.validacoes.ValidaCpf;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
-import java.io.File;
 
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -14,10 +13,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 
 public class CadastroDeCandidatoController {
 
@@ -32,7 +28,6 @@ public class CadastroDeCandidatoController {
     @FXML private Button btnUpload;
     @FXML private Button btnSalvar;
     @FXML private Button btnCancel;
-    @FXML private Button btnVisualizar;
     @FXML private javafx.scene.control.Label lblArquivo;
 
     private final ValidaCpf validaCpf = new ValidaCpf();
@@ -198,7 +193,7 @@ public class CadastroDeCandidatoController {
 
                 String successMsg = bundle.getString("candidateRegistration.alert.uploadSuccess1") + " '" +
                         arquivoSelecionado.getName() + "' " +
-                        bundle.getString("candidateRegistration.alert.uploadSuccess2") + "\n" + destino.toString();
+                        bundle.getString("candidateRegistration.alert.uploadSuccess2") + "\n" + destino;
 
                 mostrarAlerta(successMsg, true);
                 atualizarLabelArquivo();
@@ -238,7 +233,7 @@ public class CadastroDeCandidatoController {
             }
 
             String os = System.getProperty("os.name").toLowerCase();
-            ProcessBuilder pb = null;
+            ProcessBuilder pb;
 
             if (os.contains("win")) {
                 pb = new ProcessBuilder("cmd", "/c", "start", "\"\"", arquivo.getAbsolutePath());
@@ -286,15 +281,6 @@ public class CadastroDeCandidatoController {
         alert.showAndWait();
     }
 
-    private void mostrarAlerta(String rawMessage, String context, boolean isInfo) {
-        Alert.AlertType type = isInfo ? Alert.AlertType.INFORMATION : Alert.AlertType.WARNING;
-        Alert alert = new Alert(type);
-        alert.setTitle(isInfo ? bundle.getString("alert.success.title") : bundle.getString("userManagement.alert.attention"));
-        alert.setHeaderText(null);
-        alert.setContentText(rawMessage);
-        alert.showAndWait();
-    }
-
     private void mostrarErro(String bundleKey) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(bundle.getString("alert.error.reload.title"));
@@ -311,17 +297,4 @@ public class CadastroDeCandidatoController {
         alert.showAndWait();
     }
 
-    private void irParaTelaStatusCandidato() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/StatusDaCandidatura.fxml"), bundle);
-            javafx.scene.Parent root = loader.load();
-            javafx.stage.Stage stage = (javafx.stage.Stage) btnSalvar.getScene().getWindow();
-            stage.setScene(new javafx.scene.Scene(root));
-            stage.setTitle(bundle.getString("candidatesMain.nav.status"));
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            mostrarErro("candidateRegistration.alert.loadStatusError", e.getMessage());
-        }
-    }
 }

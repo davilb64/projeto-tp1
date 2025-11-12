@@ -14,4 +14,4 @@ São as classes que **representam os dados** manipulados pelo sistema e implemen
 - `Candidato` → Representa um candidato.
 - `Vaga` → Representa uma vaga de emprego.
 - `Entrevista` → Representa o agendamento de entrevistas.
-- `ContratoServico` → Representa contratos de prestadores.
+

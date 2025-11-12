@@ -25,10 +25,6 @@ public class ContratacaoRepository extends BaseRepository {
         return instance;
     }
 
-    public List<Contratacao> getTodasContratacoes() {
-        return new ArrayList<>(this.contratacoesEmMemoria);
-    }
-
     //metodos de salvar no csv
     public void escreveContracaoNova(Contratacao contratacao) throws IOException {
         int proximoId = getProximoId();
@@ -67,7 +63,7 @@ public class ContratacaoRepository extends BaseRepository {
             sb.append(contratacao.getCandidato().getTelefone() == null ? "" : contratacao.getCandidato().getTelefone()).append(";");
             sb.append(contratacao.getCandidato().getFormacao() == null ? "" : contratacao.getCandidato().getFormacao()).append(";");
             sb.append(contratacao.getCandidato().getDisponibilidade() == null ? "" : contratacao.getCandidato().getDisponibilidade()).append(";");
-            sb.append(String.valueOf(contratacao.getCandidato().getPretencaoSalarial())).append(";");
+            sb.append(contratacao.getCandidato().getPretencaoSalarial()).append(";");
         }
         if(contratacao.getVaga() != null){
             sb.append(contratacao.getVaga().getId()).append(";");
@@ -96,7 +92,7 @@ public class ContratacaoRepository extends BaseRepository {
             }
         }
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
-            leitor.readLine(); // Pula o cabeçalho
+            leitor.readLine();
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 Contratacao contratacao = parseContratacaoDaLinhaCsv(linha);
@@ -161,25 +157,4 @@ public class ContratacaoRepository extends BaseRepository {
         }
     }
 
-    public void excluirContratacao(Contratacao contratacaoParaExcluir) throws IOException {
-        if (contratacaoParaExcluir == null) {
-            return;
-        }
-        boolean removido = this.contratacoesEmMemoria.removeIf(contratacao -> contratacao.getId() == contratacaoParaExcluir.getId());
-        if (removido) {
-            persistirAlteracoesNoCSV();
-        }
-    }
-
-    public void atualizarContratacao() throws IOException {
-        persistirAlteracoesNoCSV();
-    }
-
-    public List<String> getTodosNomes() {
-        List<String> nome = new ArrayList<>();
-        for(Contratacao contratacao : this.contratacoesEmMemoria) {
-            nome.add(contratacao.getCandidato() != null ? contratacao.getCandidato().getNome() : "");
-        }
-        return nome;
-    }
 }

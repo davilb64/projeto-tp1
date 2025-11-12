@@ -41,7 +41,6 @@ public class PrincipalAdministradorController {
     private Image avatarPadrao;
 
     private Button activeButton;
-    private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
     private ResourceBundle bundle;
 
@@ -181,7 +180,7 @@ public class PrincipalAdministradorController {
         loadUI("ConfiguracoesAdm");
         setActiveButton(btnConfig);
 
-        // Atualiza a sidebar quando a tela de config é (re)carregada
+        // Atualiza a sidebar
         this.bundle = UserSession.getInstance().getBundle();
         atualizarTextosSidebar();
     }

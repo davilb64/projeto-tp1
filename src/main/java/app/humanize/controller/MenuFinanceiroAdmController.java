@@ -106,14 +106,6 @@ public class MenuFinanceiroAdmController {
     }
 
     @FXML
-    private void showCadastroFuncionario() {
-        loadUI("ContratacaoDeFuncionario");
-        if (btnCadastroFuncionario != null) {
-            setActiveButton(btnCadastroFuncionario);
-        }
-    }
-
-    @FXML
     private void showFolhaPagamento() {
         loadUI("FolhaDePagamento");
         setActiveButton(btnFolhaPagamento);

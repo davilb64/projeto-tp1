@@ -13,16 +13,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import java.io.File; // Importar File
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException; // Importar IOException
-import java.io.InputStream; // Importar InputStream
-import java.nio.file.Files; // Importar Files
-import java.nio.file.Path; // Importar Path
-import java.nio.file.Paths; // Importar Paths
-import java.util.List; // Importar List
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -64,7 +63,6 @@ public class LoginController {
             }
         }
 
-        // Lista de fotos padrão do seu screenshot
         List<String> defaultPhotos = List.of(
                 "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png",
                 "9.png", "10.png", "12.png", "04935825170.png",
@@ -101,7 +99,7 @@ public class LoginController {
         // Garante que a pasta de fotos e as fotos padrão existam
         seedDefaultPhotos();
 
-        // Foto Padrão (lida de dentro do JAR)
+        // Foto Padrão
         try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
             if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
             avatarPadrao = new Image(is);
@@ -148,7 +146,6 @@ public class LoginController {
 
     @FXML
     private void entrar(){
-        // ... (método não muda) ...
         String usuario = txtUsuario.getText();
         String senha = txtSenhaOculta.getText();
         try {
@@ -202,7 +199,6 @@ public class LoginController {
     }
 
     private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
-        // ... (método não muda) ...
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
         alert.setHeaderText(cabecalho);
@@ -210,7 +206,6 @@ public class LoginController {
         alert.showAndWait();
     }
 
-    // ... (métodos entrarAdm, entrarGestor, etc. não mudam) ...
     @FXML
     private void entrarAdm() {
         ScreenController.changeScene("/view/telaPrincipalAdministrador.fxml");

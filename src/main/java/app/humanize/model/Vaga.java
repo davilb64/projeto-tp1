@@ -93,9 +93,6 @@ public class Vaga {
 
     public void setRecrutador(Usuario recrutador) { this.recrutador = recrutador; }
 
-
-
-    // toString() define o texto exibido no ChoiceBox
     @Override
     public String toString() {
         return id + " - " + cargo + " - " + status + " - " + salario + " - " + requisitos;

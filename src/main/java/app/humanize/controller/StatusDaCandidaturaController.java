@@ -1,6 +1,5 @@
 package app.humanize.controller;
 
-import app.humanize.model.Candidato;
 import app.humanize.model.Candidatura;
 import app.humanize.model.StatusCandidatura;
 import app.humanize.repository.CandidaturaRepository;
@@ -35,12 +34,9 @@ public class StatusDaCandidaturaController {
 
     private ResourceBundle bundle;
 
-    // Método auxiliar para traduzir o status
     private String getTraducaoStatus(StatusCandidatura status) {
         if (status == null) return "";
-        // Busca a chave, ex: "statusCandidatura.PENDENTE"
         String key = "statusCandidatura." + status.name();
-        // Retorna a tradução se existir, senão o nome do enum formatado
         return bundle.containsKey(key) ? bundle.getString(key) : status.name().replace("_", " ");
     }
 
@@ -53,14 +49,12 @@ public class StatusDaCandidaturaController {
         colCargo.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(cellData.getValue().getVaga().getCargo()));
 
-        // Coluna de Status agora usa o método de tradução
         colStatus.setCellValueFactory(cellData ->
                 new javafx.beans.property.SimpleStringProperty(getTraducaoStatus(cellData.getValue().getStatus())));
 
         listaCandidaturas.addAll(candidaturaRepository.getTodas());
         tableCandidaturas.setItems(listaCandidaturas);
 
-        // Chama o filtro ao clicar no botão
         btnFiltrar.setOnAction(e -> filtrarCandidaturas());
     }
 
@@ -69,12 +63,10 @@ public class StatusDaCandidaturaController {
         String filtro = txtFiltro.getText().toLowerCase().trim();
 
         if (filtro.isEmpty()) {
-            // Se o campo estiver vazio, mostra todas
             tableCandidaturas.setItems(FXCollections.observableArrayList(candidaturaRepository.getTodas()));
             return;
         }
 
-        // Aplica o filtro em nome, cargo ou status
         ObservableList<Candidatura> filtradas = FXCollections.observableArrayList(
                 candidaturaRepository.getTodas().stream()
                         .filter(c -> {
@@ -130,7 +122,6 @@ public class StatusDaCandidaturaController {
         }
         else{
             mostrarAlerta(bundle.getString("applicationStatus.alert.onlyPendingDelete"));
-            return;
         }
     }
 
@@ -154,9 +145,7 @@ public class StatusDaCandidaturaController {
 
             TrocarStatusController controller = loader.getController();
             controller.setCandidatura(selecionada);
-            controller.setOnStatusAlterado(() -> {
-                tableCandidaturas.refresh();
-            });
+            controller.setOnStatusAlterado(() -> tableCandidaturas.refresh());
 
             Stage popupStage = new Stage();
             popupStage.setTitle(bundle.getString("changeStatus.title"));

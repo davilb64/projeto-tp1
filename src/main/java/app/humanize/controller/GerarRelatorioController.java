@@ -54,19 +54,17 @@ public class GerarRelatorioController {
         }
 
         if (tipoCombo != null) {
-            // Popula o ComboBox com os valores do ENUM ATUALIZADO
+            // popula o combobox
             tipoCombo.getItems().setAll(TipoRelatorio.values());
 
-            // Configura a Célula para exibir o nome traduzido
-            tipoCombo.setCellFactory(lv -> new ListCell<TipoRelatorio>() {
+            tipoCombo.setCellFactory(lv -> new ListCell<>() {
                 @Override
                 protected void updateItem(TipoRelatorio item, boolean empty) {
                     super.updateItem(item, empty);
                     setText(empty ? null : getTraducaoTipoRelatorio(item));
                 }
             });
-            // Configura o Botão (o que aparece quando está selecionado)
-            tipoCombo.setButtonCell(new ListCell<TipoRelatorio>() {
+            tipoCombo.setButtonCell(new ListCell<>() {
                 @Override
                 protected void updateItem(TipoRelatorio item, boolean empty) {
                     super.updateItem(item, empty);
@@ -78,13 +76,8 @@ public class GerarRelatorioController {
         }
     }
 
-    /**
-     * Busca a tradução do tipo de relatório.
-     * Ex: "report.type.LISTA_USUARIOS" -> "Lista de Usuários"
-     */
     private String getTraducaoTipoRelatorio(TipoRelatorio tipo) {
         if (tipo == null) return null;
-        // O padrão da chave é "report.type." + NOME_DO_ENUM
         String key = "report.type." + tipo.name();
         return bundle.containsKey(key) ? bundle.getString(key) : tipo.name();
     }
@@ -120,24 +113,13 @@ public class GerarRelatorioController {
             novoRegistro.setDataGeracao(LocalDate.now());
             novoRegistro.setResponsavel(usuarioLogado);
 
-            // --- MUDANÇA AQUI ---
-            // Este switch é para lógicas futuras (ex: parâmetros)
-            // Por enquanto, apenas registramos que eles existem.
             switch (tipoSelecionado){
-                case LISTA_USUARIOS:
-                    // Nenhuma lógica extra necessária
-                    break;
-                case CONTRACHEQUE_GERAL: // NOVO
-                    // Nenhuma lógica extra necessária por enquanto
-                    break;
-                case FINANCEIRO_GERAL: // NOVO
-                    // Nenhuma lógica extra necessária por enquanto
+                case LISTA_USUARIOS, CONTRACHEQUE_GERAL, FINANCEIRO_GERAL:
                     break;
                 default:
                     System.out.println(bundle.getString("log.info.paramsNotImplemented") + tipoSelecionado);
                     break;
             }
-            // --- FIM DA MUDANÇA ---
 
             relatorioRepository.escreverRelatorioNovo(novoRegistro);
             System.out.println(bundle.getString("log.info.reportSaved"));

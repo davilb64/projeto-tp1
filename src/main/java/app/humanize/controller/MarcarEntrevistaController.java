@@ -4,7 +4,6 @@ import app.humanize.model.*;
 import app.humanize.repository.*;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -18,7 +17,6 @@ import java.util.ResourceBundle;
 
 public class MarcarEntrevistaController {
 
-    // 🔹 Campos da interface
     @FXML
     private Label lblId;
 
@@ -32,15 +30,9 @@ public class MarcarEntrevistaController {
     private DatePicker dtDataEntrevista;
 
     @FXML
-    private Button btnSalvar;
-
-    @FXML
     private Button btnCancelar;
 
-    // 🔹 Repositórios
-    private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
-    private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final EntrevistaRepository entrevistaRepository = EntrevistaRepository.getInstance();
     private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
 
@@ -61,14 +53,9 @@ public class MarcarEntrevistaController {
 
     /** Define valor inicial, formato e regras de seleção do DatePicker */
     private void configurarDatePicker() {
-        // 1) Valor padrão
         dtDataEntrevista.setValue(LocalDate.now());
-
-        // 2) Placeholder
         dtDataEntrevista.setPromptText("dd/MM/aaaa");
-
-        // 3) Conversor para formato dd/MM/yyyy
-        dtDataEntrevista.setConverter(new StringConverter<LocalDate>() {
+        dtDataEntrevista.setConverter(new StringConverter<>() {
             @Override
             public String toString(LocalDate date) {
                 return (date == null) ? "" : BR_FORMATTER.format(date);
@@ -90,7 +77,6 @@ public class MarcarEntrevistaController {
             }
         });
 
-        // 4) Desabilitar datas passadas
         dtDataEntrevista.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -104,14 +90,6 @@ public class MarcarEntrevistaController {
         });
     }
 
-    // Helper para traduzir o Enum StatusEntrevista
-    private String getTraducaoStatus(StatusEntrevista status) {
-        if (status == null) return null;
-        String key = "statusEntrevista." + status.name();
-        return bundle.containsKey(key) ? bundle.getString(key) : status.name();
-    }
-
-    // 🔹 Carrega listas nos ChoiceBoxes
     private void carregarChoiceBoxes() {
         try {
             Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
@@ -138,9 +116,9 @@ public class MarcarEntrevistaController {
         }
     }
 
-    // 🔹 Salvar nova entrevista
+    // nova entrevista
     @FXML
-    private void salvarEntrevista(ActionEvent event) {
+    private void salvarEntrevista() {
         if (!validarCampos()) {
             return;
         }
@@ -148,12 +126,11 @@ public class MarcarEntrevistaController {
             try {
                 Candidatura candidatura = cbCandidatura.getValue();
                 Vaga vaga = cbVaga.getValue();
-                Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
-                if(usuarioLogado != null && !usuarioLogado.getPerfil().equals(Perfil.RECRUTADOR)) {
+                Usuario recrutador = UserSession.getInstance().getUsuarioLogado();
+                if(recrutador != null && !recrutador.getPerfil().equals(Perfil.RECRUTADOR)) {
                     mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.recrutador.title"), bundle.getString("scheduleInterview.alert.validation.recrutador.job"), null, Alert.AlertType.WARNING);
                     return;
                 }
-                Usuario recrutador = usuarioLogado;
                 LocalDate data = dtDataEntrevista.getValue();
 
                 Entrevista entrevista = new Entrevista(recrutador, vaga, candidatura, StatusEntrevista.Pendente, data);
@@ -199,7 +176,6 @@ public class MarcarEntrevistaController {
                 entrevistaParaEditar.setDataEntrevista(dtDataEntrevista.getValue());
                 entrevistaParaEditar.setStatus(StatusEntrevista.Pendente);
                 entrevistaRepository.atualizarEntrevista();
-                //muda o status da candidatura
                 candidatura.setStatus(StatusCandidatura.EM_ANALISE);
                 candidaturaRepository.salvarOuAtualizar(candidatura);
             }catch (Exception e){
@@ -214,14 +190,12 @@ public class MarcarEntrevistaController {
         fecharJanela();
     }
 
-    // 🔹 Fecha a janela
     @FXML
     private void fecharJanela() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 
-    // 🔹 Validação simples
     private boolean validarCampos() {
         if (cbCandidatura.getValue() == null) {
             mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.title"), bundle.getString("scheduleInterview.alert.validation.candidate"), null, Alert.AlertType.WARNING);
@@ -238,14 +212,12 @@ public class MarcarEntrevistaController {
         return true;
     }
 
-    // 🔹 Limpa todos os campos após salvar
     private void limparCampos() {
         cbCandidatura.setValue(null);
         cbVaga.setValue(null);
         dtDataEntrevista.setValue(null);
     }
 
-    // 🔹 Mostra alerta genérico
     private void mostrarAlerta(String titulo, String mensagem, String detalhe, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(titulo);

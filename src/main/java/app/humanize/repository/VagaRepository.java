@@ -6,7 +6,6 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class VagaRepository {
 
@@ -45,14 +44,6 @@ public class VagaRepository {
             }
         }
         return vagasAbertas;
-    }
-
-    public List<String> getTodosCargos() {
-        List<String> cargos = new ArrayList<>();
-        for(Vaga vaga : this.vagaEmMemoria) {
-            cargos.add(vaga.getCargo());
-        }
-        return cargos;
     }
 
     public int getQtdVaga(){
@@ -141,20 +132,18 @@ public class VagaRepository {
     }
 
     private String formatarVagaParaCSV(Vaga vaga) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(vaga.getId()).append(";");
-        sb.append(vaga.getCargo() == null ? "" : vaga.getCargo()).append(";");
-        sb.append(vaga.getSalario() == null ? "" : vaga.getSalario()).append(";");
-        sb.append(vaga.getStatus() == null ? "" : vaga.getStatus()).append(";");
-        sb.append(vaga.getRequisitos() == null ? "" : vaga.getRequisitos()).append(";");
-        sb.append(vaga.getDepartamento() == null ? "" : vaga.getDepartamento()).append(";");
-        sb.append(vaga.getDataVaga() == null ? "" : vaga.getDataVaga()).append(";");
-        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getId()).append(";");
-        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getNome()).append(";");
-        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getCpf()).append(";");
-        sb.append(vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getPerfil()).append(";");
-        sb.append("\n");
-        return sb.toString();
+        return vaga.getId() + ";" +
+                (vaga.getCargo() == null ? "" : vaga.getCargo()) + ";" +
+                (vaga.getSalario() == null ? "" : vaga.getSalario()) + ";" +
+                (vaga.getStatus() == null ? "" : vaga.getStatus()) + ";" +
+                (vaga.getRequisitos() == null ? "" : vaga.getRequisitos()) + ";" +
+                (vaga.getDepartamento() == null ? "" : vaga.getDepartamento()) + ";" +
+                (vaga.getDataVaga() == null ? "" : vaga.getDataVaga()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getId()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getNome()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getCpf()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getPerfil()) + ";" +
+                "\n";
     }
 
     public void excluirVaga(Vaga vagaParaExcluir) throws IOException {
@@ -168,7 +157,6 @@ public class VagaRepository {
     }
 
     public void atualizarVaga() throws IOException {
-        //this.vagaEmMemoria.replaceAll(v -> v.getId() == vaga.getId() ? vaga : v);
         persistirAlteracoesNoCSV();
     }
 }

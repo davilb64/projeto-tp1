@@ -10,22 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * Gera um relatório financeiro geral (extrato de fluxo de caixa)
- * para a empresa.
- * Acesso: ADMINISTRADOR
- */
 public class RelatorioFinanceiroGeral implements IGeradorRelatorio {
 
     private final RelatorioFinanceiroRepository relatorioRepo = RelatorioFinanceiroRepository.getInstance();
     private final ResourceBundle bundle = UserSession.getInstance().getBundle();
     private final String currencyFormat = bundle.getString("financialReport.currencyFormat");
-    // Símbolo de moeda para limpeza (ex: "R$")
     private final String currencySymbol = bundle.getString("financialReport.currencySymbol");
 
     @Override
     public String getNome() {
-        // CHAVE NOVA: "Relatório Financeiro Geral"
         return bundle.getString("report.name.financialGeneral");
     }
 
@@ -36,27 +29,22 @@ public class RelatorioFinanceiroGeral implements IGeradorRelatorio {
 
     @Override
     public ReportData coletarDados() {
-        // CHAVE NOVA: "Relatório Financeiro Geral (Fluxo de Caixa)"
         String titulo = bundle.getString("report.financialGeneral.title");
 
-        // 1. Cabeçalhos (baseado no seu RelatorioFinanceiroController)
         List<String> headers = List.of(
-                bundle.getString("financialReport.column.date"),       // "Data"
-                bundle.getString("financialReport.column.description"), // "Descrição"
-                bundle.getString("financialReport.column.category"),    // "Categoria"
-                bundle.getString("financialReport.column.revenue"),     // "Receita"
-                bundle.getString("financialReport.column.expense")      // "Despesa"
+                bundle.getString("financialReport.column.date"),
+                bundle.getString("financialReport.column.description"),
+                bundle.getString("financialReport.column.category"),
+                bundle.getString("financialReport.column.revenue"),
+                bundle.getString("financialReport.column.expense")
         );
 
-        // 2. Carrega todas as transações
-        // (Assume que seu repo já inclui os pagamentos de folha, como o controller fazia)
         List<RelatorioFinanceiro> transacoes = relatorioRepo.carregarTransacoes();
 
         if (transacoes.isEmpty()) {
             return ReportData.empty(bundle.getString("report.error.noHistoryFound"));
         }
 
-        // 3. Processa linhas e calcula totais
         List<List<String>> rows = new ArrayList<>();
         double totalReceita = 0.0;
         double totalDespesa = 0.0;
@@ -70,21 +58,16 @@ public class RelatorioFinanceiroGeral implements IGeradorRelatorio {
                     transacao.getDespesas()
             ));
 
-            // Acumula totais
             totalReceita += extrairValorNumerico(transacao.getReceita());
             totalDespesa += extrairValorNumerico(transacao.getDespesas());
         }
 
         double saldoFinal = totalReceita - totalDespesa;
 
-        // 4. Adiciona linhas de resumo
         rows.add(List.of("---", "---", "---", "---", "---"));
-        // CHAVE NOVA: "Total de Receitas"
         rows.add(List.of(bundle.getString("report.financialGeneral.totalRevenue"), "", "", String.format(currencyFormat, totalReceita), ""));
-        // CHAVE NOVA: "Total de Despesas"
         rows.add(List.of(bundle.getString("report.financialGeneral.totalExpense"), "", "", "", String.format(currencyFormat, totalDespesa)));
         rows.add(List.of("---", "---", "---", "---", "---"));
-        // CHAVE NOVA: "Saldo Final"
         rows.add(List.of(bundle.getString("report.financialGeneral.finalBalance"), "", "", "", String.format(currencyFormat, saldoFinal)));
 
         return new ReportData(titulo, headers, rows);
@@ -99,10 +82,9 @@ public class RelatorioFinanceiroGeral implements IGeradorRelatorio {
             return 0.0;
         }
         try {
-            // Remove o símbolo, espaços, e troca vírgula por ponto
             String valorLimpo = valorComRS.replace(currencySymbol, "")
-                    .replace(".", "") // Remove separador de milhar
-                    .replace(",", ".") // Troca separador decimal
+                    .replace(".", "")
+                    .replace(",", ".")
                     .trim();
             return Double.parseDouble(valorLimpo);
         } catch (NumberFormatException e) {

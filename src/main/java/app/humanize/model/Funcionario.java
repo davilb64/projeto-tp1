@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Funcionario extends Usuario {
     private int matricula;
-    private LocalDate dataAdmissao; // NOVO CAMPO
+    private LocalDate dataAdmissao;
     private int periodo;
     private double receita;
     private double despesas;
@@ -21,7 +21,7 @@ public class Funcionario extends Usuario {
 
         super(nome, cpf, endereco, email, login, senha, perfil, idiomaPreferencial);
         this.matricula = matricula;
-        this.dataAdmissao = dataAdmissao; // NOVO CAMPO
+        this.dataAdmissao = dataAdmissao;
         this.periodo = periodo;
         this.departamento = departamento;
         this.receita = receita;
@@ -37,7 +37,7 @@ public class Funcionario extends Usuario {
     // builder
     public static class FuncionarioBuilder {
         private int matricula;
-        private LocalDate dataAdmissao; // NOVO CAMPO
+        private LocalDate dataAdmissao;
         private int periodo;
         private double receita;
         private double despesas;
@@ -59,7 +59,7 @@ public class Funcionario extends Usuario {
         public FuncionarioBuilder regime(Regime regime) { this.regime = regime; return this; }
         public FuncionarioBuilder cargo(String cargo) { this.cargo = cargo; return this; }
         public FuncionarioBuilder matricula(int matricula) { this.matricula = matricula; return this; }
-        public FuncionarioBuilder dataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; return this; } // NOVO CAMPO
+        public FuncionarioBuilder dataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; return this; }
         public FuncionarioBuilder periodo(int periodo) { this.periodo = periodo; return this; }
         public FuncionarioBuilder departamento(String departamento) { this.departamento = departamento; return this; }
         public FuncionarioBuilder receita(double receita) { this.receita = receita; return this; }
@@ -86,8 +86,8 @@ public class Funcionario extends Usuario {
 
     public int getMatricula() { return matricula; }
     public void setMatricula(int matricula) { this.matricula = matricula; }
-    public LocalDate getDataAdmissao() { return dataAdmissao; } // NOVO CAMPO
-    public void setDataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; } // NOVO CAMPO
+    public LocalDate getDataAdmissao() { return dataAdmissao; }
+    public void setDataAdmissao(LocalDate dataAdmissao) { this.dataAdmissao = dataAdmissao; }
     public int getPeriodo() { return periodo; }
     public void setPeriodo(int periodo) { this.periodo = periodo; }
     public double getReceita() { return receita; }

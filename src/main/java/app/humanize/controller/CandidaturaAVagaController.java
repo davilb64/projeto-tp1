@@ -11,7 +11,6 @@ import javafx.scene.control.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class CandidaturaAVagaController {
 
@@ -21,9 +20,9 @@ public class CandidaturaAVagaController {
     @FXML private Button btnCancelar;
 
 
-    private CandidaturaRepository candidaturaRepository;
-    private CandidatoRepository candidatoRepository;
-    private VagaRepository vagaRepository;
+    private final CandidaturaRepository candidaturaRepository;
+    private final CandidatoRepository candidatoRepository;
+    private final VagaRepository vagaRepository;
     private ResourceBundle bundle;
 
     public CandidaturaAVagaController() {
@@ -62,7 +61,7 @@ public class CandidaturaAVagaController {
 
     private void configurarListViews() {
         // Configurar como exibir as vagas
-        listVagas.setCellFactory(lv -> new ListCell<Vaga>() {
+        listVagas.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Vaga vaga, boolean empty) {
                 super.updateItem(vaga, empty);
@@ -78,7 +77,7 @@ public class CandidaturaAVagaController {
         });
 
         // Configurar como exibir os candidatos
-        listCandidatos.setCellFactory(lv -> new ListCell<Candidato>() {
+        listCandidatos.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Candidato candidato, boolean empty) {
                 super.updateItem(candidato, empty);

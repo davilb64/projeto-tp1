@@ -43,7 +43,7 @@ public class ContrachequeRepository extends BaseRepository {
         }
 
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
-            leitor.readLine(); // Pula header
+            leitor.readLine();
             String linha;
             while ((linha = leitor.readLine()) != null) {
                 String[] campos = linha.split(";", -1);

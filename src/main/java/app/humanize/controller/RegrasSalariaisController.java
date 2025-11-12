@@ -2,7 +2,6 @@ package app.humanize.controller;
 
 import app.humanize.model.RegraSalarial;
 import app.humanize.repository.SalarioRepository;
-import app.humanize.repository.UsuarioRepository;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -18,19 +17,14 @@ import java.util.stream.Collectors;
 
 public class RegrasSalariaisController {
 
-    // --- Controles de Formulário ---
     @FXML private ChoiceBox<String> CBcargo;
     @FXML private ChoiceBox<String> CBnivel;
     @FXML private TextField txtSalarioBase;
     @FXML private ChoiceBox<String> CBbeneficios;
     @FXML private Button btnSalvar;
     @FXML private Button btnCancelar;
-
-    // --- Labels de Feedback (Novas) ---
     @FXML private Label lblAdicionalValor;
     @FXML private Label lblBeneficiosValor;
-
-    // --- Tabela de Regras ---
     @FXML private TableView<RegraSalarial> tableViewRegras;
     @FXML private TableColumn<RegraSalarial, String> colCargo;
     @FXML private TableColumn<RegraSalarial, String> colNivel;
@@ -38,8 +32,6 @@ public class RegrasSalariaisController {
     @FXML private TableColumn<RegraSalarial, Double> colAdicionalNivel;
     @FXML private TableColumn<RegraSalarial, Double> colBeneficios;
     @FXML private TableColumn<RegraSalarial, Double> colSalarioTotal;
-
-    // --- Labels de Totais da Tabela (Novas) ---
     @FXML private Label lblTotalBase;
     @FXML private Label lblTotalAdicional;
     @FXML private Label lblTotalBeneficios;
@@ -49,14 +41,12 @@ public class RegrasSalariaisController {
     private final ObservableList<String> cargosValidos = FXCollections.observableArrayList();
     private final ObservableList<String> niveisValidos = FXCollections.observableArrayList();
     private final ObservableList<String> beneficiosValidos = FXCollections.observableArrayList();
-    private final Map<String, String> beneficioMap = new HashMap<>(); // Mapeia Texto Traduzido -> Chave interna
+    private final Map<String, String> beneficioMap = new HashMap<>();
 
     private final ObservableList<RegraSalarial> regrasList = FXCollections.observableArrayList();
     private ResourceBundle bundle;
     private String currencyFormat;
 
-
-    // Enum movido para o topo, conforme solicitado. Mantido por compatibilidade.
     public enum NivelExperiencia {
         JUNIOR("Júnior", 0.0),
         PLENO("Pleno", 100.0),
@@ -64,7 +54,6 @@ public class RegrasSalariaisController {
         ESPECIALISTA("Especialista", 400.0),
         LIDER("Líder", 600.0);
 
-        // ... (resto do enum) ...
         private final String descricao;
         private final double adicional;
 
@@ -95,7 +84,7 @@ public class RegrasSalariaisController {
         this.bundle = UserSession.getInstance().getBundle();
         this.currencyFormat = bundle.getString("salaryRules.table.currencyFormat");
 
-        carregarCargosValidos(); // Usando lista de cargos fixos/lógicos
+        carregarCargosValidos();
         carregarNiveis();
         carregarBeneficios();
         configurarTabela();
@@ -104,13 +93,11 @@ public class RegrasSalariaisController {
         configurarValidacoes();
         configurarListenersDeCalculo();
 
-        // Recalcula totais da tabela após carregamento
         calcularTotaisTabela();
     }
 
-    // --- NOVO: Configura Listeners para atualizar os valores de feedback ---
     private void configurarListenersDeCalculo() {
-        // Listener para Nível: Atualiza Adicional
+        // Listener
         CBnivel.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 NivelExperiencia nivel = NivelExperiencia.fromString(newVal);
@@ -121,7 +108,7 @@ public class RegrasSalariaisController {
             }
         });
 
-        // Listener para Benefícios: Atualiza Valor de Benefício
+        // Listener para Benefícios
         CBbeneficios.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 double valor = calcularValorBeneficios(newVal);
@@ -131,7 +118,7 @@ public class RegrasSalariaisController {
             }
         });
 
-        // Inicializa os valores (dispara os listeners)
+        // dispara
         CBnivel.setValue(niveisValidos.get(0));
         CBbeneficios.setValue(beneficiosValidos.get(0));
     }
@@ -145,7 +132,6 @@ public class RegrasSalariaisController {
         colBeneficios.setCellValueFactory(new PropertyValueFactory<>("beneficios"));
         colSalarioTotal.setCellValueFactory(new PropertyValueFactory<>("salarioTotal"));
 
-        // Aplica a formatação de moeda em todas as colunas de valor
         configurarFormatacaoNumerica(colSalarioBase);
         configurarFormatacaoNumerica(colAdicionalNivel);
         configurarFormatacaoNumerica(colBeneficios);
@@ -153,7 +139,6 @@ public class RegrasSalariaisController {
 
         tableViewRegras.setItems(regrasList);
 
-        // NOVO: Adiciona listener para duplo clique (para edição futura ou visualização)
         tableViewRegras.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 RegraSalarial regra = tableViewRegras.getSelectionModel().getSelectedItem();
@@ -161,21 +146,19 @@ public class RegrasSalariaisController {
                     mostrarAlerta("Detalhes da Regra",
                             "Você clicou duas vezes na regra para " + regra.getCargo() + " - " + regra.getNivel(),
                             Alert.AlertType.INFORMATION);
-                    // Aqui você implementaria a lógica de edição/visualização
                 }
             }
         });
     }
 
     private void configurarFormatacaoNumerica(TableColumn<RegraSalarial, Double> coluna) {
-        coluna.setCellFactory(tc -> new TableCell<RegraSalarial, Double>() {
+        coluna.setCellFactory(tc -> new TableCell<>() {
             @Override
             protected void updateItem(Double valor, boolean vazio) {
                 super.updateItem(valor, vazio);
                 if (vazio || valor == null) {
                     setText(null);
                 } else {
-                    // Usa o formato de moeda da sessão
                     setText(String.format(currencyFormat, valor));
                 }
             }
@@ -199,13 +182,11 @@ public class RegrasSalariaisController {
         }
     }
 
-    // --- NOVO: Lógica para calcular e exibir os totais da tabela ---
     private void calcularTotaisTabela() {
         double totalBase = regrasList.stream().mapToDouble(RegraSalarial::getSalarioBase).sum();
         double totalAdicional = regrasList.stream().mapToDouble(RegraSalarial::getAdicionalNivel).sum();
         double totalBeneficios = regrasList.stream().mapToDouble(RegraSalarial::getBeneficios).sum();
 
-        // Se as Labels de totais existirem no FXML, atualiza
         if (lblTotalBase != null) lblTotalBase.setText(String.format(currencyFormat, totalBase));
         if (lblTotalAdicional != null) lblTotalAdicional.setText(String.format(currencyFormat, totalAdicional));
         if (lblTotalBeneficios != null) lblTotalBeneficios.setText(String.format(currencyFormat, totalBeneficios));
@@ -213,7 +194,6 @@ public class RegrasSalariaisController {
 
 
     private void carregarCargosValidos() {
-        // Simulação de cargos válidos para regras. (Pode vir de um CSV ou ser fixo)
         List<String> cargosFixos = List.of("Analista de RH", "Recrutador Pleno", "Gerente de Contas", "Diretor");
 
         cargosValidos.setAll(cargosFixos.stream()
@@ -231,7 +211,6 @@ public class RegrasSalariaisController {
     private void carregarNiveis() {
         niveisValidos.clear();
         for (NivelExperiencia nivel : NivelExperiencia.values()) {
-            // Usa a descrição hardcoded do Enum para o ChoiceBox
             niveisValidos.add(nivel.getDescricao());
         }
 
@@ -244,7 +223,6 @@ public class RegrasSalariaisController {
         beneficiosValidos.clear();
         beneficioMap.clear();
 
-        // Mapeia a chave de tradução para a chave de lógica interna (melhor para internacionalização)
         addBeneficio(bundle.getString("salaryRules.benefits.none"), "NONE");
         addBeneficio(bundle.getString("salaryRules.benefits.vr"), "VR");
         addBeneficio(bundle.getString("salaryRules.benefits.vt"), "VT");
@@ -256,11 +234,10 @@ public class RegrasSalariaisController {
 
         if (CBbeneficios != null) {
             CBbeneficios.setItems(beneficiosValidos);
-            CBbeneficios.setValue(bundle.getString("salaryRules.benefits.none")); // Padrão
+            CBbeneficios.setValue(bundle.getString("salaryRules.benefits.none"));
         }
     }
 
-    // Helper para popular ChoiceBox e Mapa
     private void addBeneficio(String translatedText, String internalKey) {
         beneficiosValidos.add(translatedText);
         beneficioMap.put(translatedText, internalKey);
@@ -272,7 +249,6 @@ public class RegrasSalariaisController {
             btnCancelar.setOnAction(event -> limparCampos());
         }
 
-        // NOVO: Permite limpar campos com duplo clique no cabeçalho da tabela (para edição)
         tableViewRegras.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && tableViewRegras.getSelectionModel().isEmpty()) {
                 limparCampos();
@@ -282,7 +258,6 @@ public class RegrasSalariaisController {
 
     private void configurarValidacoes() {
         txtSalarioBase.textProperty().addListener((observable, oldValue, newValue) -> {
-            // Permite dígitos, vírgula ou ponto (o parser lidará com isso)
             if (!newValue.matches("[\\d,.]*")) {
                 txtSalarioBase.setText(newValue.replaceAll("[^\\d,.]", ""));
             }
@@ -292,26 +267,16 @@ public class RegrasSalariaisController {
     private double calcularValorBeneficios(String beneficioSelecionadoTraduzido) {
         String key = beneficioMap.getOrDefault(beneficioSelecionadoTraduzido, "NONE");
 
-        switch (key) {
-            case "NONE":
-                return 0.0;
-            case "VR":
-                return VALOR_VALE_REFEICAO;
-            case "VT":
-                return VALOR_VALE_TRANSPORTE;
-            case "HEALTH":
-                return VALOR_PLANO_SAUDE;
-            case "VR_VT":
-                return VALOR_VALE_REFEICAO + VALOR_VALE_TRANSPORTE;
-            case "VR_HEALTH":
-                return VALOR_VALE_REFEICAO + VALOR_PLANO_SAUDE;
-            case "VT_HEALTH":
-                return VALOR_VALE_TRANSPORTE + VALOR_PLANO_SAUDE;
-            case "ALL":
-                return VALOR_VALE_REFEICAO + VALOR_VALE_TRANSPORTE + VALOR_PLANO_SAUDE;
-            default:
-                return 0.0;
-        }
+        return switch (key) {
+            case "VR" -> VALOR_VALE_REFEICAO;
+            case "VT" -> VALOR_VALE_TRANSPORTE;
+            case "HEALTH" -> VALOR_PLANO_SAUDE;
+            case "VR_VT" -> VALOR_VALE_REFEICAO + VALOR_VALE_TRANSPORTE;
+            case "VR_HEALTH" -> VALOR_VALE_REFEICAO + VALOR_PLANO_SAUDE;
+            case "VT_HEALTH" -> VALOR_VALE_TRANSPORTE + VALOR_PLANO_SAUDE;
+            case "ALL" -> VALOR_VALE_REFEICAO + VALOR_VALE_TRANSPORTE + VALOR_PLANO_SAUDE;
+            default -> 0.0;
+        };
     }
 
     private void salvarRegra() {
@@ -328,7 +293,6 @@ public class RegrasSalariaisController {
 
             NivelExperiencia nivel = NivelExperiencia.fromString(nivelDescricao);
 
-            // Centraliza o parsing e validação de base salarial
             double salarioBase = validarEConverterDouble(txtSalarioBase.getText(),
                     bundle.getString("salaryRules.field.baseSalary"));
 
@@ -344,7 +308,6 @@ public class RegrasSalariaisController {
 
             RegraSalarial novaRegra = new RegraSalarial(cargo, nivel.getDescricao(), salarioBase, adicionalNivel, valorBeneficios, salarioTotal);
 
-            // Verifica se a regra já existe (para evitar duplicidade)
             boolean exists = regrasList.stream().anyMatch(r ->
                     r.getCargo().equalsIgnoreCase(cargo) && r.getNivel().equalsIgnoreCase(nivelDescricao));
 
@@ -357,7 +320,7 @@ public class RegrasSalariaisController {
             try {
                 salarioRepository.salvarRegra(novaRegra);
                 regrasList.add(novaRegra);
-                calcularTotaisTabela(); // Atualiza os totais
+                calcularTotaisTabela();
                 mostrarMensagemSucesso(novaRegra);
                 limparCampos();
 
@@ -367,7 +330,6 @@ public class RegrasSalariaisController {
             }
 
         } catch (NumberFormatException e) {
-            // A exceção já carrega a mensagem formatada
             mostrarAlerta(bundle.getString("alert.error.format.title"), e.getMessage(), Alert.AlertType.ERROR);
         } catch (Exception e) {
             mostrarAlerta(bundle.getString("alert.error.title"),
@@ -397,13 +359,8 @@ public class RegrasSalariaisController {
                 txtSalarioBase.getText() != null && !txtSalarioBase.getText().trim().isEmpty();
     }
 
-    /**
-     * Valida se o texto é numérico e converte, tratando "," como decimal.
-     * Lança NumberFormatException com mensagem formatada se falhar.
-     */
     private double validarEConverterDouble(String valor, String campo) throws NumberFormatException {
         try {
-            // Tenta converter, substituindo vírgula por ponto (padrão Double.parseDouble)
             return Double.parseDouble(valor.replace(",", "."));
         } catch (NumberFormatException e) {
             throw new NumberFormatException(String.format(bundle.getString("salaryRules.alert.validation.mustBeNumeric"), campo));
@@ -411,7 +368,6 @@ public class RegrasSalariaisController {
     }
 
     private void limparCampos() {
-        // Reseta para o primeiro item/padrão
         if (CBcargo != null && !cargosValidos.isEmpty()) {
             CBcargo.setValue(cargosValidos.get(0));
         }

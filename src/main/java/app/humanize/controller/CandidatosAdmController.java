@@ -1,6 +1,5 @@
 package app.humanize.controller;
 
-import app.humanize.model.Candidato;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +32,7 @@ public class CandidatosAdmController {
     @FXML
     public void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
-        showCadastro(); // Carrega a primeira tela (Cadastro) por padrão
+        showCadastro(); // carrega a primeira tela
     }
 
     private void loadUI(String fxmlPath) {
@@ -107,31 +106,5 @@ public class CandidatosAdmController {
     public void showStatus() {
         loadUI("/view/StatusDaCandidatura.fxml");
         setActiveButton(btnStatus);
-    }
-
-    public void editarCandidatoExistente(Candidato candidato) {
-        try {
-            URL resource = getClass().getResource("/view/CadastroDeCandidato.fxml");
-            if (resource == null) {
-                throw new NullPointerException(bundle.getString("exception.fxmlNotFound.cadastroCandidato"));
-            }
-
-            FXMLLoader loader = new FXMLLoader(resource, bundle);
-            Node view = loader.load();
-
-            CadastroDeCandidatoController controller = loader.getController();
-            controller.prepararParaEdicao(candidato);
-
-            contentArea.getChildren().setAll(view);
-            setActiveButton(btnCadastro);
-
-        } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
-            mostrarAlerta(
-                    bundle.getString("candidatesMain.alert.error.loadEdit.title"),
-                    bundle.getString("candidatesMain.alert.error.loadEdit.header"),
-                    e.getMessage()
-            );
-        }
     }
 }

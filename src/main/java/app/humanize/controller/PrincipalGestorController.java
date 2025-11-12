@@ -6,7 +6,6 @@ import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -51,8 +50,6 @@ public class PrincipalGestorController {
 
     private Image avatarPadrao;
     private Button activeButton;
-
-    private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
     private ResourceBundle bundle;
 

@@ -3,25 +3,23 @@ package app.humanize.controller;
 import app.humanize.model.FolhaPag;
 import app.humanize.model.Funcionario;
 import app.humanize.model.Usuario;
-// --- NOVOS IMPORTS ---
 import app.humanize.service.formatters.IReportFormatter;
 import app.humanize.service.formatters.PdfFormatter;
 import app.humanize.service.relatorios.ReportData;
-// --- FIM DOS NOVOS IMPORTS ---
 import app.humanize.util.UserSession;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser; // NOVO
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File; // NOVO
-import java.io.FileOutputStream; // NOVO
-import java.io.IOException; // NOVO
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
-import java.util.List; // NOVO
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -30,25 +28,18 @@ import java.util.ResourceBundle;
  */
 public class ContrachequeIndividualController {
 
-    // --- Informações do Funcionário ---
     @FXML private Label lblNomeFuncionario;
     @FXML private Label lblCargo;
     @FXML private Label lblDepartamento;
     @FXML private Label lblMatricula;
     @FXML private Label lblPeriodoReferencia;
-
-    // --- Tabela de Detalhes (Proventos/Descontos) ---
     @FXML private TableView<ItemContracheque> tblDetalhes;
     @FXML private TableColumn<ItemContracheque, String> colDescricao;
     @FXML private TableColumn<ItemContracheque, String> colProvento;
     @FXML private TableColumn<ItemContracheque, String> colDesconto;
-
-    // --- Totais ---
     @FXML private Label lblTotalProventos;
     @FXML private Label lblTotalDescontos;
     @FXML private Label lblValorLiquido;
-
-    // --- Botões de Ação ---
     @FXML private Button btnImprimir;
     @FXML private Button btnFechar;
 
@@ -56,9 +47,8 @@ public class ContrachequeIndividualController {
     private String currencyFormat;
     private FolhaPag folhaAtual;
 
-    // NOVO: Instância do Formatador de PDF
     private final IReportFormatter formatadorPdf = new PdfFormatter();
-    private final String DATE_FORMAT_EXPORT = "dd/MM/yyyy"; // Formato para o título do PDF
+    private final String DATE_FORMAT_EXPORT = "dd/MM/yyyy"; // formato para o título do PDF
 
     @FXML
     public void initialize() {
@@ -72,7 +62,7 @@ public class ContrachequeIndividualController {
 
         // Ações dos botões
         btnFechar.setOnAction(e -> fecharJanela());
-        btnImprimir.setOnAction(e -> imprimirRelatorio()); // Agora chama a lógica real
+        btnImprimir.setOnAction(e -> imprimirRelatorio());
     }
 
     /**
@@ -84,19 +74,17 @@ public class ContrachequeIndividualController {
 
         Usuario usuario = UserSession.getInstance().getUsuarioLogado();
 
-        if (usuario == null || !(usuario instanceof Funcionario)) {
+        if (!(usuario instanceof Funcionario funcionario)) {
             lblNomeFuncionario.setText(folha.getNome());
             return;
         }
-
-        Funcionario funcionario = (Funcionario) usuario;
 
         lblNomeFuncionario.setText(folha.getNome());
         lblCargo.setText(folha.getCargo() + " (" + folha.getNivel() + ")");
         lblDepartamento.setText(funcionario.getDepartamento());
         lblMatricula.setText(String.valueOf(funcionario.getMatricula()));
 
-        // Formata a data (de yyyy-MM-dd) para dd/MM/yyyy para exibição
+        // Formata a data
         lblPeriodoReferencia.setText(folha.getData().format(DateTimeFormatter.ofPattern(DATE_FORMAT_EXPORT)));
 
         preencherTabelaDetalhes(folha);
@@ -112,7 +100,6 @@ public class ContrachequeIndividualController {
     private void preencherTabelaDetalhes(FolhaPag folha) {
         ObservableList<ItemContracheque> items = FXCollections.observableArrayList();
 
-        // --- Proventos (Ganhos) ---
         items.add(new ItemContracheque(bundle.getString("payslip.detail.baseSalary"), formatCurrency(folha.getSalarioBase()), ""));
         items.add(new ItemContracheque(bundle.getString("payslip.detail.levelBonus"), formatCurrency(folha.getAdicionalNivel()), ""));
         items.add(new ItemContracheque(bundle.getString("payslip.detail.benefits"), formatCurrency(folha.getBeneficios()), ""));
@@ -122,14 +109,11 @@ public class ContrachequeIndividualController {
         tblDetalhes.setItems(items);
     }
 
-    // -----------------------------------------------------------------
-    // --- MÉTODO ATUALIZADO ---
-    // -----------------------------------------------------------------
     private void imprimirRelatorio() {
         if (this.folhaAtual == null) {
             mostrarAlerta(
                     bundle.getString("alert.error.title"),
-                    bundle.getString("report.error.noPayslipFound"), // Reutilizando chave
+                    bundle.getString("report.error.noPayslipFound"),
                     null,
                     Alert.AlertType.ERROR
             );
@@ -137,18 +121,11 @@ public class ContrachequeIndividualController {
         }
 
         try {
-            // 1. Cria o DTO de dados (mesma lógica da tela anterior)
             ReportData dados = criarReportDataDaFolha(this.folhaAtual);
-
-            // 2. Formata para PDF
             byte[] arquivoBytes = formatadorPdf.formatar(dados);
-
-            // 3. Define o nome do arquivo
             String nomeBase = "Contracheque_" +
                     this.folhaAtual.getNome().replace(" ", "_") + "_" +
                     this.folhaAtual.getData().format(DateTimeFormatter.ofPattern("yyyyMM"));
-
-            // 4. Salva o arquivo
             salvarArquivoFisico(arquivoBytes, nomeBase, formatadorPdf);
 
         } catch (Exception e) {
@@ -162,13 +139,6 @@ public class ContrachequeIndividualController {
         }
     }
 
-    // -----------------------------------------------------------------
-    // --- NOVOS MÉTODOS (Copiados do FolhaDePagamentoController) ---
-    // -----------------------------------------------------------------
-
-    /**
-     * Cria um DTO ReportData a partir de uma FolhaPag para uso do formatador.
-     */
     private ReportData criarReportDataDaFolha(FolhaPag folha) {
         String titulo = String.format(bundle.getString("payroll.report.titleFormat"),
                 folha.getNome(), folha.getData().format(DateTimeFormatter.ofPattern(DATE_FORMAT_EXPORT)));
@@ -197,9 +167,9 @@ public class ContrachequeIndividualController {
     }
 
     /**
-     * Salva os bytes do relatório em um arquivo físico, usando FileChooser.
+     * Salva os bytes do relatório num arquivo físico, usando FileChooser.
      */
-    private File salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) throws IOException {
+    private void salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("reportsAdmin.saveDialog.title"));
         fileChooser.setInitialFileName(nomeBase + formatador.getExtensao());
@@ -208,7 +178,7 @@ public class ContrachequeIndividualController {
                 formatador.getDescricaoFiltro(), "*" + formatador.getExtensao());
         fileChooser.getExtensionFilters().add(extFilter);
 
-        Stage currentStage = (Stage) btnFechar.getScene().getWindow(); // Pega o Stage atual
+        Stage currentStage = (Stage) btnFechar.getScene().getWindow();
         File file = fileChooser.showSaveDialog(currentStage);
 
         if (file != null) {
@@ -221,20 +191,11 @@ public class ContrachequeIndividualController {
                         file.getAbsolutePath(),
                         Alert.AlertType.INFORMATION
                 );
-                return file;
             } catch (IOException e) {
-                // Relança a exceção para ser tratada no método 'imprimirRelatorio'
                 throw new IOException(bundle.getString("reportsAdmin.alert.saveError.header") + e.getMessage(), e);
             }
-        } else {
-            return null; // Usuário cancelou
         }
     }
-
-
-    // -----------------------------------------------------------------
-    // --- Métodos Existentes ---
-    // -----------------------------------------------------------------
 
     private void fecharJanela() {
         Stage stage = (Stage) btnFechar.getScene().getWindow();

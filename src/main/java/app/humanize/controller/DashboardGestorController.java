@@ -12,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -22,12 +21,9 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -86,9 +82,9 @@ public class DashboardGestorController {
 
         Map<YearMonth, Long> contratacoesPorMes = datasContratacao.stream()
                 .collect(Collectors.groupingBy(
-                        YearMonth::from,      // Agrupa por Mês/Ano
-                        TreeMap::new,         // Usa um TreeMap para ordenar
-                        Collectors.counting() // Conta as ocorrências
+                        YearMonth::from,
+                        TreeMap::new,
+                        Collectors.counting()
                 ));
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -153,7 +149,7 @@ public class DashboardGestorController {
 
     @FXML public void criarVaga() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CriarVaga.fxml"));
-        loader.setResources(bundle); // Passa o bundle
+        loader.setResources(bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle(bundle.getString("dashboard.gestor.window.createJob.title"));
@@ -164,7 +160,7 @@ public class DashboardGestorController {
     }
 
 
-    @FXML public void autorizarContratacao() throws IOException {
+    @FXML public void autorizarContratacao() {
         mainController.showFuncionarios();
     }
 

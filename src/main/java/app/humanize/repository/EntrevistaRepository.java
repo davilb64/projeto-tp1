@@ -1,13 +1,11 @@
 package app.humanize.repository;
 
 import app.humanize.model.*;
-import com.sun.javafx.scene.EnteredExitedHandler;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class EntrevistaRepository extends BaseRepository {
     private static final EntrevistaRepository instance = new EntrevistaRepository();
@@ -117,7 +115,7 @@ public class EntrevistaRepository extends BaseRepository {
             sb.append(entrevista.getCandidatura().getCandidato().getTelefone() == null ? "" : entrevista.getCandidatura().getCandidato().getTelefone()).append(";");
             sb.append(entrevista.getCandidatura().getCandidato().getFormacao() == null ? "" : entrevista.getCandidatura().getCandidato().getFormacao()).append(";");
             sb.append(entrevista.getCandidatura().getCandidato().getDisponibilidade() == null ? "" : entrevista.getCandidatura().getCandidato().getDisponibilidade()).append(";");
-            sb.append(String.valueOf(entrevista.getCandidatura().getCandidato().getPretencaoSalarial())).append(";");
+            sb.append(entrevista.getCandidatura().getCandidato().getPretencaoSalarial()).append(";");
         }
         if(entrevista.getVaga() != null){
             sb.append(entrevista.getVaga().getId()).append(";");
@@ -224,7 +222,7 @@ public class EntrevistaRepository extends BaseRepository {
             candidatura.setVaga(vaga);
             if (campos[21] != null && !campos[21].isEmpty()) {
                 try {
-                    String valor = campos[21].trim().toUpperCase(); // 🔥 normaliza o texto
+                    String valor = campos[21].trim().toUpperCase(); // normaliza o texto
                     candidatura.setStatus(StatusCandidatura.valueOf(valor));
                 } catch (IllegalArgumentException e) {
                     System.err.println("Status inválido no CSV: " + campos[22]);
@@ -233,10 +231,7 @@ public class EntrevistaRepository extends BaseRepository {
             }
             candidatura.setDataCandidatura(campos[22] != null && !campos[22].isEmpty() ? LocalDate.parse(campos[22]) : null);
             entrevista.setCandidatura(candidatura);
-            if(campos.length >= 23)
-            {
-                entrevista.setRelatorioEntrevista(campos[23]);
-            }
+            entrevista.setRelatorioEntrevista(campos[23]);
             return entrevista;
 
         } catch (Exception e) {

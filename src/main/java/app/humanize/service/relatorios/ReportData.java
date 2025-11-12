@@ -1,6 +1,5 @@
 package app.humanize.service.relatorios;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ReportData {
@@ -18,9 +17,7 @@ public class ReportData {
     public List<String> getHeaders() { return headers; }
     public List<List<String>> getRows() { return rows; }
 
-    /**
-     * NOVO: Método helper para criar um relatório de status/erro.
-     */
+
     public static ReportData empty(String message) {
         return new ReportData(
                 "Aviso de Relatório",

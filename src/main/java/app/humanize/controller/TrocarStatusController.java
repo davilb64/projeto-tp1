@@ -20,15 +20,14 @@ public class TrocarStatusController {
 
     @FXML private TextField txtCandidato;
     @FXML private TextField txtVaga;
-    @FXML private ChoiceBox<StatusCandidatura> choiceStatus; // Alterado de String para StatusCandidatura
+    @FXML private ChoiceBox<StatusCandidatura> choiceStatus;
     @FXML private Button btnSalvar;
 
     private Candidatura candidatura;
-    private Runnable onStatusAlterado; // callback para atualizar tabela
+    private Runnable onStatusAlterado;
     private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
     private ResourceBundle bundle;
 
-    // Método auxiliar para traduzir o status
     private String getTraducaoStatus(StatusCandidatura status) {
         if (status == null) return null;
         String key = "statusCandidatura." + status.name();
@@ -39,7 +38,6 @@ public class TrocarStatusController {
     private void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
 
-        // Popula o ChoiceBox com os Enums
         choiceStatus.setItems(FXCollections.observableArrayList(
                 StatusCandidatura.PENDENTE,
                 StatusCandidatura.EM_ANALISE,
@@ -47,8 +45,7 @@ public class TrocarStatusController {
                 StatusCandidatura.REPROVADO
         ));
 
-        // Usa um StringConverter para exibir os nomes traduzidos
-        choiceStatus.setConverter(new StringConverter<StatusCandidatura>() {
+        choiceStatus.setConverter(new StringConverter<>() {
             @Override
             public String toString(StatusCandidatura status) {
                 return getTraducaoStatus(status);
@@ -56,7 +53,6 @@ public class TrocarStatusController {
 
             @Override
             public StatusCandidatura fromString(String string) {
-                // Mapeia a string traduzida de volta para o Enum
                 if (string == null) return null;
                 for (StatusCandidatura s : choiceStatus.getItems()) {
                     if (getTraducaoStatus(s).equals(string)) {
@@ -72,7 +68,7 @@ public class TrocarStatusController {
         this.candidatura = candidatura;
         txtCandidato.setText(candidatura.getCandidato().getNome());
         txtVaga.setText(candidatura.getVaga().getCargo());
-        choiceStatus.setValue(candidatura.getStatus()); // Define o Enum diretamente
+        choiceStatus.setValue(candidatura.getStatus());
 
         txtVaga.setEditable(false);
         txtCandidato.setEditable(false);
@@ -89,7 +85,7 @@ public class TrocarStatusController {
             return;
         }
 
-        StatusCandidatura novoStatus = choiceStatus.getValue(); // Pega o Enum diretamente
+        StatusCandidatura novoStatus = choiceStatus.getValue();
         if (novoStatus == null) {
             mostrarErro(bundle.getString("changeStatus.alert.invalidStatus"));
             return;

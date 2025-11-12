@@ -10,8 +10,4 @@ Este pacote contém **os controladores do sistema**, responsáveis por intermedi
 
 ## Exemplos de classes:
 - `LoginController` → Controla a tela de login.
-- `DashboardController` → Controla o menu principal.
-- `CandidatosController` → CRUD de candidatos.
-- `VagasController` → CRUD de vagas e entrevistas.
-- `FinanceiroController` → Gerencia folha de pagamento.
-- `PrestadoresController` → CRUD de prestadores.
+

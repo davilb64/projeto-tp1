@@ -4,7 +4,6 @@ import app.humanize.exceptions.CpfInvalidoException;
 import app.humanize.exceptions.EmailInvalidoException;
 import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.*;
-import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.CandidaturaRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.validacoes.ValidaCpf;

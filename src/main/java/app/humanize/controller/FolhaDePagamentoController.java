@@ -7,27 +7,26 @@ import app.humanize.model.Usuario;
 import app.humanize.repository.FolhaPagRepository;
 import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.UsuarioRepository;
-import app.humanize.service.formatters.CsvFormatter; // NOVO: Para exportação
-import app.humanize.service.formatters.IReportFormatter; // NOVO
-import app.humanize.service.formatters.PdfFormatter; // NOVO
+import app.humanize.service.formatters.CsvFormatter;
+import app.humanize.service.formatters.IReportFormatter;
+import app.humanize.service.formatters.PdfFormatter;
 import app.humanize.service.relatorios.ReportData;
 import app.humanize.util.UserSession;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos; // NOVO
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser; // NOVO
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.stage.Stage; // NOVO
-
-import java.io.File; // NOVO
-import java.io.FileOutputStream; // NOVO
+import javafx.stage.Stage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter; // NOVO
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -39,7 +38,7 @@ public class FolhaDePagamentoController {
     @FXML private TextField txtMesAno;
 
     @FXML private TableView<FolhaPag> tabelaFolhaPagamento;
-    @FXML private TableColumn<FolhaPag, Void> colunaAcoes; // NOVO: Coluna de Ações
+    @FXML private TableColumn<FolhaPag, Void> colunaAcoes;
     @FXML private TableColumn<FolhaPag, String> colunaNome;
     @FXML private TableColumn<FolhaPag, String> colunaCargo;
     @FXML private TableColumn<FolhaPag, String> colunaSalario;
@@ -50,27 +49,20 @@ public class FolhaDePagamentoController {
     @FXML private MenuButton menuDesc;
 
     @FXML private Button btnEmitir;
-    @FXML private Button btnExportarPDF; // NOVO
-    @FXML private Button btnExportarCSV; // NOVO
+    @FXML private Button btnExportarPDF;
+    @FXML private Button btnExportarCSV;
 
-    private SalarioRepository salarioRepo = SalarioRepository.getInstance();
-    private FolhaPagRepository folhaRepo = FolhaPagRepository.getInstance();
-    private UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
+    private final SalarioRepository salarioRepo = SalarioRepository.getInstance();
+    private final FolhaPagRepository folhaRepo = FolhaPagRepository.getInstance();
+    private final UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
     private ResourceBundle bundle;
 
     private double adicionaisAtuais = 0.0;
     private double descontosAtuais = 0.0;
-    private final String DATE_FORMAT = "dd/MM/yyyy"; // Usado para exibição do mês/ano
 
-    private final IReportFormatter formatadorCsv = new CsvFormatter(); // NOVO
-    private final IReportFormatter formatadorPdf = new PdfFormatter(); // NOVO
+    private final IReportFormatter formatadorCsv = new CsvFormatter();
+    private final IReportFormatter formatadorPdf = new PdfFormatter();
 
-    // Constantes de Adicionais/Descontos (mantidas)
-    private final double ADICIONAL_HORAS_EXTRAS = 100.0;
-    private final double DESCONTO_ATRASO = 50.0;
-    private final double DESCONTO_MULTA = 80.0;
-
-    // Enum NivelExperiencia (mantido)
     public enum NivelExperiencia {
         JUNIOR("Júnior", 0.0), PLENO("Pleno", 100.0), SENIOR("Sênior", 250.0),
         ESPECIALISTA("Especialista", 400.0), LIDER("Líder", 600.0);
@@ -88,7 +80,7 @@ public class FolhaDePagamentoController {
         configurarTabela();
         configurarEventos();
         carregarFolhasExistentes();
-        configurarExportacaoBotoes(); // NOVO: Configura botões de exportação no painel inferior
+        configurarExportacaoBotoes();
 
         txtNome.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.trim().isEmpty()) {
@@ -98,7 +90,6 @@ public class FolhaDePagamentoController {
             }
         });
 
-        // NOVO: Adiciona listener para habilitar/desabilitar exportação ao selecionar linha
         tabelaFolhaPagamento.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             boolean selected = newVal != null;
             btnExportarPDF.setDisable(!selected);
@@ -108,14 +99,11 @@ public class FolhaDePagamentoController {
         btnExportarCSV.setDisable(true);
     }
 
-    // ... (buscarFuncionarioPorNome, funcionarioExiste, carregarFolhasExistentes) ...
-
     private void buscarFuncionarioPorNome(String nome) {
         List<Usuario> todosUsuarios = usuarioRepo.getTodosUsuarios();
 
         for (Usuario usuario : todosUsuarios) {
-            if (usuario instanceof Funcionario) {
-                Funcionario funcionario = (Funcionario) usuario;
+            if (usuario instanceof Funcionario funcionario) {
                 if (funcionario.getNome().equalsIgnoreCase(nome)) {
 
                     txtCargo.setText(funcionario.getCargo());
@@ -133,8 +121,7 @@ public class FolhaDePagamentoController {
         List<Usuario> todosUsuarios = usuarioRepo.getTodosUsuarios();
 
         for (Usuario usuario : todosUsuarios) {
-            if (usuario instanceof Funcionario) {
-                Funcionario funcionario = (Funcionario) usuario;
+            if (usuario instanceof Funcionario funcionario) {
                 if (funcionario.getNome().equalsIgnoreCase(nome)) {
                     return true;
                 }
@@ -148,9 +135,6 @@ public class FolhaDePagamentoController {
         tabelaFolhaPagamento.getItems().setAll(folhas);
     }
 
-    // ----------------------------------------------------
-    // NOVO: Configura a coluna de ações e formatação
-    // ----------------------------------------------------
     private void configurarTabela() {
         String currencyFormat = bundle.getString("payroll.table.currencyFormat");
         colunaNome.setCellValueFactory(cellData ->
@@ -164,12 +148,11 @@ public class FolhaDePagamentoController {
         colunaLiquid.setCellValueFactory(cellData ->
                 new SimpleStringProperty(String.format(currencyFormat, cellData.getValue().getSalarioLiquido())));
 
-        // NOVO: Renderiza botões na Coluna de Ações
-        colunaAcoes.setCellFactory(param -> new TableCell<FolhaPag, Void>() {
+        colunaAcoes.setCellFactory(param -> new TableCell<>() {
             private final Button btnVisualizar = new Button(bundle.getString("payroll.table.button.view"));
 
             {
-                btnVisualizar.getStyleClass().add("table-action-button"); // Classe CSS para botões menores
+                btnVisualizar.getStyleClass().add("table-action-button");
                 btnVisualizar.setOnAction(event -> {
                     FolhaPag folha = getTableView().getItems().get(getIndex());
                     mostrarDetalhesFolha(folha);
@@ -206,9 +189,6 @@ public class FolhaDePagamentoController {
         }
     }
 
-    // ----------------------------------------------------
-    // NOVO: Métodos de Exportação (conectados ao FXML)
-    // ----------------------------------------------------
 
     private void configurarExportacaoBotoes() {
         btnExportarPDF.setOnAction(e -> exportarFolhaSelecionada(formatadorPdf));
@@ -236,7 +216,6 @@ public class FolhaDePagamentoController {
         }
 
         try {
-            // Cria um DTO ReportData simulado a partir da FolhaPag
             ReportData dados = criarReportDataDaFolha(folhaSelecionada);
             byte[] arquivoBytes = formatador.formatar(dados);
 
@@ -253,11 +232,9 @@ public class FolhaDePagamentoController {
         }
     }
 
-    /**
-     * Cria um DTO ReportData a partir de uma FolhaPag para uso do formatador.
-     */
     private ReportData criarReportDataDaFolha(FolhaPag folha) {
         String currencyFormat = bundle.getString("payroll.table.currencyFormat");
+        String DATE_FORMAT = "dd/MM/yyyy";
         String titulo = String.format(bundle.getString("payroll.report.titleFormat"),
                 folha.getNome(), folha.getData().format(DateTimeFormatter.ofPattern(DATE_FORMAT)));
 
@@ -284,7 +261,7 @@ public class FolhaDePagamentoController {
         return new ReportData(titulo, headers, rows);
     }
 
-    private File salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) throws IOException {
+    private void salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("reportsAdmin.saveDialog.title"));
         fileChooser.setInitialFileName(nomeBase + formatador.getExtensao());
@@ -305,39 +282,20 @@ public class FolhaDePagamentoController {
                         bundle.getString("payroll.alert.exportSuccess.header"),
                         file.getAbsolutePath()
                 );
-                return file;
-            } catch (IOException e) {
-                throw e;
             }
-        } else {
-            return null;
         }
     }
 
-
-    // ----------------------------------------------------
-    // NOVO: Método de Visualização
-    // ----------------------------------------------------
-    // Em: app.humanize.controller.FolhaDePagamentoController.java
-
     private void mostrarDetalhesFolha(FolhaPag folha) {
         try {
-            // Carrega o FXML da tela de visualização individual
-            // Assumindo que o FXML está em /view/ContrachequeIndividual.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ContrachequeIndividual.fxml"), bundle);
-
-            // Se você não tiver o FXML, use esta URL para criar um placeholder (temporário)
-            // FXMLLoader loader = new FXMLLoader(new URL("file:///caminho/para/ContrachequeIndividual.fxml"), bundle);
 
             Parent root = loader.load();
 
-            // Obtém o controlador da nova janela
             ContrachequeIndividualController controller = loader.getController();
 
-            // Chama o método para injetar os dados da folha de pagamento selecionada
             controller.initData(folha);
 
-            // Configura e mostra a nova janela
             Stage stage = new Stage();
             stage.setTitle(bundle.getString("payslip.details.title"));
             stage.setScene(new Scene(root));
@@ -347,14 +305,12 @@ public class FolhaDePagamentoController {
 
         } catch (IOException e) {
             mostrarErro(
-                    bundle.getString("payroll.alert.saveError.title"), // Reutilizando chave de erro
+                    bundle.getString("payroll.alert.saveError.title"),
                     "Falha ao carregar a tela de detalhes do contracheque: " + e.getMessage()
             );
             e.printStackTrace();
         }
     }
-
-    // ... (emitirFolhaPagamento e métodos auxiliares) ...
 
     @FXML
     private void emitirFolhaPagamento() {
@@ -376,15 +332,6 @@ public class FolhaDePagamentoController {
                     bundle.getString("payroll.alert.employeeNotFound.title"),
                     String.format(bundle.getString("payroll.alert.employeeNotFound.header"), nome) + "\n" +
                             bundle.getString("payroll.alert.employeeNotFound.content"),
-                    bundle.getString("payroll.alert.invalidDate.content"));
-            return;
-        }
-
-        if (cargoNome.isEmpty()) {
-            mostrarAlerta(
-                    bundle.getString("payroll.alert.positionUndefined.title"),
-                    String.format(bundle.getString("payroll.alert.positionUndefined.header"), nome) + "\n" +
-                            bundle.getString("payroll.alert.positionUndefined.content"),
                     bundle.getString("payroll.alert.invalidDate.content"));
             return;
         }
@@ -424,7 +371,6 @@ public class FolhaDePagamentoController {
         double beneficios = regra.getBeneficios();
         double salarioTotal = salarioBase + adicionalNivel + beneficios + adicionaisAtuais - descontosAtuais;
 
-        // NOVO: Converte a data do campo de texto para LocalDate
         LocalDate dataEmissao;
         try {
             dataEmissao = LocalDate.parse(mesAno, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -456,9 +402,8 @@ public class FolhaDePagamentoController {
         descontosAtuais = 0.0;
         limparCampos();
     }
-    // ... (o resto dos métodos do controller permanece o mesmo, exceto pelo helper de alerta) ...
 
-    // Métodos auxiliares
+    // metodos auxiliares
     private RegraSalarial buscarRegraSalarial(String cargo, String nivel) {
         List<RegraSalarial> regras = salarioRepo.carregarTodasRegras();
 
@@ -472,16 +417,19 @@ public class FolhaDePagamentoController {
     }
 
     private void adicionarHorasExtras() {
+        double ADICIONAL_HORAS_EXTRAS = 100.0;
         adicionaisAtuais += ADICIONAL_HORAS_EXTRAS;
         mostrarSelecoesAtuais();
     }
 
     private void aplicarDescontoAtraso() {
+        double DESCONTO_ATRASO = 50.0;
         descontosAtuais += DESCONTO_ATRASO;
         mostrarSelecoesAtuais();
     }
 
     private void aplicarDescontoMulta() {
+        double DESCONTO_MULTA = 80.0;
         descontosAtuais += DESCONTO_MULTA;
         mostrarSelecoesAtuais();
     }
@@ -505,7 +453,7 @@ public class FolhaDePagamentoController {
     }
 
     private void mostrarAlerta(String titulo, String mensagem, String string) {
-        Alert alert = new Alert(Alert.AlertType.WARNING); // Alterado para WARNING
+        Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
         alert.setHeaderText(null);
         alert.setContentText(mensagem);

@@ -5,11 +5,9 @@ import app.humanize.model.Funcionario;
 import app.humanize.model.Usuario;
 import app.humanize.repository.ContrachequeRepository;
 import app.humanize.repository.UsuarioRepository;
-// --- NOVOS IMPORTS ---
 import app.humanize.service.formatters.IReportFormatter;
 import app.humanize.service.formatters.PdfFormatter;
 import app.humanize.service.relatorios.ReportData;
-// --- FIM NOVOS IMPORTS ---
 import app.humanize.util.UserSession;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -17,22 +15,20 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.FileChooser; // NOVO
-import javafx.stage.Stage; // NOVO
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import java.io.File; // NOVO
-import java.io.FileOutputStream; // NOVO
-import java.io.IOException; // NOVO
-import java.time.format.DateTimeFormatter; // NOVO
-import java.util.ArrayList; // NOVO
-import java.util.Comparator; // NOVO
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors; // NOVO
 
 public class ContraChequeController {
 
-    // --- FXML (Atualizado) ---
     @FXML private ComboBox<Funcionario> cbFuncionario;
     @FXML private TextField txtCargo;
     @FXML private TextField txtDepartamento;
@@ -50,7 +46,6 @@ public class ContraChequeController {
     private final ContrachequeRepository contraChequeRepository = ContrachequeRepository.getInstance();
     private ResourceBundle bundle;
 
-    // --- NOVOS ATRIBUTOS ---
     private final ObservableList<Funcionario> listaFuncionarios = FXCollections.observableArrayList();
     private final IReportFormatter formatadorPdf = new PdfFormatter();
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -83,7 +78,6 @@ public class ContraChequeController {
         formatarColunaMoeda(colunaSald);
     }
 
-    // NOVO: Popula o ComboBox de Funcionários
     private void carregarFuncionariosComboBox() {
         listaFuncionarios.clear();
 
@@ -91,13 +85,12 @@ public class ContraChequeController {
                 .filter(usuario -> usuario instanceof Funcionario)
                 .map(usuario -> (Funcionario) usuario)
                 .sorted(Comparator.comparing(Usuario::getNome)) // Ordena por nome
-                .collect(Collectors.toList());
+                .toList();
 
         listaFuncionarios.addAll(funcionarios);
         cbFuncionario.setItems(listaFuncionarios);
 
-        // Define como exibir o Funcionario no ComboBox (mostrar apenas o nome)
-        cbFuncionario.setCellFactory(lv -> new ListCell<Funcionario>() {
+        cbFuncionario.setCellFactory(lv -> new ListCell<>() {
             @Override
             protected void updateItem(Funcionario func, boolean empty) {
                 super.updateItem(func, empty);
@@ -105,8 +98,7 @@ public class ContraChequeController {
             }
         });
 
-        // Define como exibir o Funcionario quando selecionado
-        cbFuncionario.setButtonCell(new ListCell<Funcionario>() {
+        cbFuncionario.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(Funcionario func, boolean empty) {
                 super.updateItem(func, empty);
@@ -115,14 +107,13 @@ public class ContraChequeController {
         });
     }
 
-    // NOVO: Configura listeners para automação da UI
     private void configurarListenersEBindings() {
         // Listener para o ComboBox
         cbFuncionario.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, func) -> {
             if (func != null) {
                 txtCargo.setText(func.getCargo());
                 txtDepartamento.setText(func.getDepartamento());
-                tabelaContracheque.getItems().clear(); // Limpa tabela antiga
+                tabelaContracheque.getItems().clear();
             } else {
                 txtCargo.clear();
                 txtDepartamento.clear();
@@ -133,16 +124,11 @@ public class ContraChequeController {
         // Binds dos botões
         btnBuscar.disableProperty().bind(cbFuncionario.getSelectionModel().selectedItemProperty().isNull());
         btnImprimir.disableProperty().bind(tabelaContracheque.getSelectionModel().selectedItemProperty().isNull());
-
-        // --- LINHA CORRIGIDA ---
-        // Troca .emptyProperty() por Bindings.isEmpty()
         btnExportarTabela.disableProperty().bind(
                 Bindings.isEmpty(tabelaContracheque.getItems())
         );
-        // --- FIM DA CORREÇÃO ---
     }
 
-    // RENOMEADO E ATUALIZADO (era exportarContraCheque)
     @FXML
     private void buscarContraCheques() {
         Funcionario funcionario = cbFuncionario.getSelectionModel().getSelectedItem();
@@ -172,7 +158,6 @@ public class ContraChequeController {
         }
     }
 
-    // RENOMEADO E ATUALIZADO (era imprimirContraCheque)
     @FXML
     private void imprimirSelecionado() {
         ContraCheque cheque = tabelaContracheque.getSelectionModel().getSelectedItem();
@@ -192,7 +177,6 @@ public class ContraChequeController {
         }
     }
 
-    // NOVO: Exporta a tabela inteira (histórico)
     @FXML
     private void exportarTabela() {
         ObservableList<ContraCheque> lista = tabelaContracheque.getItems();
@@ -211,8 +195,6 @@ public class ContraChequeController {
             mostrarAlerta(bundle.getString("reportsAdmin.alert.exportError.title"), e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
-    // --- NOVOS MÉTODOS HELPER PARA EXPORTAÇÃO ---
 
     private ReportData criarReportDataParaUmCheque(ContraCheque cheque) {
         String dataFormatada = cheque.getDataEmissao().format(dateFormatter);
@@ -256,7 +238,7 @@ public class ContraChequeController {
         return new ReportData(titulo, headers, rows);
     }
 
-    private File salvarArquivoFisico(ReportData dados, String nomeBase, IReportFormatter formatador) throws IOException {
+    private void salvarArquivoFisico(ReportData dados, String nomeBase, IReportFormatter formatador) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("reportsAdmin.saveDialog.title"));
         fileChooser.setInitialFileName(nomeBase + formatador.getExtensao());
@@ -276,18 +258,14 @@ public class ContraChequeController {
                         bundle.getString("payroll.alert.exportSuccess.header"),
                         Alert.AlertType.INFORMATION
                 );
-                return file;
             } catch (IOException e) {
                 throw new IOException(bundle.getString("reportsAdmin.alert.saveError.header") + e.getMessage(), e);
             }
-        } else {
-            return null;
         }
     }
 
-    // Helper para formatar moeda na tabela
     private void formatarColunaMoeda(TableColumn<ContraCheque, Double> coluna) {
-        coluna.setCellFactory(tc -> new TableCell<ContraCheque, Double>() {
+        coluna.setCellFactory(tc -> new TableCell<>() {
             @Override
             protected void updateItem(Double valor, boolean vazio) {
                 super.updateItem(valor, vazio);

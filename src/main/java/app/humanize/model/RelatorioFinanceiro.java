@@ -12,15 +12,6 @@ public class RelatorioFinanceiro {
     private final StringProperty saldo;
     private final StringProperty categoria;
 
-    public RelatorioFinanceiro() {
-        this.data = new SimpleStringProperty();
-        this.descricao = new SimpleStringProperty();
-        this.receita = new SimpleStringProperty();
-        this.despesas = new SimpleStringProperty();
-        this.saldo = new SimpleStringProperty();
-        this.categoria = new SimpleStringProperty();
-    }
-
     public RelatorioFinanceiro(String data, String descricao, String receita, String despesas, String saldo, String categoria) {
         this.data = new SimpleStringProperty(data);
         this.descricao = new SimpleStringProperty(descricao);
@@ -35,7 +26,6 @@ public class RelatorioFinanceiro {
     public StringProperty dataProperty() { return data; }
 
     public String getDescricao() { return descricao.get(); }
-    public void setDescricao(String descricao) { this.descricao.set(descricao); }
     public StringProperty descricaoProperty() { return descricao; }
 
     public String getReceita() { return receita.get(); }
@@ -51,6 +41,5 @@ public class RelatorioFinanceiro {
     public StringProperty saldoProperty() { return saldo; }
 
     public String getCategoria() { return categoria.get(); }
-    public void setCategoria(String categoria) { this.categoria.set(categoria); }
     public StringProperty categoriaProperty() { return categoria; }
 }

@@ -1,8 +1,5 @@
 package app.humanize.controller;
 
-import app.humanize.exceptions.CpfInvalidoException;
-import app.humanize.exceptions.EmailInvalidoException;
-import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.*;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.CandidaturaRepository;
@@ -32,8 +29,6 @@ public class ListaDeCandidatosController {
     @FXML private TextField txtFormacao;
     @FXML private TextField txtExperiencia;
     @FXML private ComboBox<String> comboSalario;
-    @FXML private Button btnFiltrar;
-    @FXML private Button btnCadastrar;
     @FXML private TableView<Candidato> tblUsuarios;
     @FXML private TableColumn<Candidato, String> colNome;
     @FXML private TableColumn<Candidato, String> colExperiencia;

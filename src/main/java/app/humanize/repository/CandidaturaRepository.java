@@ -129,7 +129,7 @@ public class CandidaturaRepository extends BaseRepository {
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            reader.readLine(); // Pular cabeçalho
+            reader.readLine();
             String linha;
             while ((linha = reader.readLine()) != null) {
                 Candidatura c = parseLinhaCSV(linha);
@@ -172,34 +172,15 @@ public class CandidaturaRepository extends BaseRepository {
 
     /** Converte uma Candidatura para linha CSV */
     private String formatarCandidaturaParaCSV(Candidatura c) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(c.getCandidato().getCpf()).append(";");
-        sb.append(c.getCandidato().getNome()).append(";");
-        sb.append(c.getVaga().getId()).append(";");
-        sb.append(c.getVaga().getCargo()).append(";");
-        sb.append(c.getDataCandidatura() != null ? c.getDataCandidatura() : LocalDate.now()).append(";");
-        sb.append(c.getStatus() != null ? c.getStatus() : StatusCandidatura.EM_ANALISE).append("\n");
-        return sb.toString();
-    }
-
-    public String getStatusPorCandidato(Candidato candidato) {
-        return candidaturasEmMemoria.stream()
-                .filter(c -> c.getCandidato().equals(candidato))
-                .findFirst()
-                .map(c -> {
-                    if (c.getStatus() == null) return "Em análise";
-                    switch (c.getStatus()) {
-                        case APROVADO: return "Aprovado";
-                        case REPROVADO: return "Reprovado";
-                        case PENDENTE: return "Em análise";
-                        default: return "Em análise";
-                    }
-                })
-                .orElse("Sem candidatura");
+        return c.getCandidato().getCpf() + ";" +
+                c.getCandidato().getNome() + ";" +
+                c.getVaga().getId() + ";" +
+                c.getVaga().getCargo() + ";" +
+                (c.getDataCandidatura() != null ? c.getDataCandidatura() : LocalDate.now()) + ";" +
+                (c.getStatus() != null ? c.getStatus() : StatusCandidatura.EM_ANALISE) + "\n";
     }
 
     public void salvarOuAtualizar(Candidatura candidatura) throws IOException {
-        // Se já existir a mesma candidatura, atualiza o status
         for (Candidatura c : candidaturasEmMemoria) {
             if (c.getCandidato().equals(candidatura.getCandidato()) &&
                     c.getVaga().equals(candidatura.getVaga())) {
@@ -208,13 +189,10 @@ public class CandidaturaRepository extends BaseRepository {
                 return;
             }
         }
-        // Caso contrário, adiciona nova
         candidaturasEmMemoria.add(candidatura);
         persistirAlteracoesNoCSV();
     }
 
-
-    /** Mostra alerta de erro visual no JavaFX */
     private void mostrarErro(String msg) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Aviso");

@@ -19,10 +19,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream; // Importar
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -55,13 +54,13 @@ public class UsuariosController {
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
     private ResourceBundle bundle;
-    private Image avatarPadrao; // Variável para guardar o avatar
+    private Image avatarPadrao;
 
     @FXML
     public void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
 
-        // Carrega o avatar padrão UMA VEZ de dentro do JAR
+        // carrega o avatar padrão
         try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
             if (is == null) throw new FileNotFoundException("Avatar padrão não encontrado nos resources.");
             this.avatarPadrao = new Image(is);
@@ -76,8 +75,7 @@ public class UsuariosController {
 
         colFoto.setCellValueFactory(new PropertyValueFactory<>("caminhoFoto"));
 
-        // LÓGICA DE CARREGAMENTO DA FOTO CORRIGIDA
-        colFoto.setCellFactory(col -> new TableCell<Usuario, String>() {
+        colFoto.setCellFactory(col -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
             {
                 imageView.setFitHeight(50);
@@ -93,18 +91,15 @@ public class UsuariosController {
                 if (empty) {
                     setGraphic(null);
                 } else if (caminho == null || caminho.isEmpty()) {
-                    // Caminho vazio: Usa o avatar padrão
                     imageView.setImage(avatarPadrao);
                     setGraphic(imageView);
                 } else {
-                    // Caminho existe: Tenta carregar do disco
                     try {
                         File file = new File(caminho);
                         Image img = new Image(file.toURI().toString());
                         imageView.setImage(img);
                         setGraphic(imageView);
                     } catch (Exception e) {
-                        // Erro ao carregar (ex: arquivo não encontrado): Usa o avatar padrão
                         System.err.println(bundle.getString("log.error.photoNotFound") + caminho);
                         imageView.setImage(avatarPadrao);
                         setGraphic(imageView);
@@ -123,7 +118,6 @@ public class UsuariosController {
     }
 
     private void carregarFiltro() {
-        // ... (lógica de filtro não muda) ...
         List<Usuario> usuarios = usuarioRepository.getTodosUsuarios();
         Stream<Usuario> stream = usuarios.stream();
 
@@ -168,7 +162,6 @@ public class UsuariosController {
 
     @FXML
     private void cadastrarUsuario() throws IOException {
-        // ... (método não muda) ...
         URL resource = getClass().getResource("/view/CadastroUsuarioAdm.fxml");
         FXMLLoader loader = new FXMLLoader(resource, bundle);
 
@@ -186,7 +179,6 @@ public class UsuariosController {
 
     @FXML
     private void editarUsuario() throws IOException {
-        // ... (método não muda) ...
         Usuario usuarioSelecionado = tblUsuarios.getSelectionModel().getSelectedItem();
         if (usuarioSelecionado == null) {
             mostrarAlerta(bundle.getString("userManagement.alert.noUserSelectedEdit"));
@@ -213,7 +205,6 @@ public class UsuariosController {
 
     @FXML
     private void excluirUsuario() {
-        // ... (método não muda) ...
         Usuario usuarioSelecionado = tblUsuarios.getSelectionModel().getSelectedItem();
 
         if (usuarioSelecionado != null) {

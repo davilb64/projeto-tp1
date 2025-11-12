@@ -21,23 +21,6 @@ public final class UserSession {
 
     private UserSession() {}
 
-    public void setLocale(Locale locale) {
-        this.currentLocale = locale;
-        Locale.setDefault(currentLocale);
-
-        if (usuarioLogado != null) {
-            String langTag = locale.toLanguageTag().replace("-", "_");
-            usuarioLogado.setIdiomaPreferencial(langTag);
-
-            try {
-                UsuarioRepository.getInstance().atualizarUsuario(usuarioLogado);
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.err.println("Falha ao salvar a preferência de idioma no CSV: " + e.getMessage());
-            }
-        }
-    }
-
     public Locale getLocale() {
         return currentLocale;
     }
@@ -48,22 +31,20 @@ public final class UserSession {
 
     public void setLocaleFromString(String langKey) {
         Locale newLocale;
-        String langTag;
-
-        switch (langKey) {
-            case "profile.language.english":
+        String langTag = switch (langKey) {
+            case "profile.language.english" -> {
                 newLocale = new Locale("en", "US");
-                langTag = "en_US";
-                break;
-            case "profile.language.spanish":
+                yield "en_US";
+            }
+            case "profile.language.spanish" -> {
                 newLocale = new Locale("es", "ES");
-                langTag = "es_ES";
-                break;
-            default: // Português
+                yield "es_ES";
+            }
+            default -> {
                 newLocale = new Locale("pt", "BR");
-                langTag = "pt_BR";
-                break;
-        }
+                yield "pt_BR";
+            }
+        };
 
         if (usuarioLogado != null) {
             usuarioLogado.setIdiomaPreferencial(langTag);

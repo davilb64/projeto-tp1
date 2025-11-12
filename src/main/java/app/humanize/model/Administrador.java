@@ -19,7 +19,7 @@ public class Administrador extends Funcionario {
 
     public static class AdministradorBuilder {
         private int matricula;
-        private LocalDate dataAdmissao; // NOVO
+        private LocalDate dataAdmissao;
         private int periodo;
         private double receita;
         private double despesas;
@@ -35,13 +35,13 @@ public class Administrador extends Funcionario {
         private Endereco endereco;
         private String departamento;
         private String caminhoFoto;
-        private String idiomaPreferencial; // CORRIGIDO
+        private String idiomaPreferencial;
 
         public AdministradorBuilder caminhoFoto(String caminhoFoto) { this.caminhoFoto = caminhoFoto; return this; }
         public AdministradorBuilder regime(Regime regime) { this.regime = regime; return this; }
         public AdministradorBuilder cargo(String cargo) { this.cargo = cargo; return this; }
         public AdministradorBuilder matricula(int matricula) { this.matricula = matricula; return this; }
-        public AdministradorBuilder dataAdmissao(LocalDate data) { this.dataAdmissao = data; return this; } // NOVO
+        public AdministradorBuilder dataAdmissao(LocalDate data) { this.dataAdmissao = data; return this; }
         public AdministradorBuilder periodo(int periodo) { this.periodo = periodo; return this; }
         public AdministradorBuilder receita(double receita) { this.receita = receita; return this; }
         public AdministradorBuilder despesas(double despesas) { this.despesas = despesas; return this; }
@@ -54,7 +54,7 @@ public class Administrador extends Funcionario {
         public AdministradorBuilder senha(String senha) { this.senha = senha; return this; }
         public AdministradorBuilder perfil(Perfil perfil) { this.perfil = perfil; return this; }
         public AdministradorBuilder departamento(String departamento){this.departamento = departamento; return this;}
-        public AdministradorBuilder idiomaPreferencial(String idioma) { this.idiomaPreferencial = idioma; return this; } // CORRIGIDO
+        public AdministradorBuilder idiomaPreferencial(String idioma) { this.idiomaPreferencial = idioma; return this; }
 
         public Administrador build() {
             return new Administrador(this);
