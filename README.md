@@ -20,7 +20,7 @@ O projeto utiliza **Maven** e segue uma **arquitetura MVC** com camadas organiza
 
 projeto-tp1/
 <br>├── documentação/          # Armazena relatórios do projeto
-<br>├── empacotados/          # Armazena executáveis do projeto
+<br>├── empacotados/          # Armazena executáveis do projeto. **Se deseja executar sem precisar compilar o projeto, utilize os executáveis aqui encontrados**
 <br>├── src/main/java/
 <br>│   └── app/humanize/
 <br>│       ├── controller/    # Controladores JavaFX (lógica da UI)
