@@ -7,14 +7,27 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VagaRepository {
+public class VagaRepository extends BaseRepository {
 
     private static final VagaRepository instance = new VagaRepository();
-    private final String arquivoCsv = "./src/main/resources/vagas.csv";
+
+    private static final String NOME_ARQUIVO_CSV = "vagas.csv";
+    private final File arquivoDePersistencia;
+
     private final List<Vaga> vagaEmMemoria;
 
     private VagaRepository() {
+        this.arquivoDePersistencia = this.getArquivoDePersistencia(NOME_ARQUIVO_CSV);
         this.vagaEmMemoria = new ArrayList<>();
+
+        try {
+            if (!this.arquivoDePersistencia.exists()) {
+                this.copiarArquivoDefaultDeResources(NOME_ARQUIVO_CSV, this.arquivoDePersistencia);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro CRÍTICO ao copiar arquivo de seeding: " + e.getMessage());
+        }
+
         this.carregarVagaDoCSV();
     }
 
@@ -67,10 +80,13 @@ public class VagaRepository {
     }
 
     public void carregarVagaDoCSV() {
-        File arquivo = new File(arquivoCsv);
+        File arquivo = this.arquivoDePersistencia;
+
         if (!arquivo.exists()) {
+            System.err.println("Arquivo de persistência não encontrado (deveria ter sido criado): " + arquivo.getAbsolutePath());
             return;
         }
+
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
             leitor.readLine(); // Pula o cabeçalho
             String linha;
@@ -86,7 +102,7 @@ public class VagaRepository {
     }
 
     private void persistirAlteracoesNoCSV() throws IOException {
-        try (FileWriter escritor = new FileWriter(arquivoCsv, false)) {
+        try (FileWriter escritor = new FileWriter(this.arquivoDePersistencia, false)) {
             escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdPessoa;NomePessoa;CpfPessoa;PerfilPessoa\n");
             for (Vaga vaga : this.vagaEmMemoria) {
                 escritor.write(formatarVagaParaCSV(vaga));
