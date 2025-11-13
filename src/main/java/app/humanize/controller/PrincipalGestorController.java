@@ -6,7 +6,6 @@ import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -33,10 +32,6 @@ public class PrincipalGestorController {
     @FXML
     private Button btnDashboard;
     @FXML
-    private Button btnContratacoes;
-    @FXML
-    private Button btnRecrutadores;
-    @FXML
     private Button btnRelatorios;
     @FXML
     private Button btnVagas;
@@ -56,8 +51,6 @@ public class PrincipalGestorController {
     private Image avatarPadrao;
     private Button activeButton;
 
-    private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
-
     private ResourceBundle bundle;
 
     @FXML
@@ -71,8 +64,6 @@ public class PrincipalGestorController {
 
     private void atualizarTextosSidebar() {
         btnDashboard.setText(bundle.getString("sidebar.dashboard"));
-        btnContratacoes.setText(bundle.getString("sidebar.hires"));
-        btnRecrutadores.setText(bundle.getString("sidebar.recruiters"));
         btnRelatorios.setText(bundle.getString("sidebar.reports"));
         btnVagas.setText(bundle.getString("sidebar.vacancies"));
         btnFinanceiro.setText(bundle.getString("sidebar.finance"));
@@ -180,12 +171,6 @@ public class PrincipalGestorController {
     }
 
     @FXML
-    public void showRecrutadores() {
-        loadUI("AtribuirRecrutadorAVaga");
-        setActiveButton(btnRecrutadores);
-    }
-
-    @FXML
     private void showEntrevistas() {
         loadUI("GestaoEntrevista");
         setActiveButton(btnEntrevistas);
@@ -207,12 +192,6 @@ public class PrincipalGestorController {
     private void showRelatorios() {
         loadUI("RelatoriosAdm");
         setActiveButton(btnRelatorios);
-    }
-
-    @FXML
-    private void showContratacoes() {
-        loadUI("ContratacoesRecrutador");
-        setActiveButton(btnContratacoes);
     }
 
     @FXML

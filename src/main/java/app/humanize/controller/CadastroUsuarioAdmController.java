@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.List; // Importar List
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
@@ -44,7 +43,6 @@ public class CadastroUsuarioAdmController {
     @FXML private ImageView imgFotoPerfil;
     @FXML private Button btnEscolherFoto;
     @FXML private Button btnGerarPokemon;
-    // ... (outros FXML)
     @FXML private Label lblId;
     @FXML private TextField txtNome;
     @FXML private TextField txtEmail;
@@ -76,8 +74,6 @@ public class CadastroUsuarioAdmController {
     private String caminhoFotoAtualSalva;
     private File arquivoFotoSelecionado = null;
     private byte[] bytesFotoPokemon = null;
-
-    // REMOVIDO: DIRETORIO_FOTOS
     private ResourceBundle bundle;
 
     /**
@@ -96,7 +92,6 @@ public class CadastroUsuarioAdmController {
     private void seedDefaultPhotos() {
         Path externalPhotoDir = getPathParaFotos();
 
-        // Lista de todas as suas fotos padrão
         List<String> defaultPhotos = List.of(
                 "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png",
                 "9.png", "10.png", "12.png", "04935825170.png",
@@ -106,16 +101,15 @@ public class CadastroUsuarioAdmController {
         for (String photoName : defaultPhotos) {
             File externalFile = externalPhotoDir.resolve(photoName).toFile();
 
-            // Só copia se o arquivo NÃO existir na pasta externa
+            // so copia se o arquivo NÃO existir na pasta externa
             if (!externalFile.exists()) {
-                // Caminho DENTRO do JAR (na raiz do 'resources')
+                // Caminho dentro do JAR
                 String resourcePath = "/fotos_perfil/" + photoName;
                 try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
                     if (is == null) {
                         System.err.println("Foto de semeadura não encontrada no JAR: " + resourcePath);
                         continue;
                     }
-                    // Copia do JAR para a pasta externa
                     Files.copy(is, externalFile.toPath());
                 } catch (IOException e) {
                     System.err.println("Falha ao semear foto: " + photoName + " - " + e.getMessage());
@@ -130,11 +124,9 @@ public class CadastroUsuarioAdmController {
         this.bundle = UserSession.getInstance().getBundle();
 
         try {
-            // 1. Cria o diretório externo (ex: C:\Users\Nome\.humanize-app-data\fotos_perfil)
             Path externalPhotoDir = getPathParaFotos();
             Files.createDirectories(externalPhotoDir);
 
-            // 2. Semeia (copia) as fotos padrão do JAR para lá, se necessário
             seedDefaultPhotos();
 
         } catch (IOException e) {
@@ -143,7 +135,7 @@ public class CadastroUsuarioAdmController {
 
         if (usuarioParaEditar == null) {
             lblId.setText(String.valueOf(usuarioRepository.getProximoId()));
-            imgFotoPerfil.setImage(carregarAvatarLocal()); // Carrega o fallback do JAR
+            imgFotoPerfil.setImage(carregarAvatarLocal());
             dpDataAdmissao.setValue(LocalDate.now());
         }
         perfilCombo.getItems().setAll(Perfil.values());
@@ -171,7 +163,6 @@ public class CadastroUsuarioAdmController {
 
     @FXML
     private void gerarFotoPokemon() {
-        // ... (método não muda) ...
         btnEscolherFoto.setDisable(true);
         btnGerarPokemon.setDisable(true);
 
@@ -215,8 +206,6 @@ public class CadastroUsuarioAdmController {
     public void prepararParaEdicao(Usuario usuario) {
         this.usuarioParaEditar = usuario;
         Funcionario func = (Funcionario) usuario;
-
-        // ... (resto dos setTexts) ...
         lblId.setText(String.valueOf(func.getId()));
         txtNome.setText(func.getNome());
         txtEmail.setText(func.getEmail());
@@ -237,21 +226,19 @@ public class CadastroUsuarioAdmController {
         txtReceita.setText(String.valueOf(func.getReceita()));
         txtDespesas.setText(String.valueOf(func.getDespesas()));
 
-        // Este caminho agora é o caminho ABSOLUTO para a pasta externa
         this.caminhoFotoAtualSalva = func.getCaminhoFoto();
 
         if (this.caminhoFotoAtualSalva != null && !this.caminhoFotoAtualSalva.isEmpty()) {
             try {
-                // Tenta carregar a foto do caminho EXTERNO
                 File file = new File(this.caminhoFotoAtualSalva);
                 Image foto = new Image(file.toURI().toString());
                 imgFotoPerfil.setImage(foto);
             } catch (Exception e) {
                 System.err.println(bundle.getString("log.error.profilePhotoNotFound") + this.caminhoFotoAtualSalva);
-                imgFotoPerfil.setImage(carregarAvatarLocal()); // Fallback para o JAR
+                imgFotoPerfil.setImage(carregarAvatarLocal());
             }
         } else {
-            imgFotoPerfil.setImage(carregarAvatarLocal()); // Fallback para o JAR
+            imgFotoPerfil.setImage(carregarAvatarLocal());
         }
 
         String promptSenhaEdicao = bundle.getString("userRegistration.prompt.passwordEdit");
@@ -261,7 +248,6 @@ public class CadastroUsuarioAdmController {
 
     @FXML
     private void escolherFoto() {
-        // ... (método não muda) ...
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("userRegistration.fileChooser.title"));
         fileChooser.getExtensionFilters().addAll(
@@ -285,7 +271,6 @@ public class CadastroUsuarioAdmController {
     }
 
     private String getExtensaoArquivo(String nomeArquivo) {
-        // ... (método não muda) ...
         int lastIndex = nomeArquivo.lastIndexOf('.');
         if (lastIndex == -1) {
             return "";
@@ -295,7 +280,6 @@ public class CadastroUsuarioAdmController {
 
     @FXML
     private void cadastrarEndereco() {
-        // ... (método não muda) ...
         try {
             URL resource = getClass().getResource("/view/CadastroEndereco.fxml");
             if (resource == null) {
@@ -324,7 +308,6 @@ public class CadastroUsuarioAdmController {
     }
 
     private boolean validarCampos() {
-        // ... (método não muda) ...
         if (txtNome.getText().isBlank() || txtCpf.getText().isBlank() || txtLogin.getText().isBlank() || txtEmail.getText().isBlank()) {
             mostrarAlerta(
                     bundle.getString("userRegistration.alert.validation.requiredFields.title"),
@@ -377,7 +360,6 @@ public class CadastroUsuarioAdmController {
         if (!validarCampos()) {
             return;
         }
-        // ... (lógica de validação não muda) ...
         String senha = txtSenhaOculta.getText();
         String cpf = txtCpf.getText();
         String email = txtEmail.getText();
@@ -417,8 +399,6 @@ public class CadastroUsuarioAdmController {
             String departamento = txtDepartamento.getText();
             Regime regime = regimeCombo.getValue();
 
-
-            // Pega o diretório EXTERNO (user.home/.humanize-app-data/fotos_perfil)
             Path diretorioFotosExterno = getPathParaFotos();
 
             String nomeBaseArquivo;
@@ -433,18 +413,16 @@ public class CadastroUsuarioAdmController {
                 Path caminhoDestino = diretorioFotosExterno.resolve(novoNomeArquivo);
 
                 Files.copy(this.arquivoFotoSelecionado.toPath(), caminhoDestino, StandardCopyOption.REPLACE_EXISTING);
-                caminhoFotoFinalParaSalvar = caminhoDestino.toString(); // Salva o caminho absoluto EXTERNO
+                caminhoFotoFinalParaSalvar = caminhoDestino.toString();
 
             } else if (this.bytesFotoPokemon != null) {
                 String novoNomeArquivo = nomeBaseArquivo + ".png";
                 Path caminhoDestino = diretorioFotosExterno.resolve(novoNomeArquivo);
 
                 Files.write(caminhoDestino, this.bytesFotoPokemon);
-                caminhoFotoFinalParaSalvar = caminhoDestino.toString(); // Salva o caminho absoluto EXTERNO
+                caminhoFotoFinalParaSalvar = caminhoDestino.toString();
 
             } else if (caminhoFotoFinalParaSalvar == null || caminhoFotoFinalParaSalvar.isEmpty()) {
-                // Se não há foto selecionada e não havia foto antiga, salva como ""
-                // O repo salvará "" e os leitores usarão o avatarPadrão do JAR.
                 caminhoFotoFinalParaSalvar = "";
             }
 
@@ -453,7 +431,6 @@ public class CadastroUsuarioAdmController {
                 switch (perfil) {
                     case ADMINISTRADOR -> usuario = new Administrador.AdministradorBuilder()
                             .caminhoFoto(caminhoFotoFinalParaSalvar)
-                            // ... (resto do builder) ...
                             .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -463,7 +440,6 @@ public class CadastroUsuarioAdmController {
                             .build();
                     case GESTOR -> usuario = new Gestor.GestorBuilder()
                             .caminhoFoto(caminhoFotoFinalParaSalvar)
-                            // ... (resto do builder) ...
                             .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -473,7 +449,6 @@ public class CadastroUsuarioAdmController {
                             .build();
                     case RECRUTADOR -> usuario = new Recrutador.RecrutadorBuilder()
                             .caminhoFoto(caminhoFotoFinalParaSalvar)
-                            // ... (resto do builder) ...
                             .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -484,7 +459,6 @@ public class CadastroUsuarioAdmController {
                     default ->
                             usuario = new Funcionario.FuncionarioBuilder()
                                     .caminhoFoto(caminhoFotoFinalParaSalvar)
-                                    // ... (resto do builder) ...
                                     .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                                     .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                                     .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -498,7 +472,6 @@ public class CadastroUsuarioAdmController {
             } else {
                 Funcionario func = (Funcionario) usuarioParaEditar;
                 func.setCaminhoFoto(caminhoFotoFinalParaSalvar);
-                // ... (resto dos 'set') ...
                 func.setNome(txtNome.getText());
                 func.setCpf(cpf);
                 func.setEmail(email);

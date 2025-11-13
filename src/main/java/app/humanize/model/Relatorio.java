@@ -9,7 +9,7 @@ public class Relatorio {
     private LocalDate dataGeracao;
     private Usuario responsavel;
 
-    public Relatorio() { }
+    public Relatorio() {}
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

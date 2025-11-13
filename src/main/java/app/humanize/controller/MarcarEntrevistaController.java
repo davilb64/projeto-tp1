@@ -1,13 +1,9 @@
 package app.humanize.controller;
 
 import app.humanize.model.*;
-import app.humanize.repository.CandidatoRepository;
-import app.humanize.repository.EntrevistaRepository;
-import app.humanize.repository.UsuarioRepository;
-import app.humanize.repository.VagaRepository;
+import app.humanize.repository.*;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -21,36 +17,24 @@ import java.util.ResourceBundle;
 
 public class MarcarEntrevistaController {
 
-    // 🔹 Campos da interface
     @FXML
     private Label lblId;
 
     @FXML
-    private ChoiceBox<Candidato> cbCandidato;
+    private ChoiceBox<Candidatura> cbCandidatura;
 
     @FXML
-    private ChoiceBox<Vaga> cbCargo;
-
-    @FXML
-    private ChoiceBox<Usuario> cbRecrutador;
+    private ChoiceBox<Vaga> cbVaga;
 
     @FXML
     private DatePicker dtDataEntrevista;
 
     @FXML
-    private ChoiceBox<StatusEntrevista> cbStatus;
-
-    @FXML
-    private Button btnSalvar;
-
-    @FXML
     private Button btnCancelar;
 
-    // 🔹 Repositórios
-    private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
-    private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final EntrevistaRepository entrevistaRepository = EntrevistaRepository.getInstance();
+    private final CandidaturaRepository candidaturaRepository = CandidaturaRepository.getInstance();
 
     private Entrevista entrevistaParaEditar;
     private ResourceBundle bundle;
@@ -69,14 +53,9 @@ public class MarcarEntrevistaController {
 
     /** Define valor inicial, formato e regras de seleção do DatePicker */
     private void configurarDatePicker() {
-        // 1) Valor padrão
         dtDataEntrevista.setValue(LocalDate.now());
-
-        // 2) Placeholder
         dtDataEntrevista.setPromptText("dd/MM/aaaa");
-
-        // 3) Conversor para formato dd/MM/yyyy
-        dtDataEntrevista.setConverter(new StringConverter<LocalDate>() {
+        dtDataEntrevista.setConverter(new StringConverter<>() {
             @Override
             public String toString(LocalDate date) {
                 return (date == null) ? "" : BR_FORMATTER.format(date);
@@ -98,7 +77,6 @@ public class MarcarEntrevistaController {
             }
         });
 
-        // 4) Desabilitar datas passadas
         dtDataEntrevista.setDayCellFactory(picker -> new DateCell() {
             @Override
             public void updateItem(LocalDate date, boolean empty) {
@@ -112,48 +90,22 @@ public class MarcarEntrevistaController {
         });
     }
 
-    // Helper para traduzir o Enum StatusEntrevista
-    private String getTraducaoStatus(StatusEntrevista status) {
-        if (status == null) return null;
-        String key = "statusEntrevista." + status.name();
-        return bundle.containsKey(key) ? bundle.getString(key) : status.name();
-    }
-
-    // 🔹 Carrega listas nos ChoiceBoxes
     private void carregarChoiceBoxes() {
         try {
-            cbCandidato.setItems(FXCollections.observableArrayList(candidatoRepository.getTodos()));
-            cbCargo.setItems(FXCollections.observableArrayList(vagaRepository.getTodasVagas()));
-            cbRecrutador.setItems(FXCollections.observableArrayList(usuarioRepository.getRecrutadores()));
-            cbStatus.setItems(FXCollections.observableArrayList(StatusEntrevista.values()));
+            Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
 
-            // ### CORREÇÃO AQUI ###
-            // Substitui setCellFactory e setButtonCell por setConverter
-            cbStatus.setConverter(new StringConverter<StatusEntrevista>() {
-                @Override
-                public String toString(StatusEntrevista status) {
-                    // Retorna a string traduzida para exibir
-                    return getTraducaoStatus(status);
-                }
-
-                @Override
-                public StatusEntrevista fromString(String string) {
-                    // Converte a string (traduzida) de volta para o Enum
-                    if (string == null) return null;
-                    for (StatusEntrevista status : StatusEntrevista.values()) {
-                        if (getTraducaoStatus(status).equals(string)) {
-                            return status;
-                        }
-                    }
-                    return null;
-                }
-            });
-
-            // Define um valor padrão para novos cadastros
-            if (entrevistaParaEditar == null) {
-                cbStatus.setValue(StatusEntrevista.Pendente);
+            if(usuarioLogado != null && usuarioLogado.getPerfil().equals(Perfil.RECRUTADOR)) {
+                cbVaga.setItems(FXCollections.observableArrayList(vagaRepository.getVagasAbertasPorRecrutador(usuarioLogado)));
+            }else{
+                cbVaga.setItems(FXCollections.observableArrayList(vagaRepository.getTodasVagas()));
             }
 
+            // Quando o usuário muda a vaga selecionada:
+            cbVaga.getSelectionModel().selectedItemProperty().addListener((obs, vagaAntiga, vagaNova) -> {
+                if (vagaNova != null) {
+                    cbCandidatura.setItems(FXCollections.observableArrayList(candidaturaRepository.getCandidaturasPendentePorVaga(vagaNova)));
+                }
+            });
         } catch (Exception e) {
             mostrarAlerta(
                     bundle.getString("scheduleInterview.alert.loadDataError.title"),
@@ -164,21 +116,24 @@ public class MarcarEntrevistaController {
         }
     }
 
-    // 🔹 Salvar nova entrevista
+    // nova entrevista
     @FXML
-    private void salvarEntrevista(ActionEvent event) {
+    private void salvarEntrevista() {
         if (!validarCampos()) {
             return;
         }
         if(this.entrevistaParaEditar == null) {
             try {
-                Candidato candidato = cbCandidato.getValue();
-                Vaga vaga = cbCargo.getValue();
-                Usuario recrutador = cbRecrutador.getValue();
+                Candidatura candidatura = cbCandidatura.getValue();
+                Vaga vaga = cbVaga.getValue();
+                Usuario recrutador = UserSession.getInstance().getUsuarioLogado();
+                if(recrutador != null && !recrutador.getPerfil().equals(Perfil.RECRUTADOR)) {
+                    mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.recrutador.title"), bundle.getString("scheduleInterview.alert.validation.recrutador.job"), null, Alert.AlertType.WARNING);
+                    return;
+                }
                 LocalDate data = dtDataEntrevista.getValue();
-                StatusEntrevista status = cbStatus.getValue();
 
-                Entrevista entrevista = new Entrevista(recrutador, vaga, candidato, status, data);
+                Entrevista entrevista = new Entrevista(recrutador, vaga, candidatura, StatusEntrevista.Pendente, data);
                 entrevistaRepository.escreveEntrevistaNova(entrevista);
 
                 mostrarAlerta(
@@ -187,6 +142,9 @@ public class MarcarEntrevistaController {
                         null,
                         Alert.AlertType.INFORMATION
                 );
+                //muda o status da candidatura
+                candidatura.setStatus(StatusCandidatura.EM_ANALISE);
+                candidaturaRepository.salvarOuAtualizar(candidatura);
                 limparCampos();
 
             } catch (IOException e) {
@@ -206,12 +164,20 @@ public class MarcarEntrevistaController {
             }
         }else{
             try{
-                entrevistaParaEditar.setVaga(cbCargo.getValue());
-                entrevistaParaEditar.setCandidato(cbCandidato.getValue());
-                entrevistaParaEditar.setRecrutador(cbRecrutador.getValue());
+                Usuario usuarioLogado = UserSession.getInstance().getUsuarioLogado();
+                if(usuarioLogado != null && !usuarioLogado.getPerfil().equals(Perfil.RECRUTADOR)) {
+                    mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.recrutador.title"), bundle.getString("scheduleInterview.alert.validation.recrutador.job"), null, Alert.AlertType.WARNING);
+                    return;
+                }
+                Candidatura candidatura = cbCandidatura.getValue();
+                entrevistaParaEditar.setVaga(cbVaga.getValue());
+                entrevistaParaEditar.setCandidatura(candidatura);
+                entrevistaParaEditar.setRecrutador(usuarioLogado);
                 entrevistaParaEditar.setDataEntrevista(dtDataEntrevista.getValue());
-                entrevistaParaEditar.setStatus(cbStatus.getValue());
+                entrevistaParaEditar.setStatus(StatusEntrevista.Pendente);
                 entrevistaRepository.atualizarEntrevista();
+                candidatura.setStatus(StatusCandidatura.EM_ANALISE);
+                candidaturaRepository.salvarOuAtualizar(candidatura);
             }catch (Exception e){
                 mostrarAlerta(
                         bundle.getString("scheduleInterview.alert.unexpectedError.title"),
@@ -224,25 +190,19 @@ public class MarcarEntrevistaController {
         fecharJanela();
     }
 
-    // 🔹 Fecha a janela
     @FXML
     private void fecharJanela() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 
-    // 🔹 Validação simples
     private boolean validarCampos() {
-        if (cbCandidato.getValue() == null) {
+        if (cbCandidatura.getValue() == null) {
             mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.title"), bundle.getString("scheduleInterview.alert.validation.candidate"), null, Alert.AlertType.WARNING);
             return false;
         }
-        if (cbCargo.getValue() == null) {
+        if (cbVaga.getValue() == null) {
             mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.title"), bundle.getString("scheduleInterview.alert.validation.job"), null, Alert.AlertType.WARNING);
-            return false;
-        }
-        if (cbRecrutador.getValue() == null) {
-            mostrarAlerta(bundle.getString("scheduleInterview.alert.validation.title"), bundle.getString("scheduleInterview.alert.validation.recruiter"), null, Alert.AlertType.WARNING);
             return false;
         }
         if (dtDataEntrevista.getValue() == null) {
@@ -252,15 +212,12 @@ public class MarcarEntrevistaController {
         return true;
     }
 
-    // 🔹 Limpa todos os campos após salvar
     private void limparCampos() {
-        cbCandidato.setValue(null);
-        cbCargo.setValue(null);
-        cbRecrutador.setValue(null);
+        cbCandidatura.setValue(null);
+        cbVaga.setValue(null);
         dtDataEntrevista.setValue(null);
     }
 
-    // 🔹 Mostra alerta genérico
     private void mostrarAlerta(String titulo, String mensagem, String detalhe, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setTitle(titulo);
@@ -275,10 +232,8 @@ public class MarcarEntrevistaController {
         this.entrevistaParaEditar = entrevista;
 
         lblId.setText(String.valueOf(entrevista.getId()));
-        cbCandidato.setValue(entrevista.getCandidato());
-        cbCargo.setValue(entrevista.getVaga());
-        cbRecrutador.setValue(entrevista.getRecrutador());
+        cbCandidatura.setValue(entrevista.getCandidatura());
+        cbVaga.setValue(entrevista.getVaga());
         dtDataEntrevista.setValue(entrevista.getDataEntrevista());
-        cbStatus.setValue(entrevista.getStatus()); // Define o status
     }
 }

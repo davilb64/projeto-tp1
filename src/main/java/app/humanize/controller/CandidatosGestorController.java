@@ -1,6 +1,5 @@
 package app.humanize.controller;
 
-import app.humanize.model.Candidato;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,27 +18,23 @@ public class CandidatosGestorController {
 
     @FXML
     private StackPane contentArea;
-
-    @FXML
-    private Button btnCadastro;
-    @FXML
-    private Button btnCandidatura;
     @FXML
     private Button btnStatus;
+    @FXML
     private Button activeButton;
     private ResourceBundle bundle;
 
     @FXML
     public void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
-        showStatus(); // Carrega a tela de status por padrão
+        showStatus(); // carrega a tela de status por padrão
     }
 
-    private void loadUI(String fxmlPath) {
+    private void loadUI() {
         try {
-            URL resource = getClass().getResource(fxmlPath);
+            URL resource = getClass().getResource("/view/StatusDaCandidaturaGestor.fxml");
             if (resource == null) {
-                throw new NullPointerException(bundle.getString("exception.fxmlNotFound.generic") + fxmlPath);
+                throw new NullPointerException(bundle.getString("exception.fxmlNotFound.generic") + "/view/StatusDaCandidaturaGestor.fxml");
             }
 
             FXMLLoader loader = new FXMLLoader(resource, bundle);
@@ -48,7 +43,7 @@ public class CandidatosGestorController {
             contentArea.getChildren().setAll(view);
 
         } catch (IOException e) {
-            System.err.println(bundle.getString("log.error.fxmlLoad.io") + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.io") + "/view/StatusDaCandidaturaGestor.fxml");
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.reload.title"),
@@ -56,15 +51,15 @@ public class CandidatosGestorController {
                     e.getMessage()
             );
         } catch (NullPointerException e) {
-            System.err.println(bundle.getString("log.error.fxmlNotFound") + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlNotFound") + "/view/StatusDaCandidaturaGestor.fxml");
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.critical.title"),
                     bundle.getString("alert.error.fxmlNotFound.header"),
-                    bundle.getString("alert.error.fxmlNotFound.content.path") + fxmlPath
+                    bundle.getString("alert.error.fxmlNotFound.content.path") + "/view/StatusDaCandidaturaGestor.fxml"
             );
         } catch (Exception e) {
-            System.err.println(bundle.getString("log.error.fxmlLoad.unexpected") + fxmlPath);
+            System.err.println(bundle.getString("log.error.fxmlLoad.unexpected") + "/view/StatusDaCandidaturaGestor.fxml");
             e.printStackTrace();
             mostrarAlerta(
                     bundle.getString("alert.error.unexpected.title"),
@@ -92,7 +87,7 @@ public class CandidatosGestorController {
 
     @FXML
     public void showStatus() {
-        loadUI("/view/StatusDaCandidaturaGestor.fxml");
+        loadUI();
         setActiveButton(btnStatus);
     }
 }

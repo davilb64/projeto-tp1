@@ -12,24 +12,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DashboardGestorController {
@@ -67,9 +65,53 @@ public class DashboardGestorController {
         lblTotalCandidatos.setText(String.valueOf(candidaturaRepository.getCandidaturasEmAnalise().size()));
         lblSolicitacoes.setText(String.valueOf(entrevistaRepository.buscarCandidatosAprovados().size()));
         carregarGraficoRegime();
+        carregarGraficoEvolucao();
     }
 
-    // Método auxiliar para traduzir Regime
+    private List<LocalDate> getDatasContratacao() {
+        return this.usuarioRepository.getTodosUsuarios().stream()
+                .filter(u -> u instanceof Funcionario)
+                .map(u -> (Funcionario) u)
+                .map(Funcionario::getDataAdmissao)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private void carregarGraficoEvolucao() {
+        List<LocalDate> datasContratacao = getDatasContratacao();
+
+        Map<YearMonth, Long> contratacoesPorMes = datasContratacao.stream()
+                .collect(Collectors.groupingBy(
+                        YearMonth::from,
+                        TreeMap::new,
+                        Collectors.counting()
+                ));
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+
+        series.setName(bundle.getString("dashboard.gestor.chart.hires.legend"));
+
+        long totalAcumulado = 0;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM/yy");
+
+        for (Map.Entry<YearMonth, Long> entry : contratacoesPorMes.entrySet()) {
+            totalAcumulado += entry.getValue();
+            String labelMes = entry.getKey().format(formatter);
+            XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(labelMes, totalAcumulado);
+            series.getData().add(dataPoint);
+
+            String tooltipText = String.format(
+                    bundle.getString("dashboard.gestor.chart.hires.tooltip"),
+                    labelMes,
+                    totalAcumulado
+            );
+            Tooltip.install(dataPoint.getNode(), new Tooltip(tooltipText));
+        }
+
+        chartEvolucao.getData().add(series);
+        chartEvolucao.setLegendVisible(false);
+    }
+
     private String getTraducaoRegime(Regime regime) {
         if (regime == null) return "";
         String key = "regime." + regime.name();
@@ -107,7 +149,7 @@ public class DashboardGestorController {
 
     @FXML public void criarVaga() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CriarVaga.fxml"));
-        loader.setResources(bundle); // Passa o bundle
+        loader.setResources(bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle(bundle.getString("dashboard.gestor.window.createJob.title"));
@@ -117,11 +159,8 @@ public class DashboardGestorController {
         mainController.showVagas();
     }
 
-    @FXML public void atribuirRecrutador() throws IOException {
-        mainController.showRecrutadores();
-    }
 
-    @FXML public void autorizarContratacao() throws IOException {
+    @FXML public void autorizarContratacao() {
         mainController.showFuncionarios();
     }
 

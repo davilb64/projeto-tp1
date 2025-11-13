@@ -26,8 +26,6 @@ public class CandidatoRepository extends BaseRepository {
         return new ArrayList<>(candidatosEmMemoria);
     }
 
-
-
     public int getQtdCandidatos() {
         return candidatosEmMemoria.size();
     }
@@ -60,7 +58,7 @@ public class CandidatoRepository extends BaseRepository {
         }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
-            reader.readLine(); // cabeçalho
+            reader.readLine();
             String linha;
             while ((linha = reader.readLine()) != null) {
                 String[] campos = linha.split(";", -1);

@@ -1,20 +1,23 @@
 package app.humanize.model;
 
+/**
+ * Enum que representa os tipos de relatórios que podem ser gerados
+ * pelo sistema (neste contexto, pela tela de Administrador).
+ */
 public enum TipoRelatorio {
-    LISTA_USUARIOS("Lista Completa de Usuários"),
-    FOLHA_PAGAMENTO("Folha de Pagamento Mensal"),
-    CONTRACHEQUE_INDIVIDUAL("Contracheque Individual"),
-    CANDIDATOS_POR_VAGA("Candidatos por Vaga");
 
-    private final String nomeAmigavel;
+    /**
+     * Mapeia para a classe RelatorioListaUsuarios
+     */
+    LISTA_USUARIOS,
 
-    TipoRelatorio(String nome) {
-        this.nomeAmigavel = nome;
-    }
+    /**
+     * Mapeia para a classe RelatorioContrachequeGeral
+     */
+    CONTRACHEQUE_GERAL,
 
-    // Método para obter o nome bonito para exibição na UI
-    @Override
-    public String toString() {
-        return nomeAmigavel;
-    }
+    /**
+     * Mapeia para a classe RelatorioFinanceiroGeral
+     */
+    FINANCEIRO_GERAL
 }

@@ -7,17 +7,18 @@ public class Entrevista {
     private int id;
     private Usuario recrutador;
     private Vaga vaga;
-    private Candidato candidato;
+    private Candidatura candidatura;
     private StatusEntrevista status;
     private LocalDate dataEntrevista;
+    private String relatorioEntrevista;
 
     public Entrevista() {}
 
-    public Entrevista(Usuario recrutador, Vaga vaga, Candidato candidato, StatusEntrevista status, LocalDate dataEntrevista) {
+    public Entrevista(Usuario recrutador, Vaga vaga, Candidatura candidatura, StatusEntrevista status, LocalDate dataEntrevista) {
         this.id = ++idCounter;
         this.recrutador = recrutador;
         this.vaga = vaga;
-        this.candidato = candidato;
+        this.candidatura = candidatura;
         this.status = status;
         this.dataEntrevista = dataEntrevista;
     }
@@ -46,12 +47,12 @@ public class Entrevista {
         this.vaga = vaga;
     }
 
-    public Candidato getCandidato() {
-        return candidato;
+    public Candidatura getCandidatura() {
+        return candidatura;
     }
 
-    public void setCandidato(Candidato candidato) {
-        this.candidato = candidato;
+    public void setCandidatura(Candidatura candidatura) {
+        this.candidatura = candidatura;
     }
 
     public StatusEntrevista getStatus() {
@@ -70,9 +71,17 @@ public class Entrevista {
         this.dataEntrevista = dataEntrevista;
     }
 
+    public String getRelatorioEntrevista () {
+        return this.relatorioEntrevista;
+    }
+
+    public void setRelatorioEntrevista(String relatorioEntrevista) {
+        this.relatorioEntrevista = relatorioEntrevista;
+    }
+
     @Override
     public String toString() {
-        return id + " - " + candidato.getNome();
+        return id + " - " + candidatura.getCandidato().getNome();
     }
 
 }

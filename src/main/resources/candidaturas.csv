@@ -1,7 +1,9 @@
 CPF_Candidato;Nome_Candidato;Vaga_ID;Cargo;Data;Status
-Teste;Teste;1;Limpador de calha;2025-10-27;PENDENTE
-54252842093;Junior;2;Jogador de LoL;2025-10-28;PENDENTE
-34;davizera;2;treinador de ia;2025-10-27;EM_ANALISE
-086;val;2;treinador de ia;2025-10-28;APROVADO
-345;ricardo;1;Limpador de calha;2025-10-28;EM_ANALISE
-Teste;Teste;3;treinador de ia;2025-11-09;EM_ANALISE
+98790174046;Davizera;5;Advogado;2025-11-11;PENDENTE
+08854612073;Vinicius Ruela;3;treinador de ia;2025-11-11;EM_ANALISE
+08854612073;Vinicius Ruela;2;Jogador de LoL;2025-11-11;PENDENTE
+54252842093;Junior;2;Jogador de LoL;2025-11-12;APROVADO
+12345678901;Ana Silva;8;Analista de Marketing Digital;2025-11-12;EM_ANALISE
+98765432109;Lucas Mendes;9;Gerente de Projetos;2025-11-13;PENDENTE
+45678912301;Mariana Costa;7;Designer UI/UX;2025-11-14;EM_ANALISE
+33322211100;Pedro Henrique;4;Faxineiro;2025-11-14;REPROVADO

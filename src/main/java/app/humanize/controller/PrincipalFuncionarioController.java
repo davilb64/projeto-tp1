@@ -34,8 +34,6 @@ public class PrincipalFuncionarioController {
 
     private Button activeButton;
 
-    private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
-
     private ResourceBundle bundle;
 
     @FXML private void initialize(){

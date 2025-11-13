@@ -1,8 +1,5 @@
 package app.humanize.controller;
 
-import app.humanize.exceptions.CpfInvalidoException;
-import app.humanize.exceptions.EmailInvalidoException;
-import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.*;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.CandidaturaRepository;
@@ -32,8 +29,6 @@ public class ListaDeCandidatosController {
     @FXML private TextField txtFormacao;
     @FXML private TextField txtExperiencia;
     @FXML private ComboBox<String> comboSalario;
-    @FXML private Button btnFiltrar;
-    @FXML private Button btnCadastrar;
     @FXML private TableView<Candidato> tblUsuarios;
     @FXML private TableColumn<Candidato, String> colNome;
     @FXML private TableColumn<Candidato, String> colExperiencia;
@@ -120,9 +115,9 @@ public class ListaDeCandidatosController {
     private boolean dentroDaFaixaSalarial(double salario, String faixaKey) {
         return switch (faixaKey) {
             case "UP_TO_2K" -> salario <= 2000;
-            case "2K_TO_4K" -> salario > 2000 && salario <= 4000;
-            case "4K_TO_6K" -> salario > 4000 && salario <= 6000;
-            case "OVER_6K" -> salario > 6000;
+            case "2K_TO_4K" -> salario > 2000 && salario <= 8000;
+            case "4K_TO_6K" -> salario > 8000 && salario <= 15000;
+            case "OVER_6K" -> salario > 15000;
             default -> true; // "ALL"
         };
     }

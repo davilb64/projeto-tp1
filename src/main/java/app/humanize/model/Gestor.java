@@ -19,7 +19,7 @@ public class Gestor extends Funcionario {
 
     public static class GestorBuilder {
         private int matricula;
-        private LocalDate dataAdmissao; // NOVO
+        private LocalDate dataAdmissao;
         private int periodo;
         private double receita;
         private double despesas;
@@ -41,7 +41,7 @@ public class Gestor extends Funcionario {
         public GestorBuilder regime(Regime regime) { this.regime = regime; return this; }
         public GestorBuilder cargo(String cargo) { this.cargo = cargo; return this; }
         public GestorBuilder matricula(int matricula) { this.matricula = matricula; return this; }
-        public GestorBuilder dataAdmissao(LocalDate data) { this.dataAdmissao = data; return this; } // NOVO
+        public GestorBuilder dataAdmissao(LocalDate data) { this.dataAdmissao = data; return this; }
         public GestorBuilder periodo(int periodo) { this.periodo = periodo; return this; }
         public GestorBuilder receita(double receita) { this.receita = receita; return this; }
         public GestorBuilder despesas(double despesas) { this.despesas = despesas; return this; }

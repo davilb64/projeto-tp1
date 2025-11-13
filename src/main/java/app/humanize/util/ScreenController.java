@@ -6,9 +6,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL; // Importação necessária
-import java.util.Objects;
-import java.util.ResourceBundle; // Importação necessária
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Classe utilitária para gerir e trocar as cenas.

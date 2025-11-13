@@ -1,7 +1,5 @@
 package app.humanize.controller;
 
-import app.humanize.model.Perfil;
-import app.humanize.model.Usuario;
 import app.humanize.model.Vaga;
 import app.humanize.repository.VagaRepository;
 import app.humanize.util.UserSession;
@@ -82,7 +80,7 @@ public class VagasController {
         FXMLLoader loader = new FXMLLoader(resource, bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setTitle(bundle.getString("createVacancy.title")); // Chave reutilizada
+        stage.setTitle(bundle.getString("createVacancy.title"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -113,7 +111,7 @@ public class VagasController {
         stage.setTitle(bundle.getString("vacancyManagement.alert.editTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner((Stage) tblVagas.getScene().getWindow());
+        stage.initOwner(tblVagas.getScene().getWindow());
         stage.showAndWait();
 
         carregarTabela();
@@ -125,7 +123,7 @@ public class VagasController {
 
         if (vagaSelecionado != null) {
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle")); // Reutilizada
+            confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle"));
             confirmacao.setHeaderText(bundle.getString("vacancyManagement.alert.confirmDeleteHeader") + " " + vagaSelecionado.getCargo());
             confirmacao.setContentText(bundle.getString("vacancyManagement.alert.confirmDeleteContent"));
 
@@ -148,7 +146,7 @@ public class VagasController {
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(bundle.getString("userManagement.alert.attention")); // Reutilizada
+        alert.setTitle(bundle.getString("userManagement.alert.attention"));
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();

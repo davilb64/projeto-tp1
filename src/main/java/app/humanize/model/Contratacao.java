@@ -9,7 +9,7 @@ public class Contratacao {
     private Candidato candidato;
     private Vaga vaga;
     private LocalDate dataContratacao;
-    private String regime; // CLT, Estágio, PJ, etc.
+    private String regime;
 
     public Contratacao() {}
 

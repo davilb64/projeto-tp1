@@ -1,3 +1,108 @@
 Data;Descricao;Receita;Despesas;Saldo;Categoria
-09/11/2025;Payroll - junior (Jogador de LoL - Júnior);;$400.00;$-400.00;Payroll
-09/11/2025;Nómina - junior (Jogador de LoL - Júnior);;400,00 ?;$-400.00;Nómina
+01/10/2025;Saldo Inicial;R$ 50.000,00;;R$ 50.000,00;Inicial
+01/10/2025;Venda de Serviços (Cliente A);R$ 15.200,00;;R$ 65.200,00;Vendas
+10/10/2025;Pagamento de Aluguel (Escritório);;R$ 3.500,00;R$ 61.700,00;Despesas Fixas
+15/10/2025;Payroll - Davi Lopes Brito (Diretor);;R$ 16.050,00;R$ 45.650,00;Folha de Pagamento
+15/10/2025;Payroll - Bruno Silva (Analista de RH);;R$ 4.700,00;R$ 40.950,00;Folha de Pagamento
+20/10/2025;Receita de Investimentos;R$ 500,00;;R$ 41.450,00;Investimentos
+25/10/2025;Despesa com Marketing Digital;;R$ 1.200,00;R$ 40.250,00;Marketing
+30/10/2025;Venda de Serviços (Cliente B);R$ 22.800,00;;R$ 63.050,00;Vendas
+01/11/2025;Compra de Software Licença Anual;;R$ 950,00;R$ 62.100,00;Despesas Fixas
+02/11/2025;Reembolso de Despesas (Gestor Teste);;R$ 150,00;R$ 61.950,00;Reembolso
+03/11/2025;Receita de Consultoria (Cliente C);R$ 8.900,00;;R$ 70.850,00;Vendas
+05/11/2025;Pagamento de Energia Elétrica;;R$ 420,50;R$ 70.429,50;Despesas Fixas
+06/11/2025;Payroll - Valquiria Machado (Diretora TI);;R$ 15.100,00;R$ 55.329,50;Folha de Pagamento
+07/11/2025;Venda de Novo Contrato (Cliente D);R$ 35.000,00;;R$ 90.329,50;Vendas
+08/11/2025;Compra de Material de Escritório;;R$ 250,00;R$ 90.079,50;Materiais
+09/11/2025;Juros Recebidos (Conta Poupança);R$ 180,25;;R$ 90.259,75;Investimentos
+10/11/2025;Pagamento de Plano de Saúde (Geral);;R$ 2.500,00;R$ 87.759,75;Benefícios
+11/11/2025;Nómina - Junior Pires Mendes (Jogador de LoL);;R$ 3.946,74;R$ 83.813,01;Nómina
+12/11/2025;Recebimento de Fatura Antiga (Cliente E);R$ 7.500,00;;R$ 91.313,01;Vendas
+13/11/2025;Despesa com Suporte Técnico (TI);;R$ 600,00;R$ 90.713,01;Serviços
+14/11/2025;Payroll - Ricardo Rian (Dir. Financeiro);;R$ 16.050,00;R$ 74.663,01;Folha de Pagamento
+15/11/2025;Compra de Móveis para Sala de Reunião;;R$ 4.500,00;R$ 70.163,01;Investimento Fixo
+16/11/2025;Receita de Venda Recorrente (Cliente F);R$ 5.100,00;;R$ 75.263,01;Vendas
+17/11/2025;Reembolso de Viagem (Samara Costa);;R$ 320,00;R$ 74.943,01;Reembolso
+18/11/2025;Pagamento de Telefone/Internet;;R$ 180,00;R$ 74.763,01;Despesas Fixas
+19/11/2025;Venda de Serviços (Cliente G);R$ 12.000,00;;R$ 86.763,01;Vendas
+20/11/2025;Payroll - Recrutador Silva (Sênior);;R$ 6.600,00;R$ 80.163,01;Folha de Pagamento
+21/11/2025;Taxas Bancárias Mensais;;R$ 85,00;R$ 80.078,01;Despesas Bancárias
+22/11/2025;Admnistrador Souza (Analista de Sistemas);;R$ 19.703,99;R$ 60.374,02;Folha de Pagamento
+23/11/2025;Receita Extra (Negociação);R$ 1.500,00;;R$ 61.874,02;Vendas
+24/11/2025;Despesa com Coffee Break (Evento);;R$ 550,00;R$ 61.324,02;Marketing
+25/11/2025;Receita de Venda de Ativo;R$ 3.000,00;;R$ 64.324,02;Investimentos
+26/11/2025;Pagamento de Fornecedor (Consultoria);;R$ 8.000,00;R$ 56.324,02;Serviços
+27/11/2025;Venda de Serviços (Cliente H);R$ 10.500,00;;R$ 66.824,02;Vendas
+28/11/2025;Pagamento de Salário (Teste Ferreira Lima);;R$ 3.215,50;R$ 63.608,52;Folha de Pagamento
+29/11/2025;Despesa com Transporte/Logística;;R$ 350,00;R$ 63.258,52;Despesas Diversas
+30/11/2025;Venda de Serviços (Cliente I);R$ 18.000,00;;R$ 81.258,52;Vendas
+01/12/2025;Pagamento de Aluguel (Dezembro);;R$ 3.500,00;R$ 77.758,52;Despesas Fixas
+02/12/2025;Venda de Serviços (Cliente J);R$ 14.500,00;;R$ 92.258,52;Vendas
+03/12/2025;Despesa com Manutenção de Equipamentos;;R$ 1.100,00;R$ 91.158,52;Serviços
+04/12/2025;Receita de Consultoria (Cliente K);R$ 6.300,00;;R$ 97.458,52;Vendas
+05/12/2025;Payroll - Davi Lopes Brito (Diretor - 13º);;R$ 15.750,00;R$ 81.708,52;Folha de Pagamento
+06/12/2025;Recebimento de Bônus (Investimento);R$ 800,00;;R$ 82.508,52;Investimentos
+07/12/2025;Despesa com Licenças de TI (Extra);;R$ 1.500,00;R$ 81.008,52;Serviços
+08/12/2025;Venda de Serviços (Cliente L);R$ 19.500,00;;R$ 100.508,52;Vendas
+09/12/2025;Payroll - Bruno Silva (Analista de RH - 13º);;R$ 4.345,98;R$ 96.162,54;Folha de Pagamento
+10/12/2025;Despesa com Material Promocional;;R$ 750,00;R$ 95.412,54;Marketing
+11/12/2025;Venda de Serviços (Cliente M);R$ 11.200,00;;R$ 106.612,54;Vendas
+12/12/2025;Pagamento de Contas Diversas (Água/Gás);;R$ 310,00;R$ 106.302,54;Despesas Fixas
+13/12/2025;Payroll - Gestor Teste (Gerente de Contas);;R$ 9.100,00;R$ 97.202,54;Folha de Pagamento
+14/12/2025;Receita de Venda de Curso;R$ 2.500,00;;R$ 99.702,54;Vendas
+15/12/2025;Despesa com Frete e Correios;;R$ 120,00;R$ 99.582,54;Despesas Diversas
+16/12/2025;Venda de Serviços (Cliente N);R$ 9.800,00;;R$ 109.382,54;Vendas
+17/12/2025;Reembolso de Despesas (Rec Teste);;R$ 80,00;R$ 109.302,54;Reembolso
+18/12/2025;Payroll - Junior Pires Mendes (13º);;R$ 3.946,74;R$ 105.355,80;Folha de Pagamento
+19/12/2025;Recebimento de Adiantamento (Cliente O);R$ 4.000,00;;R$ 109.355,80;Vendas
+20/12/2025;Despesa com Hospedagem de Servidor;;R$ 280,00;R$ 109.075,80;Serviços
+21/12/2025;Venda de Serviços (Cliente P);R$ 16.500,00;;R$ 125.575,80;Vendas
+22/12/2025;Payroll - Teste Ferreira Lima (13º);;R$ 3.215,50;R$ 122.360,30;Folha de Pagamento
+23/12/2025;Despesa com Bônus Natalino;;R$ 2.000,00;R$ 120.360,30;Benefícios
+24/12/2025;Receita de Projeto Concluído (Cliente Q);R$ 28.000,00;;R$ 148.360,30;Vendas
+25/12/2025;Doação de Caridade (Despesa);;R$ 500,00;R$ 147.860,30;Despesas Diversas
+26/12/2025;Venda de Serviços (Cliente R);R$ 7.200,00;;R$ 155.060,30;Vendas
+27/12/2025;Pagamento de Seguros Anuais;;R$ 4.800,00;R$ 150.260,30;Despesas Fixas
+28/12/2025;Payroll - Samara Costa (CSO - 13º);;R$ 15.750,00;R$ 134.510,30;Folha de Pagamento
+29/12/2025;Receita de Venda de Estoque Antigo;R$ 1.200,00;;R$ 135.710,30;Outros
+30/12/2025;Despesa com Consultoria Fiscal;;R$ 1.500,00;R$ 134.210,30;Serviços
+31/12/2025;Venda de Serviços (Cliente S);R$ 13.500,00;;R$ 147.710,30;Vendas
+01/01/2026;Aluguel de Janeiro/2026;;R$ 3.600,00;R$ 144.110,30;Despesas Fixas
+02/01/2026;Venda de Serviços (Cliente T);R$ 17.000,00;;R$ 161.110,30;Vendas
+03/01/2026;Manutenção Preventiva de Equipamentos;;R$ 900,00;R$ 160.210,30;Serviços
+04/01/2026;Receita de Patrocínio (Investimento);R$ 5.000,00;;R$ 165.210,30;Investimentos
+05/01/2026;Despesa com Treinamento de Equipe;;R$ 1.800,00;R$ 163.410,30;Benefícios
+06/01/2026;Venda de Serviços (Cliente U);R$ 14.800,00;;R$ 178.210,30;Vendas
+07/01/2026;Pagamento de Energia Elétrica (Janeiro);;R$ 450,00;R$ 177.760,30;Despesas Fixas
+08/01/2026;Payroll - Davi Lopes Brito (Janeiro);;R$ 16.050,00;R$ 161.710,30;Folha de Pagamento
+09/01/2026;Compra de Material de Escritório;;R$ 300,00;R$ 161.410,30;Materiais
+10/01/2026;Venda de Serviços (Cliente V);R$ 21.000,00;;R$ 182.410,30;Vendas
+11/01/2026;Taxas de Processamento de Vendas;;R$ 150,00;R$ 182.260,30;Despesas Bancárias
+12/01/2026;Receita de Consultoria (Cliente X);R$ 7.900,00;;R$ 190.160,30;Vendas
+13/01/2026;Despesa com Campanhas de Marketing;;R$ 2.200,00;R$ 187.960,30;Marketing
+14/01/2026;Payroll - Bruno Silva (Janeiro);;R$ 4.700,00;R$ 183.260,30;Folha de Pagamento
+15/01/2026;Venda de Serviços (Cliente Y);R$ 18.500,00;;R$ 201.760,30;Vendas
+16/01/2026;Pagamento de Telefone/Internet;;R$ 190,00;R$ 201.570,30;Despesas Fixas
+17/01/2026;Receita de Royalties;R$ 1.000,00;;R$ 202.570,30;Outros
+18/01/2026;Despesa com Limpeza (Serviço Terceirizado);;R$ 650,00;R$ 201.920,30;Serviços
+19/01/2026;Venda de Serviços (Cliente Z);R$ 11.800,00;;R$ 213.720,30;Vendas
+20/01/2026;Payroll - Ricardo Rian (Janeiro);;R$ 16.050,00;R$ 197.670,30;Folha de Pagamento
+21/01/2026;Recebimento de Adiantamento (Cliente AA);R$ 3.500,00;;R$ 201.170,30;Vendas
+22/01/2026;Compra de Hardware Novo;;R$ 5.000,00;R$ 196.170,30;Investimento Fixo
+23/01/2026;Venda de Serviços (Cliente BB);R$ 14.000,00;;R$ 210.170,30;Vendas
+24/01/2026;Despesa com Suprimentos de Cozinha;;R$ 120,00;R$ 210.050,30;Materiais
+25/01/2026;Payroll - Valquiria Machado (Janeiro);;R$ 15.100,00;R$ 194.950,30;Folha de Pagamento
+26/01/2026;Receita de Venda de Módulo (Software);R$ 9.500,00;;R$ 204.450,30;Vendas
+27/01/2026;Despesa com Evento Corporativo (Ano Novo);;R$ 1.800,00;R$ 202.650,30;Marketing
+28/01/2026;Venda de Serviços (Cliente CC);R$ 16.000,00;;R$ 218.650,30;Vendas
+29/01/2026;Despesa com Reembolso de Quilometragem;;R$ 210,00;R$ 218.440,30;Reembolso
+30/01/2026;Receita de Venda de Assinatura;R$ 4.200,00;;R$ 222.640,30;Vendas
+31/01/2026;Pagamento de Contas Diversas;;R$ 330,00;R$ 222.310,30;Despesas Fixas
+01/02/2026;Aluguel de Fevereiro/2026;;R$ 3.600,00;R$ 218.710,30;Despesas Fixas
+02/02/2026;Venda de Serviços (Cliente DD);R$ 19.000,00;;R$ 237.710,30;Vendas
+03/02/2026;Pagamento de Fornecedor (Software);;R$ 2.500,00;R$ 235.210,30;Serviços
+04/02/2026;Receita de Consultoria (Cliente EE);R$ 10.000,00;;R$ 245.210,30;Vendas
+05/02/2026;Payroll - Davi Lopes Brito (Fevereiro);;R$ 16.050,00;R$ 229.160,30;Folha de Pagamento
+06/02/2026;Compra de Equipamento (TI);;R$ 7.000,00;R$ 222.160,30;Investimento Fixo
+07/02/2026;Venda de Serviços (Cliente FF);R$ 13.500,00;;R$ 235.660,30;Vendas
+08/02/2026;Despesa com Viagem (Gestor Teste);;R$ 1.200,00;R$ 234.460,30;Reembolso

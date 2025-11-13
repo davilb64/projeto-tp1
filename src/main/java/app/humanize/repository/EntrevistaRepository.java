@@ -1,13 +1,11 @@
 package app.humanize.repository;
 
 import app.humanize.model.*;
-import com.sun.javafx.scene.EnteredExitedHandler;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class EntrevistaRepository extends BaseRepository {
     private static final EntrevistaRepository instance = new EntrevistaRepository();
@@ -25,6 +23,30 @@ public class EntrevistaRepository extends BaseRepository {
 
     public List<Entrevista> getTodasEntrevistas() {
         return new ArrayList<>(this.entrevistaEmMemoria);
+    }
+
+    public List<Candidato> getCandidatosAprovadosEntrevistas() {
+        List<Candidato> candidatos = new ArrayList<>();
+        for (Entrevista entrevista : this.entrevistaEmMemoria) {
+            if (entrevista.getStatus() == StatusEntrevista.Aprovado) {
+                candidatos.add(entrevista.getCandidatura().getCandidato());
+            }
+        }
+        return candidatos;
+    }
+
+    public List<Vaga> getVagaPorCandidato(Candidato candidato) {
+        List<Vaga> vagas = new ArrayList<>();
+        for (Entrevista entrevista : this.entrevistaEmMemoria) {
+            if (entrevista.getStatus() == StatusEntrevista.Aprovado &&
+                    entrevista.getCandidatura() != null &&
+                    entrevista.getCandidatura().getCandidato() != null &&
+                    entrevista.getCandidatura().getCandidato().getNome().equals(candidato.getNome())
+            ) {
+                vagas.add(entrevista.getVaga());
+            }
+        }
+        return vagas;
     }
 
     public List<Entrevista> getEntrevistasHoje(){
@@ -52,7 +74,7 @@ public class EntrevistaRepository extends BaseRepository {
     }
     public Entrevista buscarEntrevistaPorNomeCandidato(String nome) {
         return this.entrevistaEmMemoria.stream()
-                .filter(e -> e.getCandidato().getNome().equalsIgnoreCase(nome))
+                .filter(e -> e.getCandidatura().getCandidato().getNome().equalsIgnoreCase(nome))
                 .findFirst().orElse(null);
     }
     //metodos de salvar no csv
@@ -73,7 +95,7 @@ public class EntrevistaRepository extends BaseRepository {
     private void persistirAlteracoesNoCSV() throws IOException {
         File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
         try (FileWriter escritor = new FileWriter(arquivo, false)) {
-            escritor.write("idEntrevista;DataEntrevista;StatusEntrevista;Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;idVaga;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdPessoa;NomePessoa;CpfPessoa;PerfilPessoa\n");
+            escritor.write("idEntrevista;DataEntrevista;StatusEntrevista;Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;idVaga;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdPessoa;NomePessoa;CpfPessoa;PerfilPessoa;StatusCandidatura;dataCandidatura;RelatorioEntrevista\n");
             for (Entrevista entrevista : this.entrevistaEmMemoria) {
                 escritor.write(formatarEntrevistaParaCSV(entrevista));
             }
@@ -86,14 +108,14 @@ public class EntrevistaRepository extends BaseRepository {
         sb.append(entrevista.getDataEntrevista() == null ? "" : entrevista.getDataEntrevista()).append(";");
         sb.append(entrevista.getStatus() == null ? "" : entrevista.getStatus()).append(";");
 
-        if(entrevista.getCandidato() != null){
-            sb.append(entrevista.getCandidato().getNome() == null ? "" : entrevista.getCandidato().getNome()).append(";");
-            sb.append(entrevista.getCandidato().getCpf() == null ? "" : entrevista.getCandidato().getCpf()).append(";");
-            sb.append(entrevista.getCandidato().getEmail() == null ? "" : entrevista.getCandidato().getEmail()).append(";");
-            sb.append(entrevista.getCandidato().getTelefone() == null ? "" : entrevista.getCandidato().getTelefone()).append(";");
-            sb.append(entrevista.getCandidato().getFormacao() == null ? "" : entrevista.getCandidato().getFormacao()).append(";");
-            sb.append(entrevista.getCandidato().getDisponibilidade() == null ? "" : entrevista.getCandidato().getDisponibilidade()).append(";");
-            sb.append(String.valueOf(entrevista.getCandidato().getPretencaoSalarial())).append(";");
+        if(entrevista.getCandidatura() != null){
+            sb.append(entrevista.getCandidatura().getCandidato().getNome() == null ? "" : entrevista.getCandidatura().getCandidato().getNome()).append(";");
+            sb.append(entrevista.getCandidatura().getCandidato().getCpf() == null ? "" : entrevista.getCandidatura().getCandidato().getCpf()).append(";");
+            sb.append(entrevista.getCandidatura().getCandidato().getEmail() == null ? "" : entrevista.getCandidatura().getCandidato().getEmail()).append(";");
+            sb.append(entrevista.getCandidatura().getCandidato().getTelefone() == null ? "" : entrevista.getCandidatura().getCandidato().getTelefone()).append(";");
+            sb.append(entrevista.getCandidatura().getCandidato().getFormacao() == null ? "" : entrevista.getCandidatura().getCandidato().getFormacao()).append(";");
+            sb.append(entrevista.getCandidatura().getCandidato().getDisponibilidade() == null ? "" : entrevista.getCandidatura().getCandidato().getDisponibilidade()).append(";");
+            sb.append(entrevista.getCandidatura().getCandidato().getPretencaoSalarial()).append(";");
         }
         if(entrevista.getVaga() != null){
             sb.append(entrevista.getVaga().getId()).append(";");
@@ -110,6 +132,9 @@ public class EntrevistaRepository extends BaseRepository {
             sb.append(entrevista.getRecrutador().getCpf() == null ? "" : entrevista.getRecrutador().getCpf()).append(";");
             sb.append(entrevista.getRecrutador().getPerfil() == null ? "" : entrevista.getRecrutador().getPerfil()).append(";");
         }
+        sb.append(entrevista.getCandidatura().getStatus() == null ? "" : entrevista.getCandidatura().getStatus()).append(";");
+        sb.append(entrevista.getCandidatura().getDataCandidatura() == null ? "" : entrevista.getCandidatura().getDataCandidatura()).append(";");
+        sb.append(entrevista.getRelatorioEntrevista() == null ? "" : entrevista.getRelatorioEntrevista()).append(";");
         sb.append("\n");
         return sb.toString();
     }
@@ -143,7 +168,7 @@ public class EntrevistaRepository extends BaseRepository {
 
     private Entrevista parseEntrevistaDaLinhaCsv(String linha) {
         String[] campos = linha.split(";", -1);
-        if (campos.length < 20) return null;
+        if (campos.length < 22) return null;
 
         try {
             int idContratacao = Integer.parseInt(campos[0]);
@@ -162,8 +187,6 @@ public class EntrevistaRepository extends BaseRepository {
             candidato.setFormacao(campos[7]);
             candidato.setDisponibilidade(campos[8]);
             candidato.setPretencaoSalarial(Double.parseDouble(campos[9]));
-
-            entrevista.setCandidato(candidato);
 
             //dados vaga
             Vaga vaga = new Vaga();
@@ -191,8 +214,24 @@ public class EntrevistaRepository extends BaseRepository {
             recrutador.setNome(campos[18]);
             recrutador.setCpf(campos[19]);
             recrutador.setPerfil(Perfil.valueOf(campos[20]));
+
             entrevista.setRecrutador(recrutador);
 
+            Candidatura candidatura = new Candidatura();
+            candidatura.setCandidato(candidato);
+            candidatura.setVaga(vaga);
+            if (campos[21] != null && !campos[21].isEmpty()) {
+                try {
+                    String valor = campos[21].trim().toUpperCase(); // normaliza o texto
+                    candidatura.setStatus(StatusCandidatura.valueOf(valor));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Status inválido no CSV: " + campos[22]);
+                    candidatura.setStatus(StatusCandidatura.EM_ANALISE);
+                }
+            }
+            candidatura.setDataCandidatura(campos[22] != null && !campos[22].isEmpty() ? LocalDate.parse(campos[22]) : null);
+            entrevista.setCandidatura(candidatura);
+            entrevista.setRelatorioEntrevista(campos[23]);
             return entrevista;
 
         } catch (Exception e) {

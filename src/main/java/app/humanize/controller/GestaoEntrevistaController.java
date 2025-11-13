@@ -47,15 +47,6 @@ public class GestaoEntrevistaController {
     @FXML
     private TableColumn<Entrevista, StatusEntrevista> colStatus;
 
-    @FXML
-    private Button btnFiltrar;
-    @FXML
-    private Button btnMarcarEntrevista;
-    @FXML
-    private Button btnEditar;
-    @FXML
-    private Button btnExcluir;
-
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final CandidatoRepository candidatoRepository = CandidatoRepository.getInstance();
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
@@ -73,7 +64,7 @@ public class GestaoEntrevistaController {
         carregarTabela();
 
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colCandidato.setCellValueFactory(new PropertyValueFactory<>("candidato"));
+        colCandidato.setCellValueFactory(new PropertyValueFactory<>("candidatura"));
         colRecrutador.setCellValueFactory(new PropertyValueFactory<>("recrutador"));
         colVaga.setCellValueFactory(new PropertyValueFactory<>("vaga"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -120,6 +111,35 @@ public class GestaoEntrevistaController {
     }
 
     @FXML
+    public void relatarEntrevista() throws IOException{
+        Entrevista entrevista = tblEntrevista.getSelectionModel().getSelectedItem();
+        if (entrevista == null) {
+            mostrarAlerta(bundle.getString("interviewManagement.alert.noSelectionEdit"));
+            return;
+        }
+        URL resource = getClass().getResource("/view/RelatarEntrevista.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("alert.error.fxmlNotFound.scheduleInterview"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+        Parent root = loader.load();
+
+        RelatarEntrevistaController relatarEntrevistaController = loader.getController();
+        relatarEntrevistaController.prepararParaEdicao(entrevista);
+
+        Stage stage = new Stage();
+        stage.setTitle(bundle.getString("interviewManagement.alert.editTitle"));
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(tblEntrevista.getScene().getWindow());
+        stage.showAndWait();
+
+        carregarTabela();
+    }
+
+    @FXML
     public void editarEntrevista() throws IOException {
         Entrevista entrevista = tblEntrevista.getSelectionModel().getSelectedItem();
         if (entrevista == null) {
@@ -143,7 +163,7 @@ public class GestaoEntrevistaController {
         stage.setTitle(bundle.getString("interviewManagement.alert.editTitle"));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner((Stage) tblEntrevista.getScene().getWindow());
+        stage.initOwner(tblEntrevista.getScene().getWindow());
         stage.showAndWait();
 
         carregarTabela();
@@ -200,7 +220,7 @@ public class GestaoEntrevistaController {
         Candidato candidatoFiltro = cbCandidato.getValue();
         if (candidatoFiltro != null) {
             stream = stream.filter(entrevista ->
-                    entrevista.getCandidato().getId() == candidatoFiltro.getId()
+                    entrevista.getCandidatura().getCandidato().getId() == candidatoFiltro.getId()
             );
         }
 

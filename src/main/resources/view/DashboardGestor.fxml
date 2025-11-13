@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -44,10 +43,6 @@
             <Label text="%dashboardManager.stat.activeEmployees" />
             <Label fx:id="lblFuncionarios" styleClass="stat-card-value" />
         </VBox>
-        <VBox alignment="CENTER" styleClass="stat-card-base, stat-card-info" HBox.hgrow="ALWAYS">
-            <Label text="%dashboardManager.stat.lastPayroll" />
-            <Label fx:id="lblUltimaFolha" styleClass="stat-card-value" />
-        </VBox>
         <VBox.margin>
             <Insets left="10.0" right="10.0" />
         </VBox.margin>
@@ -57,10 +52,7 @@
         <VBox HBox.hgrow="ALWAYS">
             <PieChart fx:id="chartRegime" title="%dashboardManager.chart.pie.title" VBox.vgrow="ALWAYS" />
         </VBox>
-        <VBox HBox.hgrow="ALWAYS">
-            <BarChart fx:id="chartFolha" title="%dashboardManager.chart.bar.title" VBox.vgrow="ALWAYS">
-                <xAxis><CategoryAxis label="%dashboardManager.chart.bar.xaxis" /></xAxis> <yAxis><NumberAxis label="%dashboardManager.chart.bar.yaxis" side="LEFT" /></yAxis> </BarChart>
-        </VBox>
+        <VBox HBox.hgrow="ALWAYS" />
         <VBox HBox.hgrow="ALWAYS">
             <LineChart fx:id="chartEvolucao" title="%dashboardManager.chart.line.title" VBox.vgrow="ALWAYS">
                 <xAxis><CategoryAxis label="%dashboardManager.chart.line.xaxis" side="BOTTOM" /></xAxis> <yAxis><NumberAxis label="%dashboardManager.chart.line.yaxis" side="LEFT" /></yAxis> </LineChart>
@@ -80,9 +72,6 @@
 
         <HBox spacing="15.0">
             <Button fx:id="btnCriarVaga" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#criarVaga" text="%dashboardManager.actions.createVacancy" HBox.hgrow="ALWAYS">
-                <cursor><Cursor fx:constant="HAND" /></cursor>
-            </Button>
-            <Button fx:id="btnAtribuir" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#atribuirRecrutador" text="%dashboardManager.actions.assignRecruiter" HBox.hgrow="ALWAYS">
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
             <Button fx:id="btnAutorizar" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#autorizarContratacao" text="%dashboardManager.actions.authorizeHire" HBox.hgrow="ALWAYS">

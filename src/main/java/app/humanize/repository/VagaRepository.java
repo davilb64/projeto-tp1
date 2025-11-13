@@ -6,16 +6,28 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class VagaRepository extends BaseRepository {
 
     private static final VagaRepository instance = new VagaRepository();
-    private static final String NOME_ARQUIVO = "vagas.csv";
+
+    private static final String NOME_ARQUIVO_CSV = "vagas.csv";
+    private final File arquivoDePersistencia;
+
     private final List<Vaga> vagaEmMemoria;
 
     private VagaRepository() {
+        this.arquivoDePersistencia = this.getArquivoDePersistencia(NOME_ARQUIVO_CSV);
         this.vagaEmMemoria = new ArrayList<>();
+
+        try {
+            if (!this.arquivoDePersistencia.exists()) {
+                this.copiarArquivoDefaultDeResources(NOME_ARQUIVO_CSV, this.arquivoDePersistencia);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro CRÍTICO ao copiar arquivo de seeding: " + e.getMessage());
+        }
+
         this.carregarVagaDoCSV();
     }
 
@@ -37,12 +49,14 @@ public class VagaRepository extends BaseRepository {
         return vagasAbertas;
     }
 
-    public List<String> getTodosCargos() {
-        List<String> cargos = new ArrayList<>();
-        for(Vaga vaga : this.vagaEmMemoria) {
-            cargos.add(vaga.getCargo());
+    public List<Vaga> getVagasAbertasPorRecrutador(Usuario recrutador) {
+        List<Vaga> vagasAbertas = new ArrayList<>();
+        for (Vaga vaga : this.vagaEmMemoria) {
+            if (vaga.getStatus() == StatusVaga.ABERTA && vaga.getRecrutador() != null && vaga.getRecrutador().getId() == recrutador.getId()) {
+                vagasAbertas.add(vaga);
+            }
         }
-        return cargos;
+        return vagasAbertas;
     }
 
     public int getQtdVaga(){
@@ -66,17 +80,13 @@ public class VagaRepository extends BaseRepository {
     }
 
     public void carregarVagaDoCSV() {
-        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
+        File arquivo = this.arquivoDePersistencia;
+
         if (!arquivo.exists()) {
-            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
-            try {
-                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivo);
-            } catch (IOException e) {
-                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
-                e.printStackTrace();
-                return;
-            }
+            System.err.println("Arquivo de persistência não encontrado (deveria ter sido criado): " + arquivo.getAbsolutePath());
+            return;
         }
+
         try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
             leitor.readLine(); // Pula o cabeçalho
             String linha;
@@ -92,9 +102,8 @@ public class VagaRepository extends BaseRepository {
     }
 
     private void persistirAlteracoesNoCSV() throws IOException {
-        File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
-        try (FileWriter escritor = new FileWriter(arquivo, false)) {
-            escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;\n");
+        try (FileWriter escritor = new FileWriter(this.arquivoDePersistencia, false)) {
+            escritor.write("ID;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;IdPessoa;NomePessoa;CpfPessoa;PerfilPessoa\n");
             for (Vaga vaga : this.vagaEmMemoria) {
                 escritor.write(formatarVagaParaCSV(vaga));
             }
@@ -119,6 +128,17 @@ public class VagaRepository extends BaseRepository {
             vaga.setDepartamento(campos[5]);
             vaga.setDataVaga(campos[6] != null && !campos[6].isEmpty() ? LocalDate.parse(campos[6]) : null);
 
+            if(campos.length >= 10){
+                if(campos[7] != null && !campos[7].isEmpty()){
+                    Usuario recrutador = new Recrutador.RecrutadorBuilder().build();
+                    int idPessoa = Integer.parseInt(campos[7]);
+                    recrutador.setId(idPessoa);
+                    recrutador.setNome(campos[8]);
+                    recrutador.setCpf(campos[9]);
+                    recrutador.setPerfil(Perfil.valueOf(campos[10]));
+                    vaga.setRecrutador(recrutador);
+                }
+            }
             return vaga;
 
         } catch (Exception e) {
@@ -128,16 +148,18 @@ public class VagaRepository extends BaseRepository {
     }
 
     private String formatarVagaParaCSV(Vaga vaga) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(vaga.getId()).append(";");
-        sb.append(vaga.getCargo() == null ? "" : vaga.getCargo()).append(";");
-        sb.append(vaga.getSalario() == null ? "" : vaga.getSalario()).append(";");
-        sb.append(vaga.getStatus() == null ? "" : vaga.getStatus()).append(";");
-        sb.append(vaga.getRequisitos() == null ? "" : vaga.getRequisitos()).append(";");
-        sb.append(vaga.getDepartamento() == null ? "" : vaga.getDepartamento()).append(";");
-        sb.append(vaga.getDataVaga() == null ? "" : vaga.getDataVaga()).append(";");
-        sb.append("\n");
-        return sb.toString();
+        return vaga.getId() + ";" +
+                (vaga.getCargo() == null ? "" : vaga.getCargo()) + ";" +
+                (vaga.getSalario() == null ? "" : vaga.getSalario()) + ";" +
+                (vaga.getStatus() == null ? "" : vaga.getStatus()) + ";" +
+                (vaga.getRequisitos() == null ? "" : vaga.getRequisitos()) + ";" +
+                (vaga.getDepartamento() == null ? "" : vaga.getDepartamento()) + ";" +
+                (vaga.getDataVaga() == null ? "" : vaga.getDataVaga()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getId()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getNome()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getCpf()) + ";" +
+                (vaga.getRecrutador() == null ? "" : vaga.getRecrutador().getPerfil()) + ";" +
+                "\n";
     }
 
     public void excluirVaga(Vaga vagaParaExcluir) throws IOException {
@@ -151,7 +173,6 @@ public class VagaRepository extends BaseRepository {
     }
 
     public void atualizarVaga() throws IOException {
-        //this.vagaEmMemoria.replaceAll(v -> v.getId() == vaga.getId() ? vaga : v);
         persistirAlteracoesNoCSV();
     }
 }

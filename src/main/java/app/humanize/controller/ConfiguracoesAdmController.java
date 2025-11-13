@@ -192,10 +192,4 @@ public class ConfiguracoesAdmController {
             );
         }
     }
-
-    @FXML
-    private void fecharJanela() {
-        Stage stage = (Stage) txtNome.getScene().getWindow();
-        stage.close();
-    }
 }

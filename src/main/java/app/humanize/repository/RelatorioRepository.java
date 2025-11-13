@@ -122,12 +122,10 @@ public class RelatorioRepository extends BaseRepository {
     }
 
     private String formatarRelatorioParaCSV(Relatorio relatorio) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(relatorio.getId()).append(";");
-        sb.append(relatorio.getTipoRelatorio().name()).append(";");
-        sb.append(relatorio.getDataGeracao().toString()).append(";");
-        sb.append(relatorio.getResponsavel() != null ? relatorio.getResponsavel().getId() : "").append("\n");
-        return sb.toString();
+        return relatorio.getId() + ";" +
+                relatorio.getTipoRelatorio().name() + ";" +
+                relatorio.getDataGeracao().toString() + ";" +
+                (relatorio.getResponsavel() != null ? relatorio.getResponsavel().getId() : "") + "\n";
     }
 
     public void excluirRelatorio (Relatorio relatorioParaExcluir) throws IOException {

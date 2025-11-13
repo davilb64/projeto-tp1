@@ -8,7 +8,6 @@ public class Candidato extends Pessoa{
     private double pretencaoSalarial;
     private String disponibilidade;
     private String telefone;
-    private LocalDate dataCadastro;
     private String caminhoDocumento;
 
     //construtores
@@ -19,7 +18,6 @@ public class Candidato extends Pessoa{
         this.experiencia = builder.experiencia;
         this.pretencaoSalarial = builder.pretencaoSalarial;
         this.disponibilidade = builder.disponibilidade;
-        this.dataCadastro = builder.dataCadastro;
         this.telefone = builder.telefone;
     }
 
@@ -34,7 +32,6 @@ public class Candidato extends Pessoa{
         private double pretencaoSalarial;
         private String disponibilidade;
         private String telefone;
-        private LocalDate dataCadastro;
         //campos de pessoa
         private String nome;
         private String cpf;
@@ -67,7 +64,6 @@ public class Candidato extends Pessoa{
             return this;
         }
         public CandidatoBuilder dataCadastro(LocalDate dataCadastro) {
-            this.dataCadastro = dataCadastro;
             return this;
         }
         public CandidatoBuilder telefone(String telefone) {
@@ -89,15 +85,6 @@ public class Candidato extends Pessoa{
     }
 
     //metodos especiais
-
-
-    public LocalDate getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(LocalDate dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
 
     public String getDisponibilidade() {
         return disponibilidade;

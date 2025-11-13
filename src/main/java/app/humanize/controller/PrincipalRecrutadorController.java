@@ -30,13 +30,11 @@ public class PrincipalRecrutadorController {
     @FXML private Button btnCandidatos;
     @FXML private Button btnEntrevistas;
     @FXML private Button btnPerfil;
-    @FXML private Button btnContratacoes;
     @FXML private Button btnConfig;
 
     private Image avatarPadrao;
 
     private Button activeButton;
-    private static final String FOTO_PADRAO = "src/main/resources/fotos_perfil/default_avatar.png";
 
     private ResourceBundle bundle;
 
@@ -49,10 +47,8 @@ public class PrincipalRecrutadorController {
     }
 
     private void atualizarTextosSidebar() {
-        // Reutiliza as chaves que já definimos
         btnCandidatos.setText(bundle.getString("sidebar.candidates"));
         btnEntrevistas.setText(bundle.getString("sidebar.interviews"));
-        btnContratacoes.setText(bundle.getString("sidebar.hires"));
         btnPerfil.setText(bundle.getString("sidebar.profile"));
         btnConfig.setText(bundle.getString("sidebar.settings"));
     }
@@ -162,11 +158,6 @@ public class PrincipalRecrutadorController {
         setActiveButton(btnEntrevistas);
     }
 
-    @FXML
-    private void showContratacoes() {
-        loadUI("ContratacoesRecrutador");
-        setActiveButton(btnContratacoes);
-    }
 
     @FXML
     void showConfiguracoes() {

@@ -10,10 +10,8 @@ public class CsvFormatter implements IReportFormatter {
     public byte[] formatar(ReportData data) {
         StringBuilder sb = new StringBuilder();
 
-        // Cabeçalho
         sb.append(String.join(";", data.getHeaders())).append("\n");
 
-        // Linhas
         for (List<String> row : data.getRows()) {
             sb.append(String.join(";", row)).append("\n");
         }

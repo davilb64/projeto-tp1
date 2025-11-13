@@ -4,18 +4,12 @@ import app.humanize.model.Entrevista;
 import app.humanize.model.Funcionario;
 import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
-import app.humanize.repository.ContratacaoRepository;
 import app.humanize.repository.EntrevistaRepository;
 import app.humanize.repository.UsuarioRepository;
-import app.humanize.repository.VagaRepository;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
@@ -30,13 +24,7 @@ public class ContratacaoDeFuncionarioController {
     private TextField txtCargoFunc;
     @FXML
     private TextField txtDepartamentoFunc;
-    @FXML
-    private Button btnSalvar;
-    @FXML
-    private Button btnCancelar;
 
-    private final ContratacaoRepository contratacaoRepository = ContratacaoRepository.getInstance();
-    private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final EntrevistaRepository entrevistaRepository = EntrevistaRepository.getInstance();
 
@@ -57,7 +45,7 @@ public class ContratacaoDeFuncionarioController {
     }
 
     private void atualizarCargo(Entrevista entrevistaSelecionada) {
-        // Exemplo: busca cargo do funcionário e preenche o campo
+        // busca cargo do funcionário e preenche o campo
         if (entrevistaSelecionada != null) {
             txtCargoFunc.setText(entrevistaRepository.buscarNomeCargoEntrevista(entrevistaSelecionada.getId()));
         } else {
@@ -72,7 +60,7 @@ public class ContratacaoDeFuncionarioController {
             return;
         }
 
-        String nome = cbNome.getValue().getCandidato().getNome();
+        String nome = cbNome.getValue().getCandidatura().getCandidato().getNome();
         String email = txtEmailFunc.getText();
         String cargo = txtCargoFunc.getText();
         String departamento = txtDepartamentoFunc.getText();
@@ -102,22 +90,18 @@ public class ContratacaoDeFuncionarioController {
         if (cbNome.getValue() == null || txtCargoFunc.getText().isBlank() || txtDepartamentoFunc.getText().isBlank()) {
             mostrarAlerta(
                     bundle.getString("hire.alert.requiredFields.title"),
-                    bundle.getString("hire.alert.requiredFields.header"),
-                    null
+                    bundle.getString("hire.alert.requiredFields.header")
             );
             return false;
         }
         return true;
     }
 
-    // 🔹 Mostra alerta genérico
-    private void mostrarAlerta(String titulo, String mensagem, String detalhe) {
-        Alert alert = new Alert(Alert.AlertType.WARNING); // Alterado para WARNING para erros de validação
+    // mostra alerta genérico
+    private void mostrarAlerta(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle(titulo);
         alert.setHeaderText(mensagem);
-        if (detalhe != null && !detalhe.isEmpty()) {
-            alert.setContentText(detalhe);
-        }
         alert.showAndWait();
     }
 

@@ -4,12 +4,10 @@ import app.humanize.model.*;
 import app.humanize.util.EstadosBrasileiros;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class UsuarioRepository extends BaseRepository {
 
@@ -32,16 +30,11 @@ public class UsuarioRepository extends BaseRepository {
     public List<Usuario> getRecrutadores() {
         List<Usuario> recrutadores = new ArrayList<>();
         for(Usuario usuario : this.usuariosEmMemoria) {
-            if (usuario instanceof Recrutador) {
+            if (usuario instanceof Recrutador &&  usuario.getPerfil() == Perfil.RECRUTADOR) {
                 recrutadores.add(usuario);
             }
         }
         return recrutadores;
-    }
-    public List<Usuario> getFuncionarios() {
-        return this.usuariosEmMemoria.stream()
-                .filter(usuario -> usuario.getPerfil() == Perfil.FUNCIONARIO)
-                .collect(Collectors.toList());
     }
     public List<Funcionario> getUsuariosInstanceofFuncionario() {
         return usuariosEmMemoria.stream()
@@ -82,7 +75,7 @@ public class UsuarioRepository extends BaseRepository {
             usuario.setIdiomaPreferencial("pt_BR");
         }
 
-        // Define a data de admissão se for um Funcionario e estiver nula
+        // define a data de admissão se for um Funcionario e estiver nula
         if (usuario instanceof Funcionario f && f.getDataAdmissao() == null) {
             f.setDataAdmissao(LocalDate.now());
         }
@@ -130,7 +123,6 @@ public class UsuarioRepository extends BaseRepository {
     private void persistirAlteracoesNoCSV() throws IOException {
         File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);
         try (FileWriter escritor = new FileWriter(arquivo, false)) {
-            // CABEÇALHO ATUALIZADO (19 COLUNAS)
             escritor.write("ID;Nome;CPF;Email;Endereco;Login;Senha;Perfil;IdiomaPreferencial;Matricula;DataAdmissao;Periodo;Receita;Despesas;Salario;Cargo;Regime;Departamento;CaminhoFoto;\n");
             for (Usuario usuario : this.usuariosEmMemoria) {
                 escritor.write(formatarUsuarioParaCSV(usuario));
@@ -140,7 +132,6 @@ public class UsuarioRepository extends BaseRepository {
 
     private Usuario parseUsuarioDaLinhaCsv(String linha) {
         String[] campos = linha.split(";", -1);
-        // ATUALIZADO: ESPERA 19 CAMPOS
         if (campos.length < 19) {
             System.err.println("Linha CSV inválida (campos: " + campos.length + ", esperado 19): " + linha);
             return null;
@@ -151,7 +142,6 @@ public class UsuarioRepository extends BaseRepository {
             String nome = campos[1];
             String cpf = campos[2];
             String email = campos[3];
-            // campo 4 é Endereço
             String login = campos[5];
             String senha = campos[6];
             Perfil perfil = Perfil.valueOf(campos[7].trim().toUpperCase());
@@ -177,14 +167,12 @@ public class UsuarioRepository extends BaseRepository {
                 }
             }
 
-            // ÍNDICES ATUALIZADOS (de 9 a 18)
             int matricula = Integer.parseInt(campos[9].trim().isEmpty() ? "0" : campos[9].trim());
 
-            // NOVO CAMPO (ÍNDICE 10)
             LocalDate dataAdmissao = null;
             String dataAdmissaoStr = campos[10].trim();
             if (!dataAdmissaoStr.isEmpty() && !dataAdmissaoStr.equalsIgnoreCase("null")) {
-                dataAdmissao = LocalDate.parse(dataAdmissaoStr); // Formato YYYY-MM-DD
+                dataAdmissao = LocalDate.parse(dataAdmissaoStr);
             }
 
             int periodo = Integer.parseInt(campos[11].trim().isEmpty() ? "0" : campos[11].trim());
@@ -200,7 +188,7 @@ public class UsuarioRepository extends BaseRepository {
             }
 
             String departamento = campos[17].trim();
-            String caminhoFoto = campos[18].trim(); // NOVO ÍNDICE 18
+            String caminhoFoto = campos[18].trim();
 
             Usuario usuario = switch (perfil) {
                 case ADMINISTRADOR -> new Administrador.AdministradorBuilder()
@@ -275,7 +263,7 @@ public class UsuarioRepository extends BaseRepository {
 
         if (usuario instanceof Funcionario f) {
             sb.append(f.getMatricula()).append(";");
-            sb.append(f.getDataAdmissao() == null ? "" : f.getDataAdmissao().toString()).append(";"); // NOVO CAMPO
+            sb.append(f.getDataAdmissao() == null ? "" : f.getDataAdmissao().toString()).append(";");
             sb.append(f.getPeriodo()).append(";");
             sb.append(f.getReceita()).append(";");
             sb.append(f.getDespesas()).append(";");

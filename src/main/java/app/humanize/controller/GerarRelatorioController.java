@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter; // For better date formatting
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class GerarRelatorioController {
@@ -54,17 +54,17 @@ public class GerarRelatorioController {
         }
 
         if (tipoCombo != null) {
+            // popula o combobox
             tipoCombo.getItems().setAll(TipoRelatorio.values());
-            // Configura a Célula para exibir o nome traduzido
-            tipoCombo.setCellFactory(lv -> new ListCell<TipoRelatorio>() {
+
+            tipoCombo.setCellFactory(lv -> new ListCell<>() {
                 @Override
                 protected void updateItem(TipoRelatorio item, boolean empty) {
                     super.updateItem(item, empty);
                     setText(empty ? null : getTraducaoTipoRelatorio(item));
                 }
             });
-            // Configura o Botão (o que aparece quando está selecionado)
-            tipoCombo.setButtonCell(new ListCell<TipoRelatorio>() {
+            tipoCombo.setButtonCell(new ListCell<>() {
                 @Override
                 protected void updateItem(TipoRelatorio item, boolean empty) {
                     super.updateItem(item, empty);
@@ -79,7 +79,6 @@ public class GerarRelatorioController {
     private String getTraducaoTipoRelatorio(TipoRelatorio tipo) {
         if (tipo == null) return null;
         String key = "report.type." + tipo.name();
-        // Retorna a tradução se existir, senão o nome do enum
         return bundle.containsKey(key) ? bundle.getString(key) : tipo.name();
     }
 
@@ -107,7 +106,6 @@ public class GerarRelatorioController {
             return;
         }
 
-
         try{
             Relatorio novoRegistro = new Relatorio();
             novoRegistro.setId(Integer.parseInt(lblId.getText()));
@@ -116,7 +114,7 @@ public class GerarRelatorioController {
             novoRegistro.setResponsavel(usuarioLogado);
 
             switch (tipoSelecionado){
-                case LISTA_USUARIOS:
+                case LISTA_USUARIOS, CONTRACHEQUE_GERAL, FINANCEIRO_GERAL:
                     break;
                 default:
                     System.out.println(bundle.getString("log.info.paramsNotImplemented") + tipoSelecionado);

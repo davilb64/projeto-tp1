@@ -10,7 +10,6 @@ public class Candidatura {
 
     //construtor
 
-
     public Candidatura(Candidato candidato, LocalDate dataCandidatura, StatusCandidatura status, Vaga vaga) {
         this.candidato = candidato;
         this.dataCandidatura = dataCandidatura;
@@ -22,7 +21,6 @@ public class Candidatura {
     }
 
     //metodos especiais
-
 
     public Candidato getCandidato() {
         return candidato;
@@ -54,5 +52,10 @@ public class Candidatura {
 
     public void setDataCandidatura(LocalDate dataCandidatura) {
         this.dataCandidatura = dataCandidatura;
+    }
+
+    @Override
+    public String toString() {
+        return this.candidato.getNome();
     }
 }

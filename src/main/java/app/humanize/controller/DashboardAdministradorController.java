@@ -58,13 +58,13 @@ public class DashboardAdministradorController {
         carregarGraficoCandidaturas();
     }
 
-    // Método auxiliar para traduzir StatusCandidatura
+    // traduzir StatusCandidatura
     private String getTraducaoStatus(StatusCandidatura status) {
         String key = "statusCandidatura." + status.name();
         return bundle.containsKey(key) ? bundle.getString(key) : status.name();
     }
 
-    // Método auxiliar para traduzir Perfil
+    // traduzir Perfil
     private String getTraducaoPerfil(Perfil perfil) {
         String key = "perfil." + perfil.name();
         return bundle.containsKey(key) ? bundle.getString(key) : perfil.name();
@@ -117,7 +117,7 @@ public class DashboardAdministradorController {
 
     @FXML public void criarUsuarios() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/CadastroUsuarioAdm.fxml"));
-        loader.setResources(bundle); // Passa o bundle para a próxima tela
+        loader.setResources(bundle);
         Parent root = loader.load();
         Stage stage = new Stage();
         stage.setTitle(bundle.getString("dashboard.window.createUser.title"));

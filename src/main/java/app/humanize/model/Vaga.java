@@ -13,17 +13,20 @@ public class Vaga {
     private String departamento;
     private LocalDate dataVaga;
     private StatusVaga status;
+    private Usuario recrutador;
 
     public Vaga(){}
 
-    public Vaga(String cargo, StatusVaga status, String salario, String requisitos, String departamento){
+    public Vaga(String cargo, StatusVaga status, String salario, String requisitos, String departamento, Usuario recrutador){
         this.id = ++idCounter;
         this.cargo = cargo;
         this.status = status;
         this.salario = salario;
         this.requisitos = requisitos;
         this.departamento = departamento;
+        this.recrutador = recrutador;
     }
+
     public void criar(String cargo, String salario){
         this.id = ++idCounter;
         this.cargo = cargo;
@@ -86,9 +89,10 @@ public class Vaga {
         this.dataVaga = dataVaga;
     }
 
+    public Usuario getRecrutador() { return recrutador; }
 
+    public void setRecrutador(Usuario recrutador) { this.recrutador = recrutador; }
 
-    // toString() define o texto exibido no ChoiceBox
     @Override
     public String toString() {
         return id + " - " + cargo + " - " + status + " - " + salario + " - " + requisitos;

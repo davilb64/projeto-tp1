@@ -52,9 +52,4 @@ public abstract class Usuario extends Pessoa {
     public void setIdiomaPreferencial(String idiomaPreferencial) {
         this.idiomaPreferencial = idiomaPreferencial;
     }
-
-
-    public boolean temPerfil() {
-        return this.perfil != null;
-    }
 }

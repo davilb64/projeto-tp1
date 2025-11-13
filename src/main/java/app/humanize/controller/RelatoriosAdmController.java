@@ -4,13 +4,10 @@ import app.humanize.model.Relatorio;
 import app.humanize.model.TipoRelatorio;
 import app.humanize.model.Usuario;
 import app.humanize.repository.RelatorioRepository;
-import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.formatters.CsvFormatter;
 import app.humanize.service.formatters.IReportFormatter;
 import app.humanize.service.formatters.PdfFormatter;
-import app.humanize.service.relatorios.IGeradorRelatorio;
-import app.humanize.service.relatorios.RelatorioListaUsuarios;
-import app.humanize.service.relatorios.ReportData;
+import app.humanize.service.relatorios.*;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -23,13 +20,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class RelatoriosAdmController {
@@ -41,7 +36,6 @@ public class RelatoriosAdmController {
     @FXML private TableColumn<Relatorio, Usuario> colResponsavel;
 
     private final RelatorioRepository relatorioRepo = RelatorioRepository.getInstance();
-    private final UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
 
     private final IReportFormatter formatadorCsv = new CsvFormatter();
     private final IReportFormatter formatadorPdf = new PdfFormatter();
@@ -57,7 +51,7 @@ public class RelatoriosAdmController {
         colDataGeracao.setCellValueFactory(new PropertyValueFactory<>("dataGeracao"));
         colResponsavel.setCellValueFactory(new PropertyValueFactory<>("responsavel"));
 
-        colResponsavel.setCellFactory(column -> new TableCell<Relatorio, Usuario>() {
+        colResponsavel.setCellFactory(column -> new TableCell<>() {
             @Override
             protected void updateItem(Usuario item, boolean empty) {
                 super.updateItem(item, empty);
@@ -102,16 +96,6 @@ public class RelatoriosAdmController {
         exportarRelatorioSelecionado(formatadorCsv);
     }
 
-    @FXML
-    private void exportarXLS() {
-        mostrarAlerta(
-                bundle.getString("reportsAdmin.alert.notImplemented.title"),
-                bundle.getString("reportsAdmin.alert.notImplemented.headerXLS"),
-                null
-        );
-    }
-
-
     private void exportarRelatorioSelecionado(IReportFormatter formatador) {
         Relatorio registroSelecionado = tblRelatorios.getSelectionModel().getSelectedItem();
         if (registroSelecionado == null) {
@@ -126,22 +110,15 @@ public class RelatoriosAdmController {
         IGeradorRelatorio estrategiaRelatorio;
 
         try {
-            switch (registroSelecionado.getTipoRelatorio()) {
-                case LISTA_USUARIOS:
-                    estrategiaRelatorio = new RelatorioListaUsuarios();
-                    break;
-                default:
-                    throw new IllegalStateException(bundle.getString("reportsAdmin.alert.unsupportedType") + " " + registroSelecionado.getTipoRelatorio());
-            }
+            estrategiaRelatorio = switch (registroSelecionado.getTipoRelatorio()) {
+                case LISTA_USUARIOS -> new RelatorioListaUsuarios();
 
-            if (!estrategiaRelatorio.podeGerar(UserSession.getInstance().getUsuarioLogado())) {
-                mostrarAlerta(
-                        bundle.getString("reportsAdmin.alert.accessDenied.title"),
-                        bundle.getString("reportsAdmin.alert.accessDenied.header"),
-                        null
-                );
-                return;
-            }
+                case CONTRACHEQUE_GERAL ->
+                        new RelatorioContrachequeGeral();
+
+                case FINANCEIRO_GERAL ->
+                        new RelatorioFinanceiroGeral();
+            };
 
             ReportData dados = estrategiaRelatorio.coletarDados();
             byte[] arquivoBytes = formatador.formatar(dados);
@@ -207,7 +184,7 @@ public class RelatoriosAdmController {
         }
 
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle")); // Chave reutilizada
+        confirmacao.setTitle(bundle.getString("userManagement.alert.confirmDeleteTitle"));
         confirmacao.setHeaderText(bundle.getString("reportsAdmin.alert.confirmDelete.header") + " " + relatorioSelecionado.getId());
         confirmacao.setContentText(bundle.getString("reportsAdmin.alert.confirmDelete.content"));
 
@@ -229,7 +206,7 @@ public class RelatoriosAdmController {
     }
 
 
-    private File salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) {
+    private void salvarArquivoFisico(byte[] bytes, String nomeBase, IReportFormatter formatador) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(bundle.getString("reportsAdmin.saveDialog.title"));
         fileChooser.setInitialFileName(nomeBase + formatador.getExtensao());
@@ -250,7 +227,6 @@ public class RelatoriosAdmController {
                 alert.setContentText(file.getAbsolutePath());
                 alert.showAndWait();
 
-                return file;
             } catch (IOException e) {
                 mostrarAlerta(
                         bundle.getString("userRegistration.alert.saveError.title"),
@@ -258,10 +234,7 @@ public class RelatoriosAdmController {
                         e.getMessage()
                 );
                 e.printStackTrace();
-                return null;
             }
-        } else {
-            return null;
         }
     }
 

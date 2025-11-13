@@ -1,5 +1,4 @@
 package app.humanize.service.relatorios;
-// ... (imports)
 
 import app.humanize.model.Perfil;
 import app.humanize.model.Usuario;
@@ -35,8 +34,7 @@ public class RelatorioListaUsuarios implements IGeradorRelatorio {
             ));
         }
 
-        // 4. Retorna o DTO com o título
-        return new ReportData(tituloRelatorio, headers, rows); // <-- Passa o título
+        return new ReportData(tituloRelatorio, headers, rows);
     }
 
     @Override

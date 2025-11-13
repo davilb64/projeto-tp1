@@ -3,11 +3,11 @@ package app.humanize.model;
 import app.humanize.util.EstadosBrasileiros;
 
 public class Endereco {
-    private String logradouro;
-    private int numero;
-    private String bairro;
-    private String cidade;
-    private EstadosBrasileiros estado;
+    private final String logradouro;
+    private final int numero;
+    private final String bairro;
+    private final String cidade;
+    private final EstadosBrasileiros estado;
     private String cep;
 
     //construtores
@@ -72,40 +72,21 @@ private Endereco(EnderecoBuilder builder) {
         return logradouro;
     }
 
-    public void setLogradouro(String logradouro) {
-        this.logradouro = logradouro;
-    }
-
     public int getNumero() {
         return numero;
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
     }
 
     public String getCidade() {
         return cidade;
     }
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
 
     public String getBairro() {
         return bairro;
     }
 
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
     public EstadosBrasileiros getEstado() {
         return estado;
-    }
-
-    public void setEstado(EstadosBrasileiros estado) {
-        this.estado = estado;
     }
 
     public String getCep() {

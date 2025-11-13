@@ -1,16 +1,13 @@
 package app.humanize.controller;
 
 import app.humanize.model.StatusVaga;
+import app.humanize.model.Usuario;
 import app.humanize.model.Vaga;
+import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.VagaRepository;
-import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 public class CriarVagaController {
     @FXML
@@ -20,55 +17,44 @@ public class CriarVagaController {
     @FXML private TextField txtRequisitos;
     @FXML private ChoiceBox<String> choiceStatus;
     @FXML private TextField txtDepartamento;
+    @FXML private ChoiceBox<Usuario> cbRecrutador;
 
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
-    private ResourceBundle bundle;
-    private Vaga vagaParaEditar;
+    private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
-    // Mapa para associar o status traduzido de volta ao Enum
-    private final Map<String, StatusVaga> statusMap = new HashMap<>();
+    private Vaga vagaParaEditar;
 
     @FXML
     public void initialize() {
-        this.bundle = UserSession.getInstance().getBundle();
+        // opções do ChoiceBox
+        choiceStatus.getItems().addAll("ABERTA", "FECHADA");
 
-        // Configurar as opções do ChoiceBox com tradução
-        String statusAberta = bundle.getString("jobStatus.open");
-        String statusFechada = bundle.getString("jobStatus.closed");
-
-        statusMap.put(statusAberta, StatusVaga.ABERTA);
-        statusMap.put(statusFechada, StatusVaga.FECHADA);
-
-        choiceStatus.getItems().addAll(statusAberta, statusFechada);
-
+        cbRecrutador.getItems().addAll(usuarioRepository.getRecrutadores());
         if (vagaParaEditar == null) {
             lblId.setText(String.valueOf(vagaRepository.getProximoId()));
-            choiceStatus.setValue(statusAberta); // Valor padrão para novas vagas
+            choiceStatus.setValue("ABERTA"); // valor padrão
         }
     }
 
     public void prepararParaEdicao(Vaga vaga) {
         this.vagaParaEditar = vaga;
 
-        lblId.setText(String.valueOf(vaga.getId())); // Define o ID existente
+        lblId.setText(String.valueOf(vaga.getId()));
         txtCargo.setText(vaga.getCargo());
         txtSalario.setText(vaga.getSalario());
         txtRequisitos.setText(vaga.getRequisitos());
         txtDepartamento.setText(vaga.getDepartamento());
 
-        // Define o valor traduzido com base no enum
-        String statusKey = (vaga.getStatus() == StatusVaga.ABERTA) ? "jobStatus.open" : "jobStatus.closed";
-        choiceStatus.setValue(bundle.getString(statusKey));
+        if(vaga.getStatus() != null){
+            choiceStatus.setValue(vaga.getStatus().name());
+        }
+        cbRecrutador.setValue(vaga.getRecrutador());
     }
 
     private boolean validarCampos() {
         if (txtCargo.getText().isBlank() || txtRequisitos.getText().isBlank() ||
                 choiceStatus.getValue() == null || txtDepartamento.getText().isBlank()) {
-            mostrarAlerta(
-                    bundle.getString("createJob.alert.requiredFields.title"),
-                    bundle.getString("createJob.alert.requiredFields.header"),
-                    null
-            );
+            mostrarAlerta("Campos Obrigatórios", "Os campos Cargo, Status, Requisitos e Departamento devem ser preenchidos.", null);
             return false;
         }
         return true;
@@ -80,19 +66,13 @@ public class CriarVagaController {
             return;
         }
 
-        // Obtém o Enum correspondente ao texto traduzido selecionado
-        StatusVaga statusSelecionado = statusMap.get(choiceStatus.getValue());
-
         if (vagaParaEditar == null) {
+
             try{
-                Vaga vaga = new Vaga(txtCargo.getText(), statusSelecionado, txtSalario.getText(), txtRequisitos.getText(), txtDepartamento.getText());
+                Vaga vaga = new Vaga(txtCargo.getText(),  StatusVaga.valueOf(choiceStatus.getValue()),  txtSalario.getText(), txtRequisitos.getText(), txtDepartamento.getText(), cbRecrutador.getValue());
                 vagaRepository.escreveVagaNova(vaga);
             }catch (Exception e){
-                mostrarAlerta(
-                        bundle.getString("alert.error.unexpected.title"),
-                        bundle.getString("alert.error.unexpected.header.tryAgain"),
-                        e.getMessage()
-                );
+                mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
             }
 
         } else {
@@ -100,17 +80,15 @@ public class CriarVagaController {
                 vagaParaEditar.setCargo(txtCargo.getText());
                 vagaParaEditar.setRequisitos(txtRequisitos.getText());
                 vagaParaEditar.setSalario(txtSalario.getText());
-                vagaParaEditar.setStatus(statusSelecionado);
+                vagaParaEditar.setStatus(StatusVaga.valueOf(choiceStatus.getValue()));
                 vagaParaEditar.setDepartamento(txtDepartamento.getText());
+                vagaParaEditar.setRecrutador(cbRecrutador.getValue());
 
                 vagaRepository.atualizarVaga();
             }catch (Exception e){
-                mostrarAlerta(
-                        bundle.getString("alert.error.unexpected.title"),
-                        bundle.getString("alert.error.unexpected.header.tryAgain"),
-                        e.getMessage()
-                );
+                mostrarAlerta("Erro inesperado","Tente novamente", e.getMessage());
             }
+
         }
         fecharJanela();
     }
