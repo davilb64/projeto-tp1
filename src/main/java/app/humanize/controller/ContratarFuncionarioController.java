@@ -18,6 +18,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -30,10 +32,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ContratarFuncionarioController {
 
@@ -60,6 +60,8 @@ public class ContratarFuncionarioController {
     @FXML private TextField txtSalario;
     @FXML private TextField txtReceita;
     @FXML private TextField txtDespesas;
+    @FXML private VBox caixaOculta;
+    @FXML private HBox hboxSelecaoCandidato;
 
 
     private Endereco enderecoDoOutroController;
@@ -78,23 +80,14 @@ public class ContratarFuncionarioController {
 
     private ResourceBundle bundle;
 
-    /**
-     * Retorna o caminho absoluto para a pasta de fotos do aplicativo (fora do JAR).
-     * Ex: C:\Users\SeuNome\.humanize-app-data\fotos_perfil
-     */
     private Path getPathParaFotos() {
         String userHome = System.getProperty("user.home");
         return Paths.get(userHome, ".humanize-app-data", "fotos_perfil");
     }
 
-    /**
-     * Copia todas as fotos padrão de /resources/fotos_perfil (de dentro do JAR)
-     * para a pasta de dados externa (user.home), se elas ainda não existirem lá.
-     */
     private void seedDefaultPhotos() {
         Path externalPhotoDir = getPathParaFotos();
 
-        // Lista de todas as suas fotos padrão
         List<String> defaultPhotos = List.of(
                 "2.png", "3.png", "4.png", "5.png", "6.png", "7.png", "8.png",
                 "9.png", "10.png", "12.png", "04935825170.png",
@@ -104,16 +97,13 @@ public class ContratarFuncionarioController {
         for (String photoName : defaultPhotos) {
             File externalFile = externalPhotoDir.resolve(photoName).toFile();
 
-            // Só copia se o arquivo NÃO existir na pasta externa
             if (!externalFile.exists()) {
-                // Caminho DENTRO do JAR (na raiz do 'resources')
                 String resourcePath = "/fotos_perfil/" + photoName;
                 try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
                     if (is == null) {
                         System.err.println("Foto de semeadura não encontrada no JAR: " + resourcePath);
                         continue;
                     }
-                    // Copia do JAR para a pasta externa
                     Files.copy(is, externalFile.toPath());
                 } catch (IOException e) {
                     System.err.println("Falha ao semear foto: " + photoName + " - " + e.getMessage());
@@ -126,13 +116,12 @@ public class ContratarFuncionarioController {
     @FXML
     public void initialize() {
         this.bundle = UserSession.getInstance().getBundle();
+        caixaOculta.setVisible(false);
 
         try {
-            // 1. Cria o diretório externo (ex: C:\Users\Nome\.humanize-app-data\fotos_perfil)
             Path externalPhotoDir = getPathParaFotos();
             Files.createDirectories(externalPhotoDir);
 
-            // 2. Semeia (copia) as fotos padrão do JAR para lá, se necessário
             seedDefaultPhotos();
 
         } catch (IOException e) {
@@ -141,12 +130,15 @@ public class ContratarFuncionarioController {
 
         if (usuarioParaEditar == null) {
             lblId.setText(String.valueOf(usuarioRepository.getProximoId()));
-            imgFotoPerfil.setImage(carregarAvatarLocal()); // Carrega o fallback do JAR
+            imgFotoPerfil.setImage(carregarAvatarLocal());
             dpDataAdmissao.setValue(LocalDate.now());
         }
 
 
-        perfilCombo.getItems().setAll(Perfil.values());
+        perfilCombo.getItems().setAll(Arrays.stream(Perfil.values())
+                        .filter(p -> p != Perfil.ADMINISTRADOR)
+                        .collect(Collectors.toList())
+        );
         regimeCombo.getItems().setAll(Regime.values());
         candidatoCombo.getItems().setAll(canditaturaRepository.getCandidatosAprovados());
 
@@ -155,9 +147,16 @@ public class ContratarFuncionarioController {
         txtSenhaOculta.visibleProperty().bind(btnMostrarSenha.selectedProperty().not());
     }
 
-    /**
-     * Carrega o avatar padrão DE DENTRO do JAR (resources) como um fallback.
-     */
+    public void iniciarComCandidato(Candidato candidato) {
+        if (hboxSelecaoCandidato != null) {
+            hboxSelecaoCandidato.setVisible(false);
+            hboxSelecaoCandidato.setManaged(false);
+        }
+
+        candidatoCombo.setValue(candidato);
+        carregaCandidato();
+    }
+
     private Image carregarAvatarLocal() {
         try (InputStream is = getClass().getResourceAsStream("/fotos_perfil/default_avatar.png")) {
             if (is == null) {
@@ -170,9 +169,10 @@ public class ContratarFuncionarioController {
         }
     }
 
+
+
     @FXML
     private void gerarFotoPokemon() {
-        // ... (método não muda) ...
         btnEscolherFoto.setDisable(true);
         btnGerarPokemon.setDisable(true);
 
@@ -217,7 +217,6 @@ public class ContratarFuncionarioController {
         this.usuarioParaEditar = usuario;
         Funcionario func = (Funcionario) usuario;
 
-        // ... (resto dos setTexts) ...
         lblId.setText(String.valueOf(func.getId()));
         txtNome.setText(func.getNome());
         txtEmail.setText(func.getEmail());
@@ -238,21 +237,19 @@ public class ContratarFuncionarioController {
         txtReceita.setText(String.valueOf(func.getReceita()));
         txtDespesas.setText(String.valueOf(func.getDespesas()));
 
-        // Este caminho agora é o caminho ABSOLUTO para a pasta externa
         this.caminhoFotoAtualSalva = func.getCaminhoFoto();
 
         if (this.caminhoFotoAtualSalva != null && !this.caminhoFotoAtualSalva.isEmpty()) {
             try {
-                // Tenta carregar a foto do caminho EXTERNO
                 File file = new File(this.caminhoFotoAtualSalva);
                 Image foto = new Image(file.toURI().toString());
                 imgFotoPerfil.setImage(foto);
             } catch (Exception e) {
                 System.err.println(bundle.getString("log.error.profilePhotoNotFound") + this.caminhoFotoAtualSalva);
-                imgFotoPerfil.setImage(carregarAvatarLocal()); // Fallback para o JAR
+                imgFotoPerfil.setImage(carregarAvatarLocal());
             }
         } else {
-            imgFotoPerfil.setImage(carregarAvatarLocal()); // Fallback para o JAR
+            imgFotoPerfil.setImage(carregarAvatarLocal());
         }
 
         String promptSenhaEdicao = bundle.getString("userRegistration.prompt.passwordEdit");
@@ -285,7 +282,6 @@ public class ContratarFuncionarioController {
     }
 
     private String getExtensaoArquivo(String nomeArquivo) {
-        // ... (método não muda) ...
         int lastIndex = nomeArquivo.lastIndexOf('.');
         if (lastIndex == -1) {
             return "";
@@ -295,7 +291,6 @@ public class ContratarFuncionarioController {
 
     @FXML
     private void cadastrarEndereco() {
-        // ... (método não muda) ...
         try {
             URL resource = getClass().getResource("/view/CadastroEndereco.fxml");
             if (resource == null) {
@@ -324,7 +319,6 @@ public class ContratarFuncionarioController {
     }
 
     private boolean validarCampos() {
-        // ... (método não muda) ...
         if (txtNome.getText().isBlank() || txtCpf.getText().isBlank() || txtLogin.getText().isBlank() || txtEmail.getText().isBlank()) {
             mostrarAlerta(
                     bundle.getString("userRegistration.alert.validation.requiredFields.title"),
@@ -377,7 +371,7 @@ public class ContratarFuncionarioController {
         if (!validarCampos()) {
             return;
         }
-        // ... (lógica de validação não muda) ...
+
         String senha = txtSenhaOculta.getText();
         String cpf = txtCpf.getText();
         String email = txtEmail.getText();
@@ -417,8 +411,6 @@ public class ContratarFuncionarioController {
             String departamento = txtDepartamento.getText();
             Regime regime = regimeCombo.getValue();
 
-
-            // Pega o diretório EXTERNO (user.home/.humanize-app-data/fotos_perfil)
             Path diretorioFotosExterno = getPathParaFotos();
 
             String nomeBaseArquivo;
@@ -433,18 +425,16 @@ public class ContratarFuncionarioController {
                 Path caminhoDestino = diretorioFotosExterno.resolve(novoNomeArquivo);
 
                 Files.copy(this.arquivoFotoSelecionado.toPath(), caminhoDestino, StandardCopyOption.REPLACE_EXISTING);
-                caminhoFotoFinalParaSalvar = caminhoDestino.toString(); // Salva o caminho absoluto EXTERNO
+                caminhoFotoFinalParaSalvar = caminhoDestino.toString();
 
             } else if (this.bytesFotoPokemon != null) {
                 String novoNomeArquivo = nomeBaseArquivo + ".png";
                 Path caminhoDestino = diretorioFotosExterno.resolve(novoNomeArquivo);
 
                 Files.write(caminhoDestino, this.bytesFotoPokemon);
-                caminhoFotoFinalParaSalvar = caminhoDestino.toString(); // Salva o caminho absoluto EXTERNO
+                caminhoFotoFinalParaSalvar = caminhoDestino.toString();
 
             } else if (caminhoFotoFinalParaSalvar == null || caminhoFotoFinalParaSalvar.isEmpty()) {
-                // Se não há foto selecionada e não havia foto antiga, salva como ""
-                // O repo salvará "" e os leitores usarão o avatarPadrão do JAR.
                 caminhoFotoFinalParaSalvar = "";
             }
 
@@ -453,7 +443,6 @@ public class ContratarFuncionarioController {
                 switch (perfil) {
                     case ADMINISTRADOR -> usuario = new Administrador.AdministradorBuilder()
                             .caminhoFoto(caminhoFotoFinalParaSalvar)
-                            // ... (resto do builder) ...
                             .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -463,7 +452,6 @@ public class ContratarFuncionarioController {
                             .build();
                     case GESTOR -> usuario = new Gestor.GestorBuilder()
                             .caminhoFoto(caminhoFotoFinalParaSalvar)
-                            // ... (resto do builder) ...
                             .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -473,7 +461,6 @@ public class ContratarFuncionarioController {
                             .build();
                     case RECRUTADOR -> usuario = new Recrutador.RecrutadorBuilder()
                             .caminhoFoto(caminhoFotoFinalParaSalvar)
-                            // ... (resto do builder) ...
                             .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -484,7 +471,6 @@ public class ContratarFuncionarioController {
                     default ->
                             usuario = new Funcionario.FuncionarioBuilder()
                                     .caminhoFoto(caminhoFotoFinalParaSalvar)
-                                    // ... (resto do builder) ...
                                     .idiomaPreferencial(UserSession.getInstance().getLocale().toLanguageTag().replace("-", "_"))
                                     .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                                     .login(txtLogin.getText()).senha(hash).perfil(perfil)
@@ -498,7 +484,6 @@ public class ContratarFuncionarioController {
             } else {
                 Funcionario func = (Funcionario) usuarioParaEditar;
                 func.setCaminhoFoto(caminhoFotoFinalParaSalvar);
-                // ... (resto dos 'set') ...
                 func.setNome(txtNome.getText());
                 func.setCpf(cpf);
                 func.setEmail(email);
@@ -559,6 +544,7 @@ public class ContratarFuncionarioController {
         txtEmail.setText(candidatoSelecionado.getEmail());
         txtCpf.setText(candidatoSelecionado.getCpf());
         txtPeriodo.setText(candidatoSelecionado.getDisponibilidade());
+        caixaOculta.setVisible(true);
     }
 
     @FXML

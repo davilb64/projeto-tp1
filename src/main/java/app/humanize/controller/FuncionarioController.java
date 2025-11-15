@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -61,7 +62,10 @@ public class FuncionarioController {
         carregarTabela();
 
         cbPerfil.getItems().clear();
-        cbPerfil.getItems().addAll(Perfil.values());
+        cbPerfil.getItems().setAll(Arrays.stream(Perfil.values())
+                .filter(p -> p != Perfil.ADMINISTRADOR)
+                .collect(Collectors.toList())
+        );
     }
 
     private void carregarTabela(){

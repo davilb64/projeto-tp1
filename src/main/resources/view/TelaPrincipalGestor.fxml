@@ -38,7 +38,7 @@
                             <Cursor fx:constant="HAND" />
                         </cursor>
                     </Button>
-                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="%sidebar.employees">
+                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="%sidebar.employees" textAlignment="CENTER" wrapText="true">
                         <cursor>
                             <Cursor fx:constant="HAND" />
                         </cursor>

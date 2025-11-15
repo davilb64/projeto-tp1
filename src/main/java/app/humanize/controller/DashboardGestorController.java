@@ -1,13 +1,12 @@
 package app.humanize.controller;
 
-import app.humanize.model.Funcionario;
-import app.humanize.model.Regime;
-import app.humanize.model.Usuario;
+import app.humanize.model.*;
 import app.humanize.repository.CandidaturaRepository;
 import app.humanize.repository.EntrevistaRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.VagaRepository;
 import app.humanize.util.UserSession;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,12 +17,15 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
@@ -43,6 +45,10 @@ public class DashboardGestorController {
     public Label lblSolicitacoes;
     public Label lblTotalCandidatos;
     public Label lblVagasAbertas;
+    @FXML private TableView<Candidatura> tblAprovados;
+    @FXML private TableColumn<Candidatura, LocalDate> colDataAprovado;
+    @FXML private TableColumn<Candidatura, String> colCandidatoAprovado;
+    @FXML private TableColumn<Candidatura, Void> colAcaoAprovado;
 
     private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
@@ -66,6 +72,127 @@ public class DashboardGestorController {
         lblSolicitacoes.setText(String.valueOf(entrevistaRepository.buscarCandidatosAprovados().size()));
         carregarGraficoRegime();
         carregarGraficoEvolucao();
+        carregarTabelaAprovados();
+        configurarColunaAcao();
+    }
+
+    private void configurarColunaAcao() {
+        Callback<TableColumn<Candidatura, Void>, TableCell<Candidatura, Void>> cellFactory = param -> {
+            final TableCell<Candidatura, Void> cell = new TableCell<>() {
+
+                private final String contratarText = bundle.containsKey("dashboard.gestor.btn.hire")
+                        ? bundle.getString("dashboard.gestor.btn.hire") : "Contratar";
+                private final String recusarText = bundle.containsKey("dashboard.gestor.btn.reject")
+                        ? bundle.getString("dashboard.gestor.btn.reject") : "Recusar";
+
+                private final Button btnContratar = new Button(contratarText);
+                private final Button btnRecusar = new Button(recusarText);
+                private final VBox pane = new VBox(5, btnContratar, btnRecusar);
+                {
+                    btnContratar.setOnAction(event -> {
+                        Candidatura candidatura = getTableView().getItems().get(getIndex());
+                        try {
+                            handleContratar(candidatura);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            mostrarAlerta("Erro", "Falha ao abrir tela de contratação", e.getMessage());
+                        }
+                    });
+
+                    btnRecusar.setOnAction(event -> {
+                        Candidatura candidatura = getTableView().getItems().get(getIndex());
+                        handleRecusar(candidatura);
+                    });
+
+                    btnContratar.getStyleClass().add("primary-action-button");
+                    btnRecusar.getStyleClass().add("danger-action-button");
+                }
+
+                @Override
+                public void updateItem(Void item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                    } else {
+                        setGraphic(pane);
+                    }
+                }
+            };
+            return cell;
+        };
+
+        colAcaoAprovado.setCellFactory(cellFactory);
+    }
+
+    private void handleContratar(Candidatura candidatura) throws IOException {
+        URL resource = getClass().getResource("/view/ContratarFuncionario.fxml");
+        if (resource == null) {
+            mostrarAlerta(bundle.getString("employeeManagement.alert.fxmlHireNotFound"));
+            return;
+        }
+
+        FXMLLoader loader = new FXMLLoader(resource, bundle);
+        Parent root = loader.load();
+        ContratarFuncionarioController controller = loader.getController();
+        controller.iniciarComCandidato(candidatura.getCandidato());
+        Stage stage = new Stage();
+        stage.setTitle(bundle.getString("employeeHire.title"));
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        carregarTabelaAprovados();
+        lblSolicitacoes.setText(String.valueOf(candidaturaRepository.getCandidaturasAprovadas().size()));
+    }
+
+
+private void mostrarAlerta(String mensagem) {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle(bundle.getString("userManagement.alert.attention"));
+    alert.setHeaderText(null);
+    alert.setContentText(mensagem);
+    alert.showAndWait();
+}
+    private void handleRecusar(Candidatura candidatura) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Recusa");
+        alert.setHeaderText("Recusar " + candidatura.getCandidato().getNome() + "?");
+        alert.setContentText("Esta ação irá alterar o status do candidato para REPROVADO. Deseja continuar?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                candidatura.setStatus(StatusCandidatura.REPROVADO);
+                candidaturaRepository.salvarOuAtualizar(candidatura);
+
+                carregarTabelaAprovados();
+                lblSolicitacoes.setText(String.valueOf(candidaturaRepository.getCandidaturasAprovadas().size()));
+
+            } catch (IOException e) {
+                mostrarAlerta("Erro", "Erro ao salvar alteração", e.getMessage());
+            }
+        }
+    }
+
+    private void mostrarAlerta(String titulo, String cabecalho, String conteudo) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo);
+        alert.showAndWait();
+    }
+
+    private void carregarTabelaAprovados() {
+        colDataAprovado.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("dataCandidatura"));
+
+        colCandidatoAprovado.setCellValueFactory(cellData -> {
+            Candidato candidato = cellData.getValue().getCandidato();
+            return new SimpleStringProperty(candidato.getNome());
+        });
+
+        List<Candidatura> aprovados = candidaturaRepository.getCandidaturasAprovadas();
+
+        tblAprovados.setItems(FXCollections.observableArrayList(aprovados));
     }
 
     private List<LocalDate> getDatasContratacao() {

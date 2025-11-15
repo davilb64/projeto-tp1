@@ -26,6 +26,16 @@ public class CandidaturaRepository extends BaseRepository {
         return new ArrayList<>(candidaturasEmMemoria);
     }
 
+    public List<Candidatura> getCandidaturasAprovadas() {
+        List<Candidatura> candidaturas = new ArrayList<>();
+        for (Candidatura candidatura: candidaturasEmMemoria) {
+            if (candidatura.getStatus() == StatusCandidatura.APROVADO){
+                candidaturas.add(candidatura);
+            }
+        }
+        return candidaturas;
+    }
+
     public List<Candidatura> getCandidaturasEmAnalise() {
         List<Candidatura> candidaturas = new ArrayList<>();
         for(Candidatura candidatura : candidaturasEmMemoria) {

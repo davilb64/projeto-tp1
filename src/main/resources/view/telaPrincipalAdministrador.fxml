@@ -35,7 +35,7 @@
                     <Button fx:id="btnRelatorios" maxWidth="1.7976931348623157E308" onAction="#showRelatorios" styleClass="buttonLateral" text="%sidebar.reports" />
                     <Button fx:id="btnVagas" maxWidth="1.7976931348623157E308" onAction="#showVagas" styleClass="buttonLateral" text="%sidebar.vacancies" />
                     <Button fx:id="btnFinanceiro" maxWidth="1.7976931348623157E308" onAction="#showFinanceiro" styleClass="buttonLateral" text="%sidebar.finance" />
-                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="%sidebar.employees" />
+                    <Button fx:id="btnFuncionarios" maxWidth="1.7976931348623157E308" onAction="#showFuncionarios" styleClass="buttonLateral" text="%sidebar.employees" textAlignment="CENTER" wrapText="true" />
                     <Button fx:id="btnPerfil" maxWidth="1.7976931348623157E308" onAction="#showPerfil" styleClass="buttonLateral" text="%sidebar.profile" />
 
                     <Button fx:id="btnConfig" maxWidth="1.7976931348623157E308" onAction="#showConfiguracoes" styleClass="buttonLateral" text="%sidebar.settings">
