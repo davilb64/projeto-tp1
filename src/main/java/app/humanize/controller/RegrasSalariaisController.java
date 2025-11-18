@@ -2,6 +2,7 @@ package app.humanize.controller;
 
 import app.humanize.model.RegraSalarial;
 import app.humanize.repository.SalarioRepository;
+import app.humanize.repository.UsuarioRepository;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -42,6 +43,7 @@ public class RegrasSalariaisController {
     private final ObservableList<String> niveisValidos = FXCollections.observableArrayList();
     private final ObservableList<String> beneficiosValidos = FXCollections.observableArrayList();
     private final Map<String, String> beneficioMap = new HashMap<>();
+    private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
 
     private final ObservableList<RegraSalarial> regrasList = FXCollections.observableArrayList();
     private ResourceBundle bundle;
@@ -194,7 +196,8 @@ public class RegrasSalariaisController {
 
 
     private void carregarCargosValidos() {
-        List<String> cargosFixos = List.of("Analista de RH", "Recrutador Pleno", "Gerente de Contas", "Diretor");
+        List<String> cargos = usuarioRepository.getTodosCargos();
+        List<String> cargosFixos = List.of(cargos.toArray(new String[0]));
 
         cargosValidos.setAll(cargosFixos.stream()
                 .sorted()

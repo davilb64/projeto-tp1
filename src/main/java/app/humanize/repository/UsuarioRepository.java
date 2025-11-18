@@ -27,6 +27,14 @@ public class UsuarioRepository extends BaseRepository {
     public List<Usuario> getTodosUsuarios() {
         return new ArrayList<>(this.usuariosEmMemoria);
     }
+    public List<String> getTodosCargos(){
+        List<String> cargos = new ArrayList<>();
+        for (Usuario usuario : this.usuariosEmMemoria){
+            Funcionario funcionario = (Funcionario) usuario;
+            cargos.add(funcionario.getCargo());
+        }
+        return cargos;
+    }
     public List<Usuario> getRecrutadores() {
         List<Usuario> recrutadores = new ArrayList<>();
         for(Usuario usuario : this.usuariosEmMemoria) {
