@@ -80,15 +80,6 @@
 
             <Label styleClass="filter-label" text="%userRegistration.label.regime" GridPane.halignment="RIGHT" GridPane.rowIndex="13" />
             <ComboBox fx:id="regimeCombo" maxWidth="1.7976931348623157E308" promptText="%userRegistration.prompt.regime" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-
-            <Label styleClass="filter-label" text="%userRegistration.label.salary" GridPane.halignment="RIGHT" GridPane.rowIndex="14" />
-            <TextField fx:id="txtSalario" promptText="%userRegistration.prompt.salary" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-
-            <Label styleClass="filter-label" text="%userRegistration.label.revenue" GridPane.halignment="RIGHT" GridPane.rowIndex="15" />
-            <TextField fx:id="txtReceita" promptText="%userRegistration.prompt.revenue" GridPane.columnIndex="1" GridPane.rowIndex="15" />
-
-            <Label styleClass="filter-label" text="%userRegistration.label.expenses" GridPane.halignment="RIGHT" GridPane.rowIndex="16" />
-            <TextField fx:id="txtDespesas" promptText="%userRegistration.prompt.expenses" GridPane.columnIndex="1" GridPane.rowIndex="16" />
          <rowConstraints>
             <RowConstraints />
             <RowConstraints />
