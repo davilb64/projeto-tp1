@@ -5,6 +5,8 @@ import app.humanize.model.Funcionario;
 import app.humanize.model.Usuario;
 import app.humanize.repository.ContrachequeRepository;
 import app.humanize.repository.UsuarioRepository;
+import app.humanize.repository.FolhaPagRepository;
+import app.humanize.model.FolhaPag;
 import app.humanize.service.formatters.IReportFormatter;
 import app.humanize.service.formatters.PdfFormatter;
 import app.humanize.service.relatorios.ReportData;
@@ -44,6 +46,8 @@ public class ContraChequeController {
 
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final ContrachequeRepository contraChequeRepository = ContrachequeRepository.getInstance();
+    private final FolhaPagRepository folhaPagRepository = FolhaPagRepository.getInstance();
+
     private ResourceBundle bundle;
 
     private final ObservableList<Funcionario> listaFuncionarios = FXCollections.observableArrayList();
@@ -60,7 +64,6 @@ public class ContraChequeController {
         carregarFuncionariosComboBox();
         configurarListenersEBindings();
 
-        // Configura os botões de ação
         btnBuscar.setOnAction(e -> buscarContraCheques());
         btnImprimir.setOnAction(e -> imprimirSelecionado());
         btnExportarTabela.setOnAction(e -> exportarTabela());
@@ -72,7 +75,6 @@ public class ContraChequeController {
         colunaDescon.setCellValueFactory(new PropertyValueFactory<>("totalDescontos"));
         colunaSald.setCellValueFactory(new PropertyValueFactory<>("saldo"));
 
-        // Formata as colunas de moeda
         formatarColunaMoeda(colunaProventos);
         formatarColunaMoeda(colunaDescon);
         formatarColunaMoeda(colunaSald);
@@ -84,7 +86,7 @@ public class ContraChequeController {
         List<Funcionario> funcionarios = usuarioRepository.getTodosUsuarios().stream()
                 .filter(usuario -> usuario instanceof Funcionario)
                 .map(usuario -> (Funcionario) usuario)
-                .sorted(Comparator.comparing(Usuario::getNome)) // Ordena por nome
+                .sorted(Comparator.comparing(Usuario::getNome))
                 .toList();
 
         listaFuncionarios.addAll(funcionarios);
@@ -108,12 +110,13 @@ public class ContraChequeController {
     }
 
     private void configurarListenersEBindings() {
-        // Listener para o ComboBox
         cbFuncionario.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, func) -> {
             if (func != null) {
                 txtCargo.setText(func.getCargo());
                 txtDepartamento.setText(func.getDepartamento());
                 tabelaContracheque.getItems().clear();
+
+                buscarDadosFolhaPorNome(func.getNome());
             } else {
                 txtCargo.clear();
                 txtDepartamento.clear();
@@ -121,12 +124,39 @@ public class ContraChequeController {
             }
         });
 
-        // Binds dos botões
         btnBuscar.disableProperty().bind(cbFuncionario.getSelectionModel().selectedItemProperty().isNull());
         btnImprimir.disableProperty().bind(tabelaContracheque.getSelectionModel().selectedItemProperty().isNull());
         btnExportarTabela.disableProperty().bind(
                 Bindings.isEmpty(tabelaContracheque.getItems())
         );
+    }
+
+
+    private void buscarDadosFolhaPorNome(String nomeFuncionario) {
+        try {
+            List<FolhaPag> folhas = folhaPagRepository.carregarTodasFolhas();
+            List<FolhaPag> folhasDoFuncionario = folhas.stream()
+                    .filter(folha -> folha.getNome().equalsIgnoreCase(nomeFuncionario))
+                    .toList();
+
+            ObservableList<ContraCheque> contraCheques = FXCollections.observableArrayList();
+
+            for (FolhaPag folha : folhasDoFuncionario) {
+                ContraCheque contraCheque = new ContraCheque();
+                contraCheque.setNomeFuncionario(folha.getNome());
+                contraCheque.setDataEmissao(folha.getData());
+                contraCheque.setTotalProventos(folha.getSalarioBase());
+                contraCheque.setTotalDescontos(folha.getDescontos());
+                contraCheque.setSaldo(folha.getSalarioLiquido());
+
+                contraCheques.add(contraCheque);
+            }
+
+            tabelaContracheque.setItems(contraCheques);
+
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar dados da folha: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -141,23 +171,11 @@ public class ContraChequeController {
             return;
         }
 
-        carregarContraCheques(funcionario.getNome());
+        // AGORA USA A BUSCA AUTOMÁTICA DA FOLHA
+        buscarDadosFolhaPorNome(funcionario.getNome());
     }
 
-    private void carregarContraCheques(String nomeFuncionario) {
-        List<ContraCheque> contraChequesDoFuncionario = contraChequeRepository.carregarContraChequesPorFuncionario(nomeFuncionario);
-        ObservableList<ContraCheque> dados = FXCollections.observableArrayList(contraChequesDoFuncionario);
-        tabelaContracheque.setItems(dados);
-
-        if (contraChequesDoFuncionario.isEmpty()) {
-            mostrarAlerta(
-                    bundle.getString("payslip.alert.noPayslips.title"),
-                    bundle.getString("payslip.alert.noPayslips.content") + nomeFuncionario,
-                    Alert.AlertType.INFORMATION
-            );
-        }
-    }
-
+    // O resto do código permanece igual...
     @FXML
     private void imprimirSelecionado() {
         ContraCheque cheque = tabelaContracheque.getSelectionModel().getSelectedItem();
