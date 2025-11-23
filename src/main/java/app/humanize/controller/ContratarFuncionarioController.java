@@ -58,9 +58,6 @@ public class ContratarFuncionarioController {
     @FXML private TextField txtCargo;
     @FXML private TextField txtDepartamento;
     @FXML private ComboBox<Regime> regimeCombo;
-    @FXML private TextField txtSalario;
-    @FXML private TextField txtReceita;
-    @FXML private TextField txtDespesas;
     @FXML private VBox caixaOculta;
     @FXML private HBox hboxSelecaoCandidato;
 
@@ -236,9 +233,6 @@ public class ContratarFuncionarioController {
         txtCargo.setText(func.getCargo());
         txtDepartamento.setText(func.getDepartamento());
         regimeCombo.setValue(func.getRegime());
-        txtSalario.setText(String.valueOf(func.getSalario()));
-        txtReceita.setText(String.valueOf(func.getReceita()));
-        txtDespesas.setText(String.valueOf(func.getDespesas()));
 
         this.caminhoFotoAtualSalva = func.getCaminhoFoto();
 
@@ -407,9 +401,6 @@ public class ContratarFuncionarioController {
                         : LocalDate.now();
             }
             int periodo = Integer.parseInt(txtPeriodo.getText().isBlank() ? "0" : txtPeriodo.getText());
-            double salario = Double.parseDouble(txtSalario.getText().isBlank() ? "0.0" : txtSalario.getText());
-            double receita = Double.parseDouble(txtReceita.getText().isBlank() ? "0.0" : txtReceita.getText());
-            double despesas = Double.parseDouble(txtDespesas.getText().isBlank() ? "0.0" : txtDespesas.getText());
             String cargo = txtCargo.getText();
             String departamento = txtDepartamento.getText();
             Regime regime = regimeCombo.getValue();
@@ -450,7 +441,6 @@ public class ContratarFuncionarioController {
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
                             .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
-                            .receita(receita).despesas(despesas).salario(salario)
                             .cargo(cargo).regime(regime)
                             .build();
                     case GESTOR -> usuario = new Gestor.GestorBuilder()
@@ -459,7 +449,6 @@ public class ContratarFuncionarioController {
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
                             .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
-                            .receita(receita).despesas(despesas).salario(salario)
                             .cargo(cargo).regime(regime)
                             .build();
                     case RECRUTADOR -> usuario = new Recrutador.RecrutadorBuilder()
@@ -468,7 +457,6 @@ public class ContratarFuncionarioController {
                             .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                             .login(txtLogin.getText()).senha(hash).perfil(perfil)
                             .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
-                            .receita(receita).despesas(despesas).salario(salario)
                             .cargo(cargo).regime(regime)
                             .build();
                     default ->
@@ -478,7 +466,6 @@ public class ContratarFuncionarioController {
                                     .nome(txtNome.getText()).cpf(cpf).email(email).endereco(enderecoDoOutroController)
                                     .login(txtLogin.getText()).senha(hash).perfil(perfil)
                                     .matricula(matricula).dataAdmissao(dataAdmissao).periodo(periodo).departamento(departamento)
-                                    .receita(receita).despesas(despesas).salario(salario)
                                     .cargo(cargo).regime(regime)
                                     .build();
                 }
@@ -499,9 +486,6 @@ public class ContratarFuncionarioController {
                 func.setPeriodo(periodo);
                 func.setCargo(cargo);
                 func.setDepartamento(departamento);
-                func.setSalario(salario);
-                func.setReceita(receita);
-                func.setDespesas(despesas);
                 func.setRegime(regime);
 
                 usuarioRepository.atualizarUsuario(func);

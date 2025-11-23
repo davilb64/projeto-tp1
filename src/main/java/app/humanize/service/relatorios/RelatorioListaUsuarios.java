@@ -9,13 +9,6 @@ import java.util.List;
 
 public class RelatorioListaUsuarios implements IGeradorRelatorio {
 
-    private final UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
-
-    @Override
-    public String getNome() {
-        return "Lista Completa de Usuários";
-    }
-
     @Override
     public ReportData coletarDados() {
         String tituloRelatorio = "Lista Completa de Usuários";
@@ -36,6 +29,15 @@ public class RelatorioListaUsuarios implements IGeradorRelatorio {
 
         return new ReportData(tituloRelatorio, headers, rows);
     }
+
+    private final UsuarioRepository usuarioRepo = UsuarioRepository.getInstance();
+
+    @Override
+    public String getNome() {
+        return "Lista Completa de Usuários";
+    }
+
+
 
     @Override
     public boolean podeGerar(Usuario usuarioLogado) {

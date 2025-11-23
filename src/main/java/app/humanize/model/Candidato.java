@@ -4,6 +4,17 @@ import java.time.LocalDate;
 
 public class Candidato extends Pessoa{
     private String formacao;
+
+    //Métodos Especiais
+    public String getFormacao() {
+        return formacao;
+    }
+    public void setFormacao(String formacao) {
+        this.formacao = formacao;
+    }
+
+
+
     private String experiencia;
     private double pretencaoSalarial;
     private String disponibilidade;
@@ -110,13 +121,6 @@ public class Candidato extends Pessoa{
         this.experiencia = experiencia;
     }
 
-    public String getFormacao() {
-        return formacao;
-    }
-
-    public void setFormacao(String formacao) {
-        this.formacao = formacao;
-    }
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;

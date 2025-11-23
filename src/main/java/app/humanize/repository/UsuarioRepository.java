@@ -15,6 +15,40 @@ public class UsuarioRepository extends BaseRepository {
     private static final String NOME_ARQUIVO = "usuarios.csv";
     private final List<Usuario> usuariosEmMemoria;
 
+    private void carregarUsuariosDoCSV() {
+        File arquivoDeDestino = getArquivoDePersistencia(NOME_ARQUIVO);
+        /*
+        .
+        .
+        .
+         */
+
+
+        if (!arquivoDeDestino.exists()) {
+            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
+            try {
+                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivoDeDestino);
+            } catch (IOException e) {
+                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivoDeDestino))) {
+            leitor.readLine();
+            String linha;
+            while ((linha = leitor.readLine()) != null) {
+                Usuario usuario = parseUsuarioDaLinhaCsv(linha);
+                if (usuario != null) {
+                    this.usuariosEmMemoria.add(usuario);
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao carregar usuários do arquivo CSV: " + e.getMessage());
+        }
+    }
+
     UsuarioRepository() {
         this.usuariosEmMemoria = new ArrayList<>();
         this.carregarUsuariosDoCSV();
@@ -100,33 +134,7 @@ public class UsuarioRepository extends BaseRepository {
                 + 1;
     }
 
-    private void carregarUsuariosDoCSV() {
-        File arquivoDeDestino = getArquivoDePersistencia(NOME_ARQUIVO);
 
-        if (!arquivoDeDestino.exists()) {
-            System.out.println("Arquivo " + NOME_ARQUIVO + " não encontrado. Copiando arquivo padrão...");
-            try {
-                copiarArquivoDefaultDeResources(NOME_ARQUIVO, arquivoDeDestino);
-            } catch (IOException e) {
-                System.err.println("!!! FALHA CRÍTICA AO COPIAR ARQUIVO PADRÃO: " + NOME_ARQUIVO);
-                e.printStackTrace();
-                return;
-            }
-        }
-
-        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivoDeDestino))) {
-            leitor.readLine();
-            String linha;
-            while ((linha = leitor.readLine()) != null) {
-                Usuario usuario = parseUsuarioDaLinhaCsv(linha);
-                if (usuario != null) {
-                    this.usuariosEmMemoria.add(usuario);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Erro ao carregar usuários do arquivo CSV: " + e.getMessage());
-        }
-    }
 
     private void persistirAlteracoesNoCSV() throws IOException {
         File arquivo = getArquivoDePersistencia(NOME_ARQUIVO);

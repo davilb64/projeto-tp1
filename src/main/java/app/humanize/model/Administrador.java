@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class Administrador extends Funcionario {
 
+    //sem atributos
+
     private Administrador(AdministradorBuilder builder) {
         super(
                 builder.idiomaPreferencial, builder.nome, builder.cpf, builder.endereco, builder.email,
