@@ -222,9 +222,9 @@ public class CadastroUsuarioAdmController {
         txtCargo.setText(func.getCargo());
         txtDepartamento.setText(func.getDepartamento());
         regimeCombo.setValue(func.getRegime());
-        txtSalario.setText(String.valueOf(func.getSalario()));
-        txtReceita.setText(String.valueOf(func.getReceita()));
-        txtDespesas.setText(String.valueOf(func.getDespesas()));
+//        txtSalario.setText(String.valueOf(func.getSalario()));
+//        txtReceita.setText(String.valueOf(func.getReceita()));
+//        txtDespesas.setText(String.valueOf(func.getDespesas()));
 
         this.caminhoFotoAtualSalva = func.getCaminhoFoto();
 
@@ -392,7 +392,8 @@ public class CadastroUsuarioAdmController {
                         : LocalDate.now();
             }
             int periodo = Integer.parseInt(txtPeriodo.getText().isBlank() ? "0" : txtPeriodo.getText());
-            double salario = Double.parseDouble(txtSalario.getText().isBlank() ? "0.0" : txtSalario.getText());
+            //double salario = Double.parseDouble(txtSalario.getText().isBlank() ? "0.0" : txtSalario.getText());
+            double salario = 0;
             double receita = Double.parseDouble(txtReceita.getText().isBlank() ? "0.0" : txtReceita.getText());
             double despesas = Double.parseDouble(txtDespesas.getText().isBlank() ? "0.0" : txtDespesas.getText());
             String cargo = txtCargo.getText();

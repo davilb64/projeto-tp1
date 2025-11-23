@@ -56,6 +56,16 @@ public class CandidaturaRepository extends BaseRepository {
         return candidatos;
     }
 
+    public Integer getIdVagaDoCandidatoAprovado(Candidato aprovado) {
+        for (Candidatura candidatura: candidaturasEmMemoria) {
+            if (candidatura.getStatus() == StatusCandidatura.APROVADO &&
+                candidatura.getCandidato().getId() == aprovado.getId()) {
+                return candidatura.getVaga().getId();
+            }
+        }
+        return null;
+    }
+
     public List<Candidatura> getCandidaturasPendentePorVaga(Vaga vaga) {
         List<Candidatura> candidaturas = new ArrayList<>();
         for(Candidatura candidatura : candidaturasEmMemoria) {

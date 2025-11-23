@@ -6,6 +6,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class VagaRepository extends BaseRepository {
 
@@ -47,6 +48,17 @@ public class VagaRepository extends BaseRepository {
             }
         }
         return vagasAbertas;
+    }
+
+    public Vaga getVagasPorId(Integer id) {
+        if(id == null) return null;
+
+        for (Vaga vaga : this.vagaEmMemoria) {
+            if (vaga.getId() == id) {
+                return vaga;
+            }
+        }
+        return null;
     }
 
     public List<Vaga> getVagasAbertasPorRecrutador(Usuario recrutador) {
@@ -174,5 +186,21 @@ public class VagaRepository extends BaseRepository {
 
     public void atualizarVaga() throws IOException {
         persistirAlteracoesNoCSV();
+    }
+
+    public void atualizarVaga(Vaga vagaAtualizada) throws IOException {
+        Vaga vagaAntiga = getVagasPorId(vagaAtualizada.getId());
+
+        if (vagaAntiga != null) {
+            int index = this.vagaEmMemoria.indexOf(vagaAntiga);
+            if (index != -1) {
+                this.vagaEmMemoria.set(index, vagaAtualizada);
+                persistirAlteracoesNoCSV();
+            } else {
+                throw new IOException("Erro interno: Vaga encontrada mas índice não localizado.");
+            }
+        } else {
+            throw new IOException("Vaga com ID " + vagaAtualizada.getId() + " não encontrada para atualizar.");
+        }
     }
 }

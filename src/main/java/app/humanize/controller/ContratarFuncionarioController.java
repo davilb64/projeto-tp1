@@ -6,6 +6,7 @@ import app.humanize.exceptions.SenhaInvalidaException;
 import app.humanize.model.*;
 import app.humanize.repository.CandidaturaRepository;
 import app.humanize.repository.UsuarioRepository;
+import app.humanize.repository.VagaRepository;
 import app.humanize.service.validacoes.ValidaCpf;
 import app.humanize.service.validacoes.ValidaEmail;
 import app.humanize.service.validacoes.ValidaSenha;
@@ -67,10 +68,12 @@ public class ContratarFuncionarioController {
     private Endereco enderecoDoOutroController;
     private final UsuarioRepository usuarioRepository = UsuarioRepository.getInstance();
     private final CandidaturaRepository canditaturaRepository = CandidaturaRepository.getInstance();
+    private final VagaRepository vagaRepository = VagaRepository.getInstance();
     private final ValidaCpf validaCpf = new ValidaCpf();
     private final ValidaSenha validaSenha = new ValidaSenha();
     private final ValidaEmail validaEmail = new ValidaEmail();
     private Usuario usuarioParaEditar;
+    private Integer idVaga;
 
     private String caminhoFotoAtualSalva;
     private File arquivoFotoSelecionado = null;
@@ -503,10 +506,14 @@ public class ContratarFuncionarioController {
 
                 usuarioRepository.atualizarUsuario(func);
             }
+            Vaga vagaParaAtualizar = vagaRepository.getVagasPorId(idVaga);
+            if (vagaParaAtualizar != null) {
+                vagaParaAtualizar.setStatus(StatusVaga.FECHADA);
+                vagaRepository.atualizarVaga(vagaParaAtualizar);
+            }
             Candidato candidato = candidatoCombo.getSelectionModel().getSelectedItem();
             canditaturaRepository.removerPorCandidato(candidato);
             fecharJanela();
-
         } catch (CpfInvalidoException | SenhaInvalidaException | EmailInvalidoException | NumberFormatException e) {
             mostrarAlerta(
                     bundle.getString("userRegistration.alert.validation.error.title"),
@@ -545,6 +552,7 @@ public class ContratarFuncionarioController {
         txtCpf.setText(candidatoSelecionado.getCpf());
         txtPeriodo.setText(candidatoSelecionado.getDisponibilidade());
         caixaOculta.setVisible(true);
+        idVaga = canditaturaRepository.getIdVagaDoCandidatoAprovado(candidatoSelecionado);
     }
 
     @FXML
