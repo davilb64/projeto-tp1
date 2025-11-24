@@ -1,9 +1,9 @@
 CPF_Candidato;Nome_Candidato;Vaga_ID;Cargo;Data;Status
-98790174046;Davizera;5;Advogado;2025-11-11;PENDENTE
-08854612073;Vinicius Ruela;3;treinador de ia;2025-11-11;EM_ANALISE
-08854612073;Vinicius Ruela;2;Jogador de LoL;2025-11-11;PENDENTE
-54252842093;Junior;2;Jogador de LoL;2025-11-12;APROVADO
+98790174046;Davi Brito;5;Consultor Jurídico;2025-11-11;PENDENTE
+8854612073;Vinicius Ruela;3;Cientista de Dados;2025-11-11;EM_ANALISE
+8854612073;Vinicius Ruela;2;Desenvolvedor Backend Java;2025-11-11;PENDENTE
+54252842093;Junior Alves;2;Desenvolvedor Backend Java;2025-11-12;APROVADO
 12345678901;Ana Silva;8;Analista de Marketing Digital;2025-11-12;EM_ANALISE
 98765432109;Lucas Mendes;9;Gerente de Projetos;2025-11-13;PENDENTE
 45678912301;Mariana Costa;7;Designer UI/UX;2025-11-14;EM_ANALISE
-33322211100;Pedro Henrique;4;Faxineiro;2025-11-14;REPROVADO
+33322211100;Pedro Henrique;4;Auxiliar de Serviços Gerais;2025-11-14;REPROVADO

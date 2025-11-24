@@ -1,11 +1,9 @@
-idContratacao;DataContratacao;RegimeContratacao;Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;idVaga;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;
-1;2025-10-31;CLT;Rian;08602279108;rian@gmail;61998580165;UNB;aa;1600.0;2;Técnico TI;1000;ABERTA;python;TI;2025-10-15;
-2;2025-11-03;PJ;Roberta;84028530059;lol@gmail.com;61998565655;UNB;sempre;2500.0;1;Auxiliar adm;50000;ABERTA;WORD E EXCEL;Administrativo;2025-10-10;
-3;2025-10-31;PJ;Roberta;84028530059;lol@gmail.com;61998565655;UNB;sempre;2500.0;2;Técnico TI;1000;ABERTA;python;TI;2025-10-15;
-4;2025-10-01;CLT;Roberta;84028530059;lol@gmail.com;61998565655;UNB;sempre;2500.0;1;Auxiliar adm;50000;ABERTA;WORD E EXCEL;Administrativo;2025-10-10;
-5;2025-10-27;CLT;Rian;08602279108;rian@gmail;61998580165;UNB;aa;1600.0;2;Técnico TI;1000;ABERTA;python;TI;2025-10-15;
-6;2025-10-01;clt;Teste;Teste;Teste;teste;teste;teste;1000.0;1;Limpador de calha;2;ABERTA;ser lindo;Limpeza;2025-09-30;
-7;2025-10-28;CLT;Teste;Teste;Teste;teste;teste;teste;1000.0;1;Limpador de calha;2;ABERTA;ser lindo;Limpeza;2025-09-30;
-8;2025-11-05;CLT;Carlos Lima;11122233301;carlos.lima@gmail.com;11987654321;Direito PUC-SP;Integral;10000.0;5;Advogado;10000;CONTRATADO;OAB Ativa;Jurídico;2025-11-01;
-9;2025-11-10;PJ;Fernanda Dias;22233344402;fer.dias@outlook.com;61999887766;Publicidade;Integral;8000.0;3;treinador de ia;8000;CONTRATADO;Ingles Fluente;T.I;2025-10-20;
-10;2025-11-12;CLT;Junior;54252842093;Junior@outlook.com;61991234567;ADS Estácio;Integral;45000.0;2;Jogador de LoL;10000;CONTRATADO;Ser Nerd;e-sports;2025-10-10;
+idContratacao;DataContratacao;RegimeContratacao;Nome;CPF;Email;Telefone;Formacao;Disponibilidade;Pretencao;idVaga;Cargo;Salario;Status;Requisitos;Departamento;DataVaga;Unnamed: 17
+1;2025-10-31;CLT;Rian;08602279108;rian@gmail;61998580165;UNB;aa;1600.0;2;Desenvolvedor Backend Java;10000.00;ABERTA;Java, Spring Boot, Microservices;Tecnologia;2025-10-15;
+2;2025-11-03;PJ;Roberta;84028530059;lol@gmail.com;61998565655;UNB;sempre;2500.0;1;Auxiliar de Manutenção;1800.00;ABERTA;Ensino Médio Completo, Experiência em reparos;Manutenção;2025-10-10;
+3;2025-10-31;PJ;Roberta;84028530059;lol@gmail.com;61998565655;UNB;sempre;2500.0;2;Desenvolvedor Backend Java;10000.00;ABERTA;Java, Spring Boot, Microservices;Tecnologia;2025-10-15;
+4;2025-10-01;CLT;Roberta;84028530059;lol@gmail.com;61998565655;UNB;sempre;2500.0;1;Auxiliar de Manutenção;1800.00;ABERTA;Ensino Médio Completo, Experiência em reparos;Manutenção;2025-10-10;
+5;2025-10-27;CLT;Rian;08602279108;rian@gmail;61998580165;UNB;aa;1600.0;2;Desenvolvedor Backend Java;10000.00;ABERTA;Java, Spring Boot, Microservices;Tecnologia;2025-10-15;
+8;2025-11-05;CLT;Carlos Lima;11122233301;carlos.lima@gmail.com;11987654321;Direito PUC-SP;Integral;10000.0;5;Consultor Jurídico;10000.00;CONTRATADO;OAB Ativa, Experiência em Direito Empresarial;Jurídico;2025-11-01;
+9;2025-11-10;PJ;Fernanda Dias;22233344402;fer.dias@outlook.com;61999887766;Publicidade;Integral;8000.0;3;Cientista de Dados;9500.00;CONTRATADO;Python, Machine Learning, SQL, Inglês Avançado;Tecnologia;2025-10-20;
+10;2025-11-12;CLT;Junior Alves;54252842093;Junior@outlook.com;61991234567;Análise e Desenvolvimento de Sistemas - Estácio;Integral;45000.0;2;Desenvolvedor Backend Java;10000.00;CONTRATADO;Java, Spring Boot, Microservices;Tecnologia;2025-10-10;

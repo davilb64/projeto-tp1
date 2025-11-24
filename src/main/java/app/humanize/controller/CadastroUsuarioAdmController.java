@@ -159,6 +159,7 @@ public class CadastroUsuarioAdmController {
         btnEscolherFoto.setDisable(true);
         btnGerarPokemon.setDisable(true);
 
+        //task pra gerar em segundo plano
         Task<byte[]> loadPokemonTask = new Task<>() {
             @Override
             protected byte[] call() throws Exception {
@@ -166,7 +167,7 @@ public class CadastroUsuarioAdmController {
                     Random random = new Random();
                     int id = random.nextInt(1000) + 1;
                     String spriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png";
-
+                    //download da imagem
                     InputStream in = new URL(spriteUrl).openStream();
                     byte[] imageBytes = in.readAllBytes();
                     in.close();
@@ -178,9 +179,11 @@ public class CadastroUsuarioAdmController {
             }
         };
 
+        //atualiza a interface
         loadPokemonTask.setOnSucceeded(event -> {
             this.bytesFotoPokemon = loadPokemonTask.getValue();
             this.arquivoFotoSelecionado = null;
+            //atualiza a foto
             imgFotoPerfil.setImage(new Image(new ByteArrayInputStream(this.bytesFotoPokemon)));
             btnEscolherFoto.setDisable(false);
             btnGerarPokemon.setDisable(false);
