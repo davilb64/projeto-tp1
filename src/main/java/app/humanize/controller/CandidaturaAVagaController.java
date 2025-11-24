@@ -2,11 +2,14 @@ package app.humanize.controller;
 
 import app.humanize.model.*;
 import app.humanize.repository.CandidatoRepository;
-import app.humanize.repository.VagaRepository;
 import app.humanize.repository.CandidaturaRepository;
+import app.humanize.repository.VagaRepository;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 
 import java.time.LocalDate;
 import java.util.List;

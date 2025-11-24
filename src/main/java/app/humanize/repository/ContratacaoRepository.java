@@ -2,8 +2,8 @@ package app.humanize.repository;
 
 import app.humanize.model.Candidato;
 import app.humanize.model.Contratacao;
-import app.humanize.model.Vaga;
 import app.humanize.model.StatusVaga;
+import app.humanize.model.Vaga;
 
 import java.io.*;
 import java.time.LocalDate;

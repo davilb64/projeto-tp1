@@ -8,8 +8,11 @@ import app.humanize.repository.EntrevistaRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.util.ResourceBundle;
 

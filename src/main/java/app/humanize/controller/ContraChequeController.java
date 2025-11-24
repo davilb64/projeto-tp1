@@ -1,12 +1,12 @@
 package app.humanize.controller;
 
 import app.humanize.model.ContraCheque;
+import app.humanize.model.FolhaPag;
 import app.humanize.model.Funcionario;
 import app.humanize.model.Usuario;
 import app.humanize.repository.ContrachequeRepository;
-import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.FolhaPagRepository;
-import app.humanize.model.FolhaPag;
+import app.humanize.repository.UsuarioRepository;
 import app.humanize.service.formatters.IReportFormatter;
 import app.humanize.service.formatters.PdfFormatter;
 import app.humanize.service.relatorios.ReportData;

@@ -6,7 +6,10 @@ import app.humanize.model.Vaga;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.repository.VagaRepository;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class CriarVagaController {

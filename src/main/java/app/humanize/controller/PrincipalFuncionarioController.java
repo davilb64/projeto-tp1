@@ -2,6 +2,7 @@ package app.humanize.controller;
 
 import app.humanize.model.Funcionario;
 import app.humanize.model.Usuario;
+import app.humanize.util.ScreenController;
 import app.humanize.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import app.humanize.util.ScreenController;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

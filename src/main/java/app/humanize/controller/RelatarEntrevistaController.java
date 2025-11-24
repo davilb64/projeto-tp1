@@ -1,12 +1,20 @@
 package app.humanize.controller;
 
-import app.humanize.model.*;
-import app.humanize.repository.*;
+import app.humanize.model.Candidatura;
+import app.humanize.model.Entrevista;
+import app.humanize.model.StatusCandidatura;
+import app.humanize.model.StatusEntrevista;
+import app.humanize.repository.CandidaturaRepository;
+import app.humanize.repository.EntrevistaRepository;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+
 import java.util.ResourceBundle;
 
 public class RelatarEntrevistaController {

@@ -289,7 +289,7 @@ public class UsuarioRepository extends BaseRepository {
             sb.append(f.getDepartamento() == null ? "" : f.getDepartamento()).append(";");
             sb.append(f.getCaminhoFoto() == null ? "" : f.getCaminhoFoto()).append(";");
         } else {
-            sb.append(";;;;;;;;;;"); // ATUALIZADO: 10 colunas vazias
+            sb.append(";;;;;;;;;;"); //10 colunas vazias
         }
         sb.append("\n");
         return sb.toString();

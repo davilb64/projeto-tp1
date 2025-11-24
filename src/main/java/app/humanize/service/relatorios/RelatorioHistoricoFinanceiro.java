@@ -6,7 +6,10 @@ import app.humanize.repository.ContrachequeRepository;
 import app.humanize.util.UserSession;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class RelatorioHistoricoFinanceiro implements IGeradorRelatorio {
 

@@ -1,6 +1,9 @@
 package app.humanize.repository;
 
-import app.humanize.model.*;
+import app.humanize.model.Candidato;
+import app.humanize.model.Candidatura;
+import app.humanize.model.StatusCandidatura;
+import app.humanize.model.Vaga;
 import javafx.scene.control.Alert;
 
 import java.io.*;

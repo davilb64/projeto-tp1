@@ -1,7 +1,9 @@
 package app.humanize.controller;
 
 import app.humanize.model.*;
-import app.humanize.repository.*;
+import app.humanize.repository.CandidaturaRepository;
+import app.humanize.repository.EntrevistaRepository;
+import app.humanize.repository.VagaRepository;
 import app.humanize.util.UserSession;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

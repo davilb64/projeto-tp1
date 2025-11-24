@@ -1,6 +1,6 @@
 package app.humanize.controller;
 
-import app.humanize.model.*;
+import app.humanize.model.Candidato;
 import app.humanize.repository.CandidatoRepository;
 import app.humanize.repository.CandidaturaRepository;
 import app.humanize.util.UserSession;

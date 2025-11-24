@@ -4,11 +4,12 @@ import app.humanize.model.RegraSalarial;
 import app.humanize.repository.SalarioRepository;
 import app.humanize.repository.UsuarioRepository;
 import app.humanize.util.UserSession;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.collections.ObservableList;
-import javafx.collections.FXCollections;
 import javafx.scene.control.cell.PropertyValueFactory;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
